@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/04 17:51:20 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/04 20:28:09 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_token	*ft_init_token(ssize_t token_size)
 	if (!token)
 		return (NULL);
 	token->type = -1;
-	token->value = malloc(sizeof(char *) * token_size);//calloc?
+	token->value = malloc(sizeof(char) * token_size + 1);//calloc?
 	if (!token->value)
 	{
 		free(token);
@@ -47,10 +47,36 @@ t_token	*ft_init_token(ssize_t token_size)
 	return (token);
 }
 
+ssize_t	ft_operatorsize(char *input)
+{
+	int	i;
+
+	i = 0;
+	if (!input)
+		return (0);
+	if (input[i] == '|')
+		return (1);
+	if (input[i] == '>')
+	{
+		if (input[i + 1] == '>')
+			return (2);
+		else
+			return (1);
+	}
+	if (input[i] == '<')
+	{
+		if (input[i + 1] == '<')
+			return (2);
+		else
+			return (1);
+	}
+	else
+		return (0);
+}
+
 /// @brief finds the size of the next token
 /// @param input the current position in the input
 /// @return the size of the token, or -1 if the quotes are open
-/*consider removing spaces before calling this function*/
 ssize_t	ft_tokensize(char *input)
 {
 	int		i;
@@ -60,6 +86,8 @@ ssize_t	ft_tokensize(char *input)
 		return (0);
 	i = 0;
 	quotes = 0;
+	if (is_operator(&input[i]))
+		return (ft_operatorsize(&input[i]));
 	while (input[i])
 	{
 		if (is_quote(input[i]) && !quotes)
@@ -74,13 +102,7 @@ ssize_t	ft_tokensize(char *input)
 			i++;
 		}
 		if (!quotes && is_delimiter(&input[i]) && input[i])
-		{
-			if (!ft_strncmp(&input[i], "<<", 2) || !ft_strncmp(&input[i], ">>", 2))
-				i += 2;
-			else
-				i++;
 			break ;
-		}
 		if (input[i])
 			i++;
 	}
@@ -109,6 +131,31 @@ void	ft_add_token(t_token **lst, t_token *new)
 	}
 }
 
+/// @brief determine the token type
+/// @param token the newly created token node
+void	ft_settokentype(t_token *token)
+{
+	char	*value;
+	size_t	size;
+
+	if (!token)
+		return ;
+	value = token->value;
+	size = ft_strlen(value);
+	if (!ft_strncmp(value, "<<", size))
+		token->type = TOKEN_HEREDOC;
+	else if (!ft_strncmp(value, ">>", size))
+		token->type = TOKEN_APPEND;
+	else if (!ft_strncmp(value, "<", size))
+		token->type = TOKEN_RED_IN;
+	else if (!ft_strncmp(value, ">", size))
+		token->type = TOKEN_RED_OUT;
+	else if (!ft_strncmp(value, "|", size))
+		token->type = TOKEN_PIPE;
+	else
+		token->type = TOKEN_STRING;
+}
+
 /// @brief copies from the input to a new_token node
 /// @param input the string from the user
 /// @param size the size of the token returned by ft_tokensize()
@@ -122,8 +169,9 @@ t_token	*ft_new_token(char *input, ssize_t size)
 	token = ft_init_token(size);
 	if (!token)
 		return (NULL);
-	token->value = ft_memmove(token->value, input, (size_t)size);
+	token->value = ft_memmove(token->value, input, (size_t)size + 1);
 	token->value[(int)size] = '\0';
+	ft_settokentype(token);
 	return (token);
 }
 
@@ -140,7 +188,7 @@ int	main(void)
 	while (true)
 	{
 		i = 0;
-		input = readline("minishell>");
+		input = readline("minishell> ");
 		if (!ft_strncmp(input, "exit", 5) || !input)
 			break ;
 		while (input[i])
@@ -150,7 +198,7 @@ int	main(void)
 			size = ft_tokensize(&input[i]);
 			if (size == -1)
 			{
-				ft_putstr_fd("Failed to read token size\n", 2);
+				ft_putstr_fd("Unclosed quotes\n", 2);
 				break;
 			}
 			token = ft_new_token(&input[i], size);
