@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/04 19:21:12 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/05 09:29:52 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,26 @@ typedef	struct s_shell
 }	t_shell;
 
 /*****************************************************************************\
-*                               Parsing Functions                             *
+*                            Input Parsing Functions                          *
 \*****************************************************************************/
 
 bool	ft_isspace(const char c);
 bool	is_operator(const char *str);
 bool	is_quote(const char str);
 bool	is_delimiter(const char *str);
+
+/*****************************************************************************\
+*                               Tokenizer Functions                           *
+\*****************************************************************************/
+
+void	ft_add_token(t_token **lst, t_token *new);
+void	ft_settokentype(t_token *token);
+
+t_token	*ft_new_token(char *input, ssize_t size);
+t_token	*ft_init_token(ssize_t token_size);
+
+ssize_t	ft_tokensize(char *input);
+ssize_t	ft_operatorsize(char *input);
 
 /*****************************************************************************\
 *                               Error Functions                               *

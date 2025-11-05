@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/11 20:09:29 by adpinhei          #+#    #+#              #
-#    Updated: 2025/11/04 17:50:32 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/11/05 09:25:32 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ LIBFT := $(LIBFT_PATH)/libft.a
 BUILD_DIR := build
 
 #Source Files
-SRC_FILES := main.c clean_token_lst.c input_checker.c
+SRC_FILES := main.c clean_token_lst.c input_checker.c token_maker.c \
+			list_maker.c
 
 #Object Files
 OBJ_FILES := $(SRC_FILES:%.c=$(BUILD_DIR)/%.o)
