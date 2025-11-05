@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/05 09:26:47 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/05 10:37:26 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	ft_settokentype(t_token *token)
 		token->type = TOKEN_RED_OUT;
 	else if (!ft_strncmp(value, "|", size))
 		token->type = TOKEN_PIPE;
+	else if (!ft_strncmp(value, "eof", size))
+		token->type = TOKEN_EOF;
 	else
 		token->type = TOKEN_STRING;
 }
