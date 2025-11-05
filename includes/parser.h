@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/05 09:29:52 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/05 11:00:55 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 
 /// @brief macros for token identification
-typedef	enum e_toke_type
+typedef	enum e_token_type
 {
 	TOKEN_STRING,
 	TOKEN_PIPE,
@@ -24,6 +24,7 @@ typedef	enum e_toke_type
 	TOKEN_RED_OUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
+	TOKEN_EOF,
 }	t_token_type;
 
 /// @brief macros for node type
@@ -49,6 +50,7 @@ typedef	struct s_shell
 	char			**args;
 	struct s_shell	*next;
 }	t_shell;
+
 
 /*****************************************************************************\
 *                            Input Parsing Functions                          *

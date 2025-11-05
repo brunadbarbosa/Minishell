@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/05 09:33:17 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/05 10:38:17 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void	ft_printlst(t_token **lst)
 }
 int	main(void)
 {
-	char	*input;
-	ssize_t	size;
-	t_token	*token;
-	t_token	*token_lst;
+	char		*input;
+	ssize_t		size;
+	t_token		*token;
+	t_token		*token_lst;
 	int		i;
 
 	token_lst = NULL;
@@ -55,6 +55,8 @@ int	main(void)
 			ft_add_token(&token_lst, token);
 			i += size;
 		}
+		token = ft_new_token("eof", 3);
+		ft_add_token(&token_lst, token);
 		free(input);
 		ft_printlst(&token_lst);
 		if (token_lst)
