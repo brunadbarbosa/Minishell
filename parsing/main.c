@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/06 10:21:23 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/06 11:05:14 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_printlst(t_token **lst)
 	t_token *current = *lst;
 	while (current)
 	{
-		ft_printf("TOKEN #%i\n value: %s\n type: %i\n***\n",i, current->value, current->type);
+		ft_printf("TOKEN #%i\n [value: %s]\n [type: %i]\n***\n",i, current->value, current->type);
 		i++;
 		current = current->next;
 	}
