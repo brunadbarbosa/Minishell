@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 16:36:50 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/05 11:29:12 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/06 10:42:31 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@
 # include <stdbool.h>
 # include "parser.h"
 
+
+typedef	enum e_redir_type
+{
+	REDIR_IN, // <
+	REDIR_OUT, // >
+	REDIR_APPEND // >>
+}	e_redir_type;
+
 /// @brief these structs will form our environment.
 typedef	struct s_env
 {
@@ -32,36 +40,21 @@ typedef	struct s_env
 	struct s_env	*next;
 }	t_env;
 
-/// @brief struct to hold the file's information.
-typedef	struct s_file
+/// @brief redirection details. t_cmd will have a pointer to this.
+typedef	struct s_redir
 {
-	int		is_heredoc; //0 if it is not, 1 if it is.
-	int		fd_in;
-	int		fd_out;
-	char	*name;
-}	t_file;
+	e_redir_type	type; //macros for the type of redirection (e.g. '<', '>>')
+	char			*file; //the name of the redirection file
+	struct s_redir	*next; //list of redirections (e.g. "< infile cat > outfile", which has both REDIR_IN and REDIR_OUT)
+}	t_redir;
 
-/// @brief struct to hold the user's input. Will be parsed into t_shell.
-typedef	struct s_input
+/// @brief main struct to be passed for execution
+typedef	struct s_cmd
 {
-	char	*input; //holds input from the user.
-	int		in_quotes; //tells if we are in quotes.
-}	t_input;
-
-// /// @brief main struct to be passed to execution. 
-// typedef	struct s_shell
-// {
-// 	int		type; //macros defined as program, built-in, or operator.
-// 	char	*cmd; //the command to be executed.
-// 	char	**args; //args to cmd. NULL if nothing to be passed as argument.
-// 	int		exit_status; //holds the return from processes.
-// 	t_env	*env; //header to the environment.
-// 	t_file	*file; //struct to any needed infile or outfile.
-// 	t_shell	*left;
-// 	t_shell	*right;
-// 	t_shell	*prev;
-// }	t_shell;
-
-
+	char			*cmd; //command name
+	char			**args; //arguments to the command
+	t_redir			*redirs; //linked list of redirections, NULL if none
+	struct s_cmd	*next; //if there is a pipe, the address of the next cmd will be here. If no, this will be NULL
+}	t_cmd;
 
 #endif
