@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/06 10:36:23 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/06 11:03:01 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /// @brief macros for token identification
 typedef	enum e_token_type
 {
-	TOKEN_STRING,
+	TOKEN_WORD,
 	TOKEN_PIPE,
 	TOKEN_RED_IN,
 	TOKEN_RED_OUT,

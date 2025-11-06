@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/06 10:21:23 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/06 11:03:01 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_settokentype(t_token *token)
 	else if (!ft_strncmp(value, "eof", size))
 		token->type = TOKEN_EOF;
 	else
-		token->type = TOKEN_STRING;
+		token->type = TOKEN_WORD;
 }
 
 /// @brief initializes token nodes
