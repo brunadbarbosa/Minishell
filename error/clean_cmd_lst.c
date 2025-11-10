@@ -1,0 +1,61 @@
+#include "../includes/minishell.h"
+
+static void	ft_clean_redirs(t_redir *redirs);
+
+/// @brief cleans the t_cmd list
+/// @param lst the pointer to the list
+/// @param msg an error msg. NULL if not to print anything
+void	ft_clean_cmd_lst(t_cmd *lst, char *msg)
+{
+	t_cmd	*current;
+
+	if (!lst)
+		return ;
+	while (lst)
+	{
+		current = lst;
+		if (!current)
+			return ;
+		if (current->redirs)
+			ft_clean_redirs(current->redirs);
+		if (current->cmd)
+		{
+			free(current->cmd);
+			current->cmd = NULL;
+		}
+		if (current->args)
+			ft_free_args(&current->args);
+		if (current->next)
+			lst = current->next;
+		free(current);
+	}
+	if (msg)
+		ft_putstr_fd(2, msg);
+}
+
+/// @brief cleans the redirections
+/// @param redirs the list of redirections for an specific t_cmd
+static void	ft_clean_redirs(t_redir *redirs)
+{
+	t_redir	*current;
+
+	if (!redirs)
+		return ;
+	while (redirs)
+	{
+		current = redirs;
+		if (current->file)
+		{
+			free(current->file);
+			current->file = NULL;
+		}
+		if (current->fd != -1)
+		{
+			close(current->fd);
+			current->fd = -1;
+		}
+		if (current->next)
+			redirs = current->next;
+		free(current);
+	}
+}
