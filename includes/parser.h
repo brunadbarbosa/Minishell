@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/06 11:03:01 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:49:23 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ ssize_t	ft_tokensize(char *input);
 ssize_t	ft_operatorsize(char *input);
 
 /*****************************************************************************\
-*                               Error Functions                               *
+*                           Error & Cleaning Functions                        *
 \*****************************************************************************/
 
-void	ft_clean_token_lst(t_token **lst);
+void	ft_clean_tokens(t_token **lst, char *msg);
+void	ft_clean_cmd_lst(t_cmd *lst, char *msg);
 
 #endif

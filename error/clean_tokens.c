@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean_token_lst.c                                  :+:      :+:    :+:   */
+/*   clean_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:17:25 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/06 10:21:23 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:49:06 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /// @brief cleans the list of t_token nodes
 /// @param lst the list to be cleaned
-void	ft_clean_token_lst(t_token **lst)
+void	ft_clean_tokens(t_token **lst, char *msg)
 {
 	t_token	*current;
 	t_token	*next;
@@ -32,4 +32,6 @@ void	ft_clean_token_lst(t_token **lst)
 	free(current->value);
 	free(current);
 	*lst = NULL;
+	if (msg)
+		ft_putstr_fd(msg, 2);
 }

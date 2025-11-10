@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 18:50:33 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/04/17 19:26:25 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:23:00 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
