@@ -5,8 +5,13 @@
 /// @param envp the pointer to the environment variables
 void	ft_init_shell(t_shell *shell, char **envp)
 {
-	if (!envp || !* envp || !shell)
+	if (!shell)
 		return ;
+	if (!envp)
+	{
+		ft_putstr_fd("No environment\n", 2);
+		return ;
+	}
 	shell->cmds = NULL;
 	shell->tokens = NULL;
 	shell->exit_status = 0;
@@ -33,11 +38,11 @@ t_env	*ft_env(t_shell *shell, char **envp)
 		j = 0;
 		while (envp[i][j] != '=')
 			j++;
-		ft_strlcpy(env->name, envp[i], ++j);
-		env->value = ft_split(envp[i][j], ':');
+		ft_strlcpy(env->name, envp[i], j);
+		env->value = ft_split(envp[i][++j], ':');
 		if (!env->value)
 		{
-			ft_clean_shell(shell, "Failed to create env\n");
+			ft_clean_shell(&shell, "Failed to create env\n");
 			return (NULL);
 		}
 		i++;

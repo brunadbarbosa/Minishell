@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/10 20:27:42 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/11 18:35:37 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	loop(t_shell *shell)
 		ft_exit(&shell, input);
 		add_history(input);
 		ft_lexer(&shell, input);//puts tolkens
+		ft_printlst(&shell->tokens);
 		ft_parser(&shell);//make the cmd list
 		free(input);
 		ft_clean_shell(&shell, NULL);

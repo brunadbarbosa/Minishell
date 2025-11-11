@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 16:36:50 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/10 20:06:32 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/11 18:18:45 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef	struct s_shell
 
 void	loop(void);
 void	ft_init_shell(t_shell *shell, char **envp);
+void	ft_exit(t_shell *shell, char *input);
 
 /*****************************************************************************\
 *                                Cleaning Functions                           *
