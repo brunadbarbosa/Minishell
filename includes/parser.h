@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/10 19:49:23 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/11 18:38:08 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ bool	is_delimiter(const char *str);
 *                               Tokenizer Functions                           *
 \*****************************************************************************/
 
+void	ft_lexer(t_shell *shell, char *input);
 void	ft_add_token(t_token **lst, t_token *new);
 void	ft_settokentype(t_token *token);
 
