@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/11 18:35:37 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:00:53 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,26 @@ void	loop(t_shell *shell)
 	// 	ft_clean_token_lst(&token_lst);
 }
 
+void	print_env(t_shell *shell)
+{
+	if (!shell)
+	{
+		ft_printf("No shell\n");
+		return ;
+	}
+	t_env	*env = shell->env;
+	while(env)
+	{
+		ft_printf("var name: %s\n", env->name);
+		int	i = 0;
+		while (env->value[i])
+		{
+			ft_printf("\t[%s]\n", env->value[i]);
+			i++;
+		}
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
@@ -89,6 +109,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	ft_init_shell(&shell, envp);
+	print_env(&shell);
 	loop(&shell);
 	ft_clean_shell(&shell, NULL);
 	return (shell.exit_status);

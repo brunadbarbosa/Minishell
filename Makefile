@@ -1,72 +1,101 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/11 20:09:29 by adpinhei          #+#    #+#              #
-#    Updated: 2025/11/11 18:35:50 by adpinhei         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
+###############################################################################
+#                            Target and Compiler                              #
+###############################################################################
 NAME := minishell
 
 CC := cc
 
-FLAGS := -Wall -Wextra -Werror -g #-fsanitize=address
+###############################################################################
+#                                    Flags                                    #
+###############################################################################
+FLAGS = -Wall -Wextra -Werror
 LDFLAGS := -lreadline
 
-vpath %.c src error parsing
-vpath %.h includes
+###############################################################################
+#                                    vpath                                    #
+###############################################################################
+vpath $(INCLUDES) includes
+vpath $(ERROR_FILES) error
+vpath $(PARSE_FILES) parsing
 
+###############################################################################
+#                            Libft path and archive                           #
+###############################################################################
 LIBFT_PATH := ./libft
 LIBFT := $(LIBFT_PATH)/libft.a
 
+###############################################################################
+#                              Builds' Directory                              #
+###############################################################################
 BUILD_DIR := build
 
-#Source Files
-SRC_FILES := loop.c clean_tokens.c input_checker.c token_maker.c \
-			token_list_maker.c cmd_list_maker.c clean_cmd_lst.c \
-			clean_env.c lexer.c
+###############################################################################
+#                               Source Files                                  #
+###############################################################################
 
-#Object Files
+ERROR_FILES := clean_cmd.c clean_env.c clean_shell.c clean_tokens.c \
+				clean_utils.c
+
+PARSE_FILES := loop.c cmd_list_maker.c exit.c input_checker.c lexer.c \
+				parser.c shell_init.c token_list_maker.c token_maker.c
+
+SRC_FILES := $(ERROR_FILES) $(PARSE_FILES)
+
+###############################################################################
+#                               Object Files                                  #
+###############################################################################
 OBJ_FILES := $(SRC_FILES:%.c=$(BUILD_DIR)/%.o)
 
-#Includes
+###############################################################################
+#                                 Includes                                    #
+###############################################################################
 INCLUDES := minishell.h parser.h
 
+
+###############################################################################
+#                                Debug Flags                                  #
+###############################################################################
+gdb: FLAGS += -g
+leak: FLAGS += -fsanitize=address, leak, undefined
+
+###############################################################################
+#                                Basic Rules                                  #
+###############################################################################
 .PHONY: all clean fclean re valgrind norm gdb
 
 all: $(BUILD_DIR) $(LIBFT) $(NAME)
 
-bonus: $(BUILD_DIR) $(LIBFT) $(BONUS_NAME)
-
-#Compile library LIBFT
+###############################################################################
+#                                   Libft                                     #
+###############################################################################
 $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_PATH)
 
-#Create BUILD directory if it doesn't exist
+###############################################################################
+#                               Create ./build                                #
+###############################################################################
 $(BUILD_DIR):
 	@mkdir -p $@
 	@echo "$(GREEN)Creating$(RESET) $(BUILD_DIR)"
 	@echo "$(GREEN)Compiled objects$(RESET)"
 
-#Compile object files into build
+###############################################################################
+#                        Compile objects into /build                          #
+###############################################################################
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(FLAGS) -c $< -o $@
 
-#Building executable
+###############################################################################
+#                               Build executable                              #
+###############################################################################
 $(NAME): $(OBJ_FILES) $(LIBFT)
 	@$(CC) $(FLAGS) $(OBJ_FILES) $(LIBFT) $(LDFLAGS) -o $@
 	@echo "$(YELLOW)Compiled$(RESET) $(NAME)"
 
-#Building bonus executable
-$(BONUS_NAME): $(BONUS_OBJ) $(LIBFT)
-	@$(CC) $(FLAGS) $(BONUS_OBJ) $(LIBFT) $(LDFLAGS) -o $@
-	@echo "$(YELLOW)Compiled bonus executable$(RESET) $(BONUS_NAME)"
-
+###############################################################################
+#                                Debug Rules                                  #
+###############################################################################
 norm:
 	@norminette -R CheckForbiddenSourceHeader
 
@@ -79,21 +108,16 @@ valgrind: $(NAME)
 	--track-fds=yes \
 	./$(NAME)
 
-bonusvalgrind: $(BONUS_NAME)
-	@echo "$(YELLOW)Valgrind Report$(RESET)"
-	@valgrind --leak-check=full \
-	--show-leak-kinds=all \
-	--track-origins=yes \
-	--track-fds=yes \
-	./$(BONUS_NAME)
-
 gdb: $(NAME)
 	@gdb --tui ./$(NAME)
 
-bonusgdb: $(BONUS_NAME)
-	@gdb --tui ./$(BONUS_NAME)
+leak: $(NAME)
+	@echo "$(YELLOW)Running with sanitizers (adress, leak, undefined)$(RESET)"
+	@./$(NAME)
 
-#Cleanup
+###############################################################################
+#                                  Clean up                                   #
+###############################################################################
 clean:
 	@rm -rf $(BUILD_DIR)
 	@make --no-print-directory -C $(LIBFT_PATH) clean
@@ -111,21 +135,22 @@ fclean: clean
 
 re: fclean all
 
-#Help
+###############################################################################
+#                                    Help                                     #
+###############################################################################
 help:
 	@echo "$(YELLOW)Available targets:$(RESET)"
 	@echo "  all           - Build the mandatory executable"
-	@echo "  bonus         - Build the bonus executable"
 	@echo "  clean         - Remove object files"
 	@echo "  fclean        - Remove all built files"
 	@echo "  re            - Clean and rebuild everything"
 	@echo "  norm          - Run norminette checks"
 	@echo "  valgrind      - Run valgrind on mandatory"
-	@echo "  bonusvalgrind - Run valgrind on bonus"
 	@echo "  gdb           - Start gdb on mandatory"
-#	@echo "  bonusgdb      - Start gdb on bonus"
 
-#Color editing
+###############################################################################
+#                               Color Codes                                   #
+###############################################################################
 RED = \033[1;31m
 
 GREEN = \033[1;32m
