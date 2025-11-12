@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 17:04:53 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 18:29:07 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:56:26 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_cmd	*build_cmd(t_token *token)
 	cmd->cmd = find_cmd(token);
 	cmd->args = find_args(token);
 	cmd->redirs = find_redirs(token);
+	return (cmd);
 }
 
 static char	*find_cmd(t_token *token)
@@ -56,6 +57,7 @@ static char	**find_args(t_token *token)
 		return (NULL);
 	current = token;
 	i = 0;
+	alloc_args(&args, token);
 	while (current->type != TOKEN_WORD && current->type != TOKEN_EOF)
 		current = current->next;
 	if (current->type != TOKEN_WORD)
@@ -70,6 +72,29 @@ static char	**find_args(t_token *token)
 	return (args);
 }
 
+void	alloc_args(char **args, t_token *token)
+{
+	int		i;
+	t_token	*current;
+
+	current = token;
+	i = 0;
+	while (current->type != TOKEN_EOF && current->type != TOKEN_WORD)
+		current = current->next;
+	if (current->type != TOKEN_WORD)
+		return ;
+	if (current->type == TOKEN_WORD)
+		current = current->next;
+	while (current->type == TOKEN_WORD)
+	{
+		i++;
+		current = current->next;
+	}
+	args = malloc(sizeof(char *) * i + 1);
+	if (!args)
+		ft_putstr_fd("Failed at alloc_args\n", 2);
+}
+
 t_redir	*find_redirs(t_token *token)
 {
 	t_redir	*redir;
@@ -78,14 +103,15 @@ t_redir	*find_redirs(t_token *token)
 
 	if (!token)
 		return (NULL);
+	redir = NULL;
 	current = token;
 	while (current->type != TOKEN_EOF && current->type != TOKEN_PIPE)
 	{
 		if (current->type > 1 && current->type < 6)
 		{
 			node = redir_node(current);
-			add_redir(&redir, node);
-			ft_clean_redirs(node);
+			if (node)
+				add_redir(&redir, node);
 		}
 		current = current->next;
 	}
@@ -96,7 +122,7 @@ t_redir	*redir_node(t_token *token)
 {
 	t_redir	*node;
 
-	if (!token)
+	if (!token || !token->next)
 		return (NULL);
 	node = malloc(sizeof(t_redir));
 	if (!node)
@@ -105,6 +131,7 @@ t_redir	*redir_node(t_token *token)
 	node->type = redir_type(token);
 	node->file = ft_strdup(token->next->value);
 	node->next = NULL;
+	return (node);
 }
 
 int	redir_type(t_token *token)
@@ -125,16 +152,15 @@ void	add_redir(t_redir **lst, t_redir *new)
 {
 	t_redir	*last;
 
-	if (!lst)
+	if (!lst || !new)
 		return ;
 	if (!*lst)
 	{
-		lst = new;
+		*lst = new;
 		return ;
 	}
 	last = *lst;
 	while (last->next)
 		last = last->next;
 	last->next = new;
-	last = NULL;
 }

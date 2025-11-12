@@ -1,6 +1,16 @@
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean_cmd.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 19:29:21 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/12 19:38:04 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static void	ft_clean_redirs(t_redir *redirs);
+#include "../includes/minishell.h"
 
 /// @brief cleans the t_cmd list
 /// @param lst the pointer to the list
@@ -24,13 +34,13 @@ void	ft_clean_cmd_lst(t_cmd *lst, char *msg)
 			current->cmd = NULL;
 		}
 		if (current->args)
-			ft_free_args(&current->args);
+			ft_free_args(current->args);
 		if (current->next)
 			lst = current->next;
 		free(current);
 	}
 	if (msg)
-		ft_putstr_fd(2, msg);
+		ft_putstr_fd(msg, 2);
 }
 
 /// @brief cleans the redirections

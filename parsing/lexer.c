@@ -23,12 +23,12 @@ void	ft_lexer(t_shell *shell, char *input)
 			return (ft_putstr_fd("Unclosed quotes\n", 2));
 		token_node = ft_new_token(&input[i], size);
 		if (!token_node)
-			return (ft_clean_shell(&shell, "Failed to allocate token\n"));
+			return (ft_clean_shell(shell, "Failed to allocate token\n"));
 		ft_add_token(&token_lst, token_node);
 		i += size;
 	}
 	if (ft_close_token_lst(token_lst))
-		ft_clean_shell(&shell, "Failed to close token_lst\n");
+		ft_clean_shell(shell, "Failed to close token_lst\n");
 }
 
 /// @brief closes the token list with eof

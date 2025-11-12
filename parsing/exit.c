@@ -9,7 +9,7 @@ void	ft_exit(t_shell *shell, char *input)
 		return ;
 	if (!ft_strncmp(input, "exit", len))
 	{
-		ft_clean_shell(&shell, NULL);
+		ft_clean_shell(shell, NULL);
 		exit(EXIT_FAILURE);
 	}
 }

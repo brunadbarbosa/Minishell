@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/12 16:26:45 by adpinhei          #+#    #+#              #
-#    Updated: 2025/11/12 16:26:46 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/11/12 19:37:13 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,9 +26,9 @@ LDFLAGS := -lreadline
 ###############################################################################
 #                                    vpath                                    #
 ###############################################################################
-vpath $(INCLUDES) includes
-vpath $(ERROR_FILES) error
-vpath $(PARSE_FILES) parsing
+vpath %.c includes
+vpath %.c error
+vpath %.c parsing
 
 ###############################################################################
 #                            Libft path and archive                           #
@@ -48,7 +48,7 @@ BUILD_DIR := build
 ERROR_FILES := clean_cmd.c clean_env.c clean_shell.c clean_tokens.c \
 				clean_utils.c
 
-PARSE_FILES := loop.c exit.c input_checker.c lexer.c \
+PARSE_FILES := loop.c exit.c input_checker.c lexer.c build_cmd.c\
 				parser.c shell_init.c token_list_maker.c token_maker.c
 
 SRC_FILES := $(ERROR_FILES) $(PARSE_FILES)

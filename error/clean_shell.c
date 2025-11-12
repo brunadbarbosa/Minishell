@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean_shell.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 19:30:22 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/12 19:38:55 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 /// @brief cleans the t_shell super structure
@@ -19,7 +31,7 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 	}
 	if (shell->tokens)
 	{
-		ft_clean_tokens(shell->tokens, msg);
+		ft_clean_tokens(&shell->tokens, msg);
 		shell->tokens = NULL;
 	}
 }
