@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 15:00:53 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:43:14 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,14 @@ void	print_env(t_shell *shell)
 		return ;
 	}
 	t_env	*env = shell->env;
-	while(env)
+	while(env->next)
 	{
-		ft_printf("var name: %s\n", env->name);
-		int	i = 0;
-		while (env->value[i])
-		{
-			ft_printf("\t[%s]\n", env->value[i]);
-			i++;
-		}
+		ft_printf("[var name] %s\n", env->name);
+		ft_printf("\t[value] %s\n", env->value);
+		env = env->next;
 	}
+	ft_printf("[var name] %s\n", env->name);
+	ft_printf("\t[value] %s\n", env->value);
 }
 
 int	main(int argc, char **argv, char **envp)

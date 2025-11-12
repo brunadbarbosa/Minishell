@@ -31,6 +31,7 @@ void	ft_lexer(t_shell *shell, char *input)
 		ft_clean_shell(&shell, "Failed to close token_lst\n");
 }
 
+/// @brief closes the token list with eof
 static int	ft_close_token_lst(t_token *token_lst)
 {
 	t_token	*closing_token;
