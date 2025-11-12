@@ -27,7 +27,7 @@ t_env	*ft_env(t_shell *shell, char **envp)
 	int		i;
 	int		j;
 
-	if (!envp || !*envp)
+	if (!envp)
 		return (NULL);
 	env = malloc(sizeof(t_env));
 	if (!env)
@@ -39,12 +39,7 @@ t_env	*ft_env(t_shell *shell, char **envp)
 		while (envp[i][j] != '=')
 			j++;
 		ft_strlcpy(env->name, envp[i], j);
-		env->value = ft_split(envp[i][++j], ':');
-		if (!env->value)
-		{
-			ft_clean_shell(&shell, "Failed to create env\n");
-			return (NULL);
-		}
+		env->value = ft_strdup(&envp[i + j + 1]);
 		i++;
 	}
 	return (env);

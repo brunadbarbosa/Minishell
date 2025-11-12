@@ -35,7 +35,7 @@ void	ft_clean_cmd_lst(t_cmd *lst, char *msg)
 
 /// @brief cleans the redirections
 /// @param redirs the list of redirections for an specific t_cmd
-static void	ft_clean_redirs(t_redir *redirs)
+void	ft_clean_redirs(t_redir *redirs)
 {
 	t_redir	*current;
 

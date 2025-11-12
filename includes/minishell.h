@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 16:36:50 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 15:32:45 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:19:20 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ typedef	enum e_redir_type
 /// @brief these structs will form our environment.
 typedef	struct s_env
 {
-	char			*name; //variable name.
-	char			*value; //variables expansion.
+	char			*name; //variable's name.
+	char			*value; //variable's expansion.
 	struct s_env	*next;
 }	t_env;
 
@@ -68,12 +68,13 @@ typedef	struct s_shell
 }	t_shell;
 
 /*****************************************************************************\
-*                                Main Functions                               *
+*                                Parsing Functions                            *
 \*****************************************************************************/
 
 void	loop(t_shell *shell);
 void	ft_init_shell(t_shell *shell, char **envp);
 void	ft_exit(t_shell *shell, char *input);
+void	ft_parser(t_shell *shell);
 
 /*****************************************************************************\
 *                                Cleaning Functions                           *
@@ -81,6 +82,7 @@ void	ft_exit(t_shell *shell, char *input);
 
 void	ft_clean_shell(t_shell *shell, char *msg);
 void	ft_clean_env(t_env *env, char *msg);
+void	ft_clean_redirs(t_redir *redirs);
 void	ft_free_args(char **args);
 
 #endif

@@ -1,5 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 16:26:33 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/12 17:05:24 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
+/// @brief generates the command list from the token list
 void	ft_parser(t_shell *shell)
 {
 	if (!shell)
@@ -19,50 +32,4 @@ void	ft_cmd_lst_init(t_shell *shell)
 	shell->cmds->args = NULL;
 	shell->cmds->next = NULL;
 	shell->cmds->redirs = NULL;
-}
-
-void	ft_cmd_lst(t_shell *shell)
-{
-	t_token	*token;
-
-	token = shell->tokens;
-	while (token->type != TOKEN_EOF)
-	{
-		ft_addcmd(shell->cmds, token); //identify the token type, build the shell->cmd
-		token = token->next;
-	}
-	token = NULL;
-	//identify token type
-	//if redirection, allocate cmd_lst->redirs
-	//if (!eof && !redir && !pipe) make cmd name and cmd args
-	//if pipe, cmd->next
-	//if heredoc, find eoh (end of heredoc)
-}
-
-void	ft_addcmd(t_cmd **cmds, t_token *token)
-{
-	t_cmd	*current;
-
-	if (!token)
-		return ;
-	current = *cmds;
-	if (!current)
-		current = ft_new_cmd(token);
-	else
-	{
-		while (current->next)
-			current = current->next;
-		//if pipe, connect current to current->next
-		current->next = ft_new_cmd(token);
-	}
-}
-
-t_cmd	*ft_new_cmd(t_token *token)
-{
-	//identify token type
-	//if redir, ft_redir()
-	//allocate for the new cmd
-	//cmd.name
-	//cmd.args
-	//if pipe...?
 }
