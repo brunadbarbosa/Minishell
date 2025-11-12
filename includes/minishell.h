@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 16:36:50 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/11 18:18:45 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:32:45 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef	enum e_redir_type
 typedef	struct s_env
 {
 	char			*name; //variable name.
-	char			**value; //variables expansion.
+	char			*value; //variables expansion.
 	struct s_env	*next;
 }	t_env;
 
@@ -71,7 +71,7 @@ typedef	struct s_shell
 *                                Main Functions                               *
 \*****************************************************************************/
 
-void	loop(void);
+void	loop(t_shell *shell);
 void	ft_init_shell(t_shell *shell, char **envp);
 void	ft_exit(t_shell *shell, char *input);
 
