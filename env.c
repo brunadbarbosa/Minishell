@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:59:27 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/12 15:56:33 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:21:41 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,13 @@ void	ft_env(t_env *env)
 {
 	while (env)
 	{
-		printf("%s=", env->name);
-		printf("%s", env->value);	
-		printf("\n");
-		env = env->next;
+		if (env->value && env->value[0])
+		{
+			printf("%s=", env->name);
+			printf("%s", env->value);	
+			printf("\n");
+		}
+			env = env->next;
 	}
 }
 
