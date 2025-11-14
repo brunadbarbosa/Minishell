@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 11:15:14 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/09/08 17:32:54 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 20:42:41 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ int	ft_putstr(const char *str)
 	if (!str)
 		return (ft_putstr("(null)"));
 	while (str[i])
-		ft_putchar(str[i++]);
+	{
+		ft_putchar(str[i]);
+		i++;
+	}
 	return (i);
 }
 

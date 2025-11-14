@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:42:27 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/14 14:44:52 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 20:49:02 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_redir	*find_redirs(t_token *token)
 				add_redir(&redir, node);
 		}
 		current = current->next;
+		free(node);
 	}
 	return (redir);
 }

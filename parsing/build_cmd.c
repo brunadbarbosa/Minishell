@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 17:04:53 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/14 19:42:29 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 20:40:30 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static char	*find_cmd(t_token *token)
 	current = token;
 	while (current && current->type != TOKEN_EOF && current->type != TOKEN_PIPE)
 	{
-		if (current->type == TOKEN_WORD)
+		if (current->type == TOKEN_WORD) // if TOKEN_REDIR I have to jump two tokens
 		{
 			cmd = ft_strdup(current->value);
 			return (cmd);
@@ -94,7 +94,7 @@ static void	alloc_args(char ***args, t_token *token)
 	if (!current || current->type != TOKEN_WORD)
 	{
 		*args = malloc(sizeof(char *));
-		if (!*args)
+		if (*args)
 			(*args)[0] = NULL;
 		return ;
 	}
@@ -105,7 +105,7 @@ static void	alloc_args(char ***args, t_token *token)
 		i++;
 		current = current->next;
 	}
-	*args = malloc(sizeof(char *));
+	*args = malloc(sizeof(char *) * (i + 1));
 	if (!*args)
 		ft_putstr_fd("Failed at alloc_args\n", 2);
 }
