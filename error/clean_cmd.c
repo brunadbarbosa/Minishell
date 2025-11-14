@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:29:21 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 19:38:04 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 19:12:07 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	ft_clean_cmd_lst(t_cmd *lst, char *msg)
 	while (lst)
 	{
 		current = lst;
+		lst = lst->next;
 		if (!current)
 			return ;
 		if (current->redirs)
@@ -35,8 +36,6 @@ void	ft_clean_cmd_lst(t_cmd *lst, char *msg)
 		}
 		if (current->args)
 			ft_free_args(current->args);
-		if (current->next)
-			lst = current->next;
 		free(current);
 	}
 	if (msg)
@@ -54,6 +53,7 @@ void	ft_clean_redirs(t_redir *redirs)
 	while (redirs)
 	{
 		current = redirs;
+		redirs = current->next;
 		if (current->file)
 		{
 			free(current->file);
@@ -64,8 +64,6 @@ void	ft_clean_redirs(t_redir *redirs)
 			close(current->fd);
 			current->fd = -1;
 		}
-		if (current->next)
-			redirs = current->next;
 		free(current);
 	}
 }

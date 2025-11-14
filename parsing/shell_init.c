@@ -1,5 +1,9 @@
 #include "../includes/minishell.h"
 
+static t_env	*ft_env(char **envp);
+static t_env	*new_env_node(char *entry);
+static void	env_add_back(t_env **env, t_env *new);
+
 /// @brief initialize the super struct t_shell
 /// @param shell the super struct
 /// @param envp the pointer to the environment variables
@@ -15,32 +19,68 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->cmds = NULL;
 	shell->tokens = NULL;
 	shell->exit_status = 0;
-	shell->env = ft_env(&shell, envp);
+	shell->env = ft_env(envp);
+	if (!shell->env)
+		ft_clean_shell(shell, "Failed to create env\n");
 }
 
-/// @brief initializes the local environment
-/// @param envp the pointer to the environment variables
-/// @return the list to be used as local environment
-t_env	*ft_env(t_shell *shell, char **envp)
+static t_env	*ft_env(char **envp)
 {
 	t_env	*env;
+	t_env	*node;
 	int		i;
-	int		j;
 
-	if (!envp)
+	if (!envp || !envp[0])
 		return (NULL);
-	env = malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
+	env = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		j = 0;
-		while (envp[i][j] != '=')
-			j++;
-		ft_strlcpy(env->name, envp[i], j);
-		env->value = ft_strdup(&envp[i + j + 1]);
+		node = new_env_node(envp[i]);
+		if (!node)
+			return (NULL);
+		env_add_back(&env, node);
 		i++;
 	}
 	return (env);
+}
+
+static t_env	*new_env_node(char *entry)
+{
+	t_env	*node;
+	int		j;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	j = 0;
+	while (entry[j] && entry[j] != '=')
+		j++;
+	node->name = malloc(sizeof(char) * (j + 1));
+	if (!node->name)
+		return (NULL);
+	ft_strlcpy(node->name, entry, j + 1);
+	if (entry[j] == '=')
+		node->value = ft_strdup(entry + j + 1);
+	else
+		node->value = ft_strdup("");
+	if (!node->value)
+		return (NULL);
+	node->next = NULL;
+	return (node);
+}
+
+static void	env_add_back(t_env **env, t_env *new)
+{
+	t_env	*temp;
+
+	if (!*env)
+	{
+		*env = new;
+		return ;
+	}
+	temp = *env;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
 }

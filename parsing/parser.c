@@ -6,35 +6,25 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 16:26:33 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 19:23:25 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 19:28:17 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static t_cmd	*build_cmd_list(t_token *tokens, t_shell *shell);
+static void	add_cmd(t_cmd **head, t_cmd *new);
+
 
 /// @brief generates the command list from the token list
 void	ft_parser(t_shell *shell)
 {
 	if (!shell)
 		return ;
-//	cmd_lst_init(&shell);
 	shell->cmds = build_cmd_list(shell->tokens, shell);
 }
 
-// void	cmd_lst_init(t_shell *shell)
-// {
-// 	if (!shell)
-// 		return ;
-// 	shell->cmds = malloc(sizeof(t_cmd));
-// 	if (!shell->cmds)
-// 		ft_clean_shell(&shell, "Failed allocating t_cmd\n");
-// 	shell->cmds->cmd = NULL;
-// 	shell->cmds->args = NULL;
-// 	shell->cmds->next = NULL;
-// 	shell->cmds->redirs = NULL;
-// }
-
-t_cmd	*build_cmd_list(t_token *tokens, t_shell *shell)
+static t_cmd	*build_cmd_list(t_token *tokens, t_shell *shell)
 {
 	t_cmd	*head;
 	t_cmd	*new;
@@ -61,7 +51,7 @@ t_cmd	*build_cmd_list(t_token *tokens, t_shell *shell)
 	return (head);
 }
 
-void	add_cmd(t_cmd **head, t_cmd *new)
+static void	add_cmd(t_cmd **head, t_cmd *new)
 {
 	t_cmd	*last;
 
