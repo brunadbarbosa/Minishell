@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/06 11:03:01 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 20:19:15 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,21 @@ t_token	*ft_new_token(char *input, ssize_t size)
 void	ft_settokentype(t_token *token)
 {
 	char	*value;
-	size_t	size;
 
 	if (!token)
 		return ;
 	value = token->value;
-	size = ft_strlen(value);
-	if (!ft_strncmp(value, "<<", size))
+	if (!ft_strncmp(value, "<<", 2))
 		token->type = TOKEN_HEREDOC;
-	else if (!ft_strncmp(value, ">>", size))
+	else if (!ft_strncmp(value, ">>", 2))
 		token->type = TOKEN_APPEND;
-	else if (!ft_strncmp(value, "<", size))
+	else if (!ft_strncmp(value, "<", 1))
 		token->type = TOKEN_RED_IN;
-	else if (!ft_strncmp(value, ">", size))
+	else if (!ft_strncmp(value, ">", 1))
 		token->type = TOKEN_RED_OUT;
-	else if (!ft_strncmp(value, "|", size))
+	else if (!ft_strncmp(value, "|", 1))
 		token->type = TOKEN_PIPE;
-	else if (!ft_strncmp(value, "eof", size))
+	else if (!ft_strncmp(value, "eof", 1))
 		token->type = TOKEN_EOF;
 	else
 		token->type = TOKEN_WORD;

@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/14 19:44:43 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 20:43:54 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,15 @@ static void	ft_printcmd(t_shell *shell)
 			{
 				ft_printf("\t\t[args] %s\n", current->args[j]);
 				j++;
+			}
+		}
+		if (current->redirs)
+		{
+			while (current->redirs)
+			{
+				ft_printf("\t\t[redir type] %i\n", current->redirs->type);
+				ft_printf("\t\t[redir file] %s\n", current->redirs->file);
+				current->redirs = current->redirs->next;
 			}
 		}
 		if (current->next)
