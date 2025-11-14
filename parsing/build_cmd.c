@@ -6,11 +6,16 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 17:04:53 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 18:56:26 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 19:42:29 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static char	*find_cmd(t_token *token);
+static char	**find_args(t_token *token);
+static void	alloc_args(char ***args, t_token *token);
+
 
 t_cmd	*build_cmd(t_token *token)
 {
@@ -24,6 +29,7 @@ t_cmd	*build_cmd(t_token *token)
 	cmd->cmd = find_cmd(token);
 	cmd->args = find_args(token);
 	cmd->redirs = find_redirs(token);
+	cmd->next = NULL;
 	return (cmd);
 }
 
@@ -35,7 +41,7 @@ static char	*find_cmd(t_token *token)
 	if (!token)
 		return (NULL);
 	current = token;
-	while (current->type != TOKEN_EOF && current->type != TOKEN_PIPE)
+	while (current && current->type != TOKEN_EOF && current->type != TOKEN_PIPE)
 	{
 		if (current->type == TOKEN_WORD)
 		{
@@ -57,110 +63,49 @@ static char	**find_args(t_token *token)
 		return (NULL);
 	current = token;
 	i = 0;
+	args = NULL;
 	alloc_args(&args, token);
-	while (current->type != TOKEN_WORD && current->type != TOKEN_EOF)
-		current = current->next;
-	if (current->type != TOKEN_WORD)
+	if (!args)
 		return (NULL);
-	while (current->type == TOKEN_WORD)
+	while (current && current->type != TOKEN_WORD && current->type != TOKEN_EOF)
+		current = current->next;
+	if (!current || current->type != TOKEN_WORD)
+		return (args);
+	current = current->next;
+	while (current && current->type == TOKEN_WORD)
 	{
 		args[i] = ft_strdup(current->value);
 		i++;
 		current = current->next;
 	}
-	args[i] = '\0';
+	args[i] = NULL;
 	return (args);
 }
 
-void	alloc_args(char **args, t_token *token)
+static void	alloc_args(char ***args, t_token *token)
 {
 	int		i;
 	t_token	*current;
 
 	current = token;
 	i = 0;
-	while (current->type != TOKEN_EOF && current->type != TOKEN_WORD)
+	while (current && current->type != TOKEN_EOF && current->type != TOKEN_WORD)
 		current = current->next;
-	if (current->type != TOKEN_WORD)
+	if (!current || current->type != TOKEN_WORD)
+	{
+		*args = malloc(sizeof(char *));
+		if (!*args)
+			(*args)[0] = NULL;
 		return ;
+	}
 	if (current->type == TOKEN_WORD)
 		current = current->next;
-	while (current->type == TOKEN_WORD)
+	while (current && current->type == TOKEN_WORD)
 	{
 		i++;
 		current = current->next;
 	}
-	args = malloc(sizeof(char *) * i + 1);
-	if (!args)
+	*args = malloc(sizeof(char *));
+	if (!*args)
 		ft_putstr_fd("Failed at alloc_args\n", 2);
-}
-
-t_redir	*find_redirs(t_token *token)
-{
-	t_redir	*redir;
-	t_redir	*node;
-	t_token	*current;
-
-	if (!token)
-		return (NULL);
-	redir = NULL;
-	current = token;
-	while (current->type != TOKEN_EOF && current->type != TOKEN_PIPE)
-	{
-		if (current->type > 1 && current->type < 6)
-		{
-			node = redir_node(current);
-			if (node)
-				add_redir(&redir, node);
-		}
-		current = current->next;
-	}
-	return (redir);
-}
-
-t_redir	*redir_node(t_token *token)
-{
-	t_redir	*node;
-
-	if (!token || !token->next)
-		return (NULL);
-	node = malloc(sizeof(t_redir));
-	if (!node)
-		return (NULL);
-	node->fd = -1;
-	node->type = redir_type(token);
-	node->file = ft_strdup(token->next->value);
-	node->next = NULL;
-	return (node);
-}
-
-int	redir_type(t_token *token)
-{
-	if (token->type == TOKEN_RED_IN)
-		return (REDIR_IN);
-	else if (token->type == TOKEN_RED_OUT)
-		return (REDIR_OUT);
-	else if (token->type == TOKEN_HEREDOC)
-		return (REDIR_HERE);
-	else if (token->type == TOKEN_APPEND)
-		return (REDIR_APPEND);
-	else
-		return (-1);
-}
-
-void	add_redir(t_redir **lst, t_redir *new)
-{
-	t_redir	*last;
-
-	if (!lst || !new)
-		return ;
-	if (!*lst)
-	{
-		*lst = new;
-		return ;
-	}
-	last = *lst;
-	while (last->next)
-		last = last->next;
-	last->next = new;
 }

@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 16:36:50 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 19:30:53 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:39:09 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,14 @@ void	ft_init_shell(t_shell *shell, char **envp);
 void	ft_exit(t_shell *shell, char *input);
 void	ft_parser(t_shell *shell);
 void	ft_lexer(t_shell *shell, char *input);
-void	ft_add_token(t_token **lst, t_token *new);
 void	ft_settokentype(t_token *token);
 
 t_token	*ft_new_token(char *input, ssize_t size);
 t_token	*ft_init_token(ssize_t token_size);
+
+t_cmd	*build_cmd(t_token *token);
+
+t_redir	*find_redirs(t_token *token);
 
 ssize_t	ft_tokensize(char *input);
 ssize_t	ft_operatorsize(char *input);

@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:30:14 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 19:38:30 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:44:16 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,17 @@ void	ft_clean_env(t_env *env, char *msg)
 	while(env)
 	{
 		current = env;
+		env = env->next;
 		if (current->name)
 		{
 			free(current->name);
 			current->name = NULL;
 		}
 		if (current->value)
-			ft_free_args(&current->value);
-		if (env->next)
-			env = env->next;
+		{
+			free(current->value);
+			current->value = NULL;
+		}
 		free(current);
 	}
 	if (msg)
