@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-static int	ft_close_token_lst(t_token *token_lst);
+static int	ft_close_token_lst(t_token **token_lst);
 static void	ft_add_token(t_token **lst, t_token *new);
 
 /// @brief tokenizes the input
@@ -14,7 +14,6 @@ void	ft_lexer(t_shell *shell, char *input)
 	if (!input)
 		return ;
 	i = 0;
-	shell->tokens = NULL;
 	while (input[i])
 	{
 		while (ft_isspace(input[i]))
@@ -28,19 +27,20 @@ void	ft_lexer(t_shell *shell, char *input)
 		ft_add_token(&shell->tokens, token_node);
 		i += size;
 	}
-	if (ft_close_token_lst(shell->tokens))
+	if (ft_close_token_lst(&shell->tokens))
 		ft_clean_shell(shell, "Failed to close token_lst\n");
+//	ft_expand(shell->tokens, shell->env);
 }
 
 /// @brief closes the token list with eof
-static int	ft_close_token_lst(t_token *token_lst)
+static int	ft_close_token_lst(t_token **token_lst)
 {
 	t_token	*closing_token;
 
 	closing_token = ft_new_token("eof", 3);
 	if (!closing_token)
 		return (1);
-	ft_add_token(&token_lst, closing_token);
+	ft_add_token(token_lst, closing_token);
 	return (0);
 }
 

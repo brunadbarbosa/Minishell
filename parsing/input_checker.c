@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:20:13 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/04 15:22:40 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:08:01 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	is_operator(const char *str)
 		return (true);
 	else if (ft_strncmp(str, ">>", 2) == 0)
 		return (true);
-	else if (*str == '>' || *str == '<' || *str == '|')
+	else if (*str == '>' || *str == '<' || *str == '|' || *str == ' ')
 		return (true);
 	else
 		return (false);
