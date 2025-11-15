@@ -1,36 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/16 11:28:43 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/16 14:59:49 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-	while(env)
+	int	i;
+
+	i = 0;
+	while (s[i])
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
+		f(i, &s[i]);
+		i++;
 	}
-	return (NULL);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
-{
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+
+// static void	ft_maximize(unsigned int i, char *c)
+// {
+// 	(void)i;
+// 	if (*c > 96 && *c < 123)
+// 		*c -= 32;
+// 	return ;
+// }
+
+// int	main(void)
+// {
+// 	char s[] = "42_coMmon_core";
+
+// 	ft_striteri(s, ft_maximize);
+// 	printf("Capitalized: %s\n", s);
+// 	return (0);
+// }

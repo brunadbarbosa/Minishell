@@ -1,36 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/18 09:49:40 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/18 18:15:12 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	while(env)
-	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
-	}
-	return (NULL);
-}
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
-{
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
+	new->next = *lst;
+	*lst = new;
 }

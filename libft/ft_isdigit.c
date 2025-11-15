@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/07 11:25:16 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/12 14:46:41 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+int	ft_isdigit(int c)
 {
-	while(env)
-	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
-	}
-	return (NULL);
+	return ((c >= 48 && c <= 57));
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+
+/*#include <stdio.h>
+int	main(int argc, char **argv)
 {
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+	if (argc != 2)
+		return (-1);
+	printf("%d\n", (ft_isdigit(*argv[1])));
+	return (0);
+}*/

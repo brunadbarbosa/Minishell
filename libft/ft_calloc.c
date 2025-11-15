@@ -1,36 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/10 16:49:44 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/16 17:13:12 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	while(env)
+	unsigned char	*tmp;
+	size_t			i;
+
+	i = 0;
+	if (size != 0 && nmemb > SIZE_MAX / size)
+		return (0);
+	tmp = malloc(nmemb * size);
+	if (!tmp)
+		return (NULL);
+	while (i < nmemb * size)
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
+		tmp[i] = 0;
+		i++;
 	}
-	return (NULL);
+	return (tmp);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+/*int	main (int argc, char **argv)
 {
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+	if (argc != 2)
+		return 1;
+	printf ("%p\n", ft_calloc(*argv[1], *argv[2]));
+	return(0);
+}*/

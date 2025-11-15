@@ -1,36 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/07 14:01:25 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/12 12:03:19 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+void	*ft_memset(void *s, int c, size_t n)
 {
-	while(env)
+	while (n > 0)
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
+		((unsigned char *)s)[n - 1] = c;
+		n--;
 	}
-	return (NULL);
+	return (s);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+
+/*#include <stdio.h>
+int	main(void)
 {
-	char	*dir;
+	char str[] = ".,fjndkrgbsk";
 	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+   ft_memset(str, 'Z', 2);
+   printf("String after memset(): %s\n", str);
+   return 0;
+}*/

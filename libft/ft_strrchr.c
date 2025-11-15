@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/08 14:37:14 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/16 17:04:09 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+char	*ft_strrchr(const char *s, int c)
 {
-	while(env)
+	int				i;
+
+	i = ft_strlen(s);
+	if (!s)
+		return (0);
+	while (i > -1)
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
+		if (s[i] == (unsigned char)c)
+			return ((char *)&s[i]);
+		i--;
 	}
-	return (NULL);
+	return (0);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+
+/*#include <stdio.h>
+int	main(int argc, char **argv)
 {
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+	if (argc != 3)
+		return (-1);
+	printf ("%s", ft_strrchr(argv[1], *argv[2]));
+	return (0);
+}*/

@@ -1,36 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/16 14:18:27 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/16 15:29:41 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+void	ft_putstr_fd(char *s, int fd)
 {
-	while(env)
+	int	i;
+
+	i = 0;
+	while (s[i])
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
+		write (fd, &s[i], 1);
+		i++;
 	}
-	return (NULL);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+
+/*#include <fcntl.h>
+int main(void)
 {
-	char	*dir;
+	char	*s = "42_common_core";
+	int		fd = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+	if (fd == -1)
+		return (1);
+	ft_putstr_fd(s, fd);
+	ft_putstr_fd("\n", fd);
+	close(fd);
+	return (0);
+}*/

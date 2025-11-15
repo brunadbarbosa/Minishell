@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/07 17:51:22 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/16 15:00:29 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+int	ft_toupper(int c)
 {
-	while(env)
-	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
-	}
-	return (NULL);
+	if (c >= 97 && c <= 122)
+		return (c - 32);
+	return (c);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+
+/*#include <unistd.h>
+int	main (int argc, char **argv)
 {
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+	if (argc != 2)
+		return (-1);
+	char	c = ft_toupper(*argv[1]);
+	write (1, &c, 1);
+	return (0);
+}*/

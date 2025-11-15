@@ -1,36 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/04/09 15:43:06 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/04/12 12:06:29 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-/// @brief Gets PWD's content from env
-/// @param env env's list
-/// @return PWD's content
-char *getpwd(t_env *env)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-	while(env)
+	size_t	i;
+
+	i = 0;
+	if (size > 0)
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
-		env = env->next;
+		while (src[i] != '\0' && (i < (size - 1)))
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	return (NULL);
+	while (src[i])
+		i++;
+	return (i);
 }
-/// @brief prints PWD
-/// @param env env's list
-void	ft_pwd(t_env *env)
+
+/*int	main(int argc, char **argv)
 {
-	char	*dir;
-	
-	dir = getpwd(env);
-	printf("%s\n", dir);
-}
+	if (argc != 4)
+		return (-1);
+	printf("%zu\n", ft_strlcpy(argv[1], argv[2], *argv[3]));
+	return (0);
+}*/

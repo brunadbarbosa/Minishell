@@ -1,0 +1,312 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/14 20:20:23 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+/// @brief check my option -n
+/// @param args check if argument is a -n
+/// @return positive if it is -n
+static int	ft_checkflag(char *args)
+{
+	int	i;
+
+	i = 0;
+	if (!args || args[0] != '-')
+		return (0);
+	i++;
+	while(args[i])
+	{
+		if (args[i] == 'n')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+/// @brief will print what was writen on the terminal
+/// @param args the arguments from terminal
+void	ft_echo(char **args)
+{
+	int	i;
+	int	sign;
+
+	i = 0;
+	sign = 0;
+	if (!args[i])
+	{
+		printf("\n");
+		return ;		
+	}
+	if (ft_checkflag(args[i]))
+	{
+		i++;
+		sign = 1;		
+	}
+	while (args[i])
+	{
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf(" ");
+		i++;
+	}
+	if (sign == 0)
+		printf("\n");
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/08 17:59:27 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/14 20:14:44 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+/// @brief this function will create a new node
+/// @param env_str the argument that I'll use to fill env node
+/// @return new node
+t_env	*create_env_node(const char *env_str)
+{
+	t_env	*node;
+	char	*equal;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+
+	equal = strchr(env_str, '=');
+
+	if (equal)
+	{
+		node->name = strndup(env_str, equal - env_str);
+		node->value = strdup(equal + 1);
+	}
+	else
+	{
+		node->name = strdup(env_str);
+		node->value = strdup("");
+	}
+	node->next = NULL;
+	return (node);
+}
+
+/// @brief creating the env list
+/// @param envp to be copied
+/// @return the list
+t_env	*init_env_list(char **envp)
+{
+	t_env	*head = NULL;
+	t_env	*tail = NULL;
+	t_env	*new_node;
+	int		i = 0;
+
+	while (envp[i])
+	{
+		new_node = create_env_node(envp[i]);
+		if (!new_node)
+			return (NULL);
+		if (!head)
+			head = new_node;
+		else
+			tail->next = new_node;
+		tail = new_node;
+		i++;
+	}
+	return (head);
+}
+/// @brief Will print all env's list
+/// @param env to be printed
+void	ft_env(t_env *env)
+{
+	while (env)
+	{
+		if (env->value && env->value[0])
+		{
+			printf("%s=", env->name);
+			printf("%s", env->value);	
+			printf("\n");
+		}
+			env = env->next;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 15:26:29 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/15 17:05:51 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+#include "libft.h"
+
+int	check_args(char **args)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (args[i])
+	{
+		j = 0;
+		while (args[i][j])
+		{
+			if ((args[i][j] >= 'a' && args[i][j] <= 'z') || (args[i][j] >= 'A' && args[i][j] <= 'Z') || args[i][j] == '_')
+				j++;
+			else
+				return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+/// @brief find the last node of the list
+/// @param lst env's list
+/// @return the address of the last list's node
+static t_env	*ft_envlast(t_env *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+/// @brief adding the variable created by export to the end of env's list
+/// @param lst env's list
+/// @param  new the new node
+static void	ft_envadd_back(t_env **lst, t_env *new)
+{
+	t_env	*last;
+
+	if (!lst || !new)
+		return ;
+	if (*lst == NULL)
+		*lst = new;
+	else
+	{
+		last = ft_envlast(*lst);
+		last->next = new;
+	}
+}
+/// @brief replicating export's behaviours
+/// @param args the arguments received from terminal
+/// @param env env's list
+void	ft_export(char **args, t_env *env)
+{
+	int	i;
+	t_env	*new;
+
+	i = 0;
+	
+	if (!args || !args[0])
+	{
+		while (env)
+		{
+			printf("declare -x ");
+			printf("%s", env->name);
+			if (env->value && env->value[0])
+				printf("=");
+			printf("%s", env->value);	
+			printf("\n");
+			env = env->next;
+		}
+		return ;
+	}
+	while (args[i])
+	{
+		new = create_env_node(args[i]);
+		ft_envadd_back(&env, new);
+		i++;
+	}
+	if (args[2])
+	{
+		ft_export(NULL, env);
+		ft_env(env);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/15 16:25:16 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_env	*env;
+	
+	env = init_env_list(envp);
+	(void)argc;
+	if (strcmp(argv[1], "pwd") == 0)
+		ft_pwd(env);
+	else if (strcmp(argv[1], "echo") == 0)
+		ft_echo(argv+2);
+	else if (strcmp(argv[1], "env") == 0)
+		ft_env(env);		
+	else if (strcmp(argv[1], "export") == 0)
+		ft_export(argv+2, env);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/15 17:08:35 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+/// @brief Gets PWD's content from env
+/// @param env env's list
+/// @return PWD's content
+char *getpwd(t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while(env[i])
+	{
+		if (!strncmp(env[i], "PWD=", 4))
+			return (strdup(env[i] + 4));
+		i++;
+	}
+	return (NULL);
+}
+/// @brief prints PWD
+/// @param env env's list
+void	ft_pwd(t_env *env)
+{
+	char	*dir;
+	
+	dir = getpwd(env);
+	printf("%s\n", dir);
+}

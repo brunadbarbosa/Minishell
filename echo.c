@@ -6,13 +6,16 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/09 15:55:33 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/14 20:20:23 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-int	ft_checkflag(char *args)
+/// @brief check my option -n
+/// @param args check if argument is a -n
+/// @return positive if it is -n
+static int	ft_checkflag(char *args)
 {
 	int	i;
 
@@ -29,13 +32,14 @@ int	ft_checkflag(char *args)
 	}
 	return (1);
 }
-
+/// @brief will print what was writen on the terminal
+/// @param args the arguments from terminal
 void	ft_echo(char **args)
 {
 	int	i;
 	int	sign;
 
-	i = 1;
+	i = 0;
 	sign = 0;
 	if (!args[i])
 	{
@@ -56,21 +60,4 @@ void	ft_echo(char **args)
 	}
 	if (sign == 0)
 		printf("\n");
-}
-
-
-int	main(void)
-{
-	char *cmd1[] = {"echo", "Hello", "world!", NULL};
-	char *cmd2[] = {"echo", "-n-n-n-n-n-n", "Sem", "nova", "linha", NULL};
-	char *cmd3[] = {"echo", NULL};
-
-	printf("Teste 1:\n");
-	ft_echo(cmd1);
-	printf("Teste 2:\n");
-	ft_echo(cmd2);
-	printf("Teste 3:\n");
-	ft_echo(cmd3);
-
-	return (0);
 }

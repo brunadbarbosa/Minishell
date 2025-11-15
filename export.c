@@ -6,84 +6,100 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 15:26:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/13 17:59:25 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:49:04 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+#include "libft.h"
 
-// // função auxiliar pra criar um nó
-// static t_env	*create_env_node(const char *env_str)
-// {
-// 	t_env	*node;
-// 	char	*equal;
-
-// 	node = malloc(sizeof(t_env));
-// 	if (!node)
-// 		return (NULL);
-
-// 	equal = strchr(env_str, '=');
-
-// 	if (equal)
-// 	{
-// 		node->name = strndup(env_str, equal - env_str);
-// 		node->value = strdup(equal + 1); // valor completo após o '='
-// 	}
-// 	else
-// 	{
-// 		node->name = strdup(env_str);
-// 		node->value = strdup("");
-// 	}
-// 	node->next = NULL;
-// 	return (node);
-// }
-
-// // função principal para copiar o ambiente
-// t_env	*init_env_list(char **envp)
-// {
-// 	t_env	*head = NULL;
-// 	t_env	*tail = NULL;
-// 	t_env	*new_node;
-// 	int		i = 0;
-
-// 	while (envp[i])
-// 	{
-// 		new_node = create_env_node(envp[i]);
-// 		if (!new_node)
-// 			return (NULL); // (depois podes tratar leaks)
-// 		if (!head)
-// 			head = new_node;
-// 		else
-// 			tail->next = new_node;
-// 		tail = new_node;
-// 		i++;
-// 	}
-// 	return (head);
-// }
-
-void	ft_export(t_cmd **args, t_env *env)
+int	check_args(char **args)
 {
+	int	i;
+	int	j;
+
+	i = 0;
+	while (args[i])
+	{
+		j = 0;
+		while (args[i][j])
+		{
+			if ((args[i][j] >= 'a' && args[i][j] <= 'z') || (args[i][j] >= 'A' && args[i][j] <= 'Z') || args[i][j] == '_')
+				j++;
+			else
+				return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+/// @brief find the last node of the list
+/// @param lst env's list
+/// @return the address of the last list's node
+static t_env	*ft_envlast(t_env *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+/// @brief adding the variable created by export to the end of env's list
+/// @param lst env's list
+/// @param  new the new node
+static void	ft_envadd_back(t_env **lst, t_env *new)
+{
+	t_env	*last;
+
+	if (!lst || !new)
+		return ;
+	if (*lst == NULL)
+		*lst = new;
+	else
+	{
+		last = ft_envlast(*lst);
+		last->next = new;
+	}
+}
+/// @brief replicating export's behaviours
+/// @param args the arguments received from terminal
+/// @param env env's list
+void	ft_export(char **args, t_env *env)
+{
+	int	i;
+	t_env	*new;
+
+	i = 0;
+	
+	if (!check_args(args))
+	{
+		printf("export: '%s': not a valid identifier\n", *args);
+		return ;
+	}
 	if (!args || !args[0])
 	{
 		while (env)
 		{
 			printf("declare -x ");
-			printf("%s=", env->name);
+			printf("%s", env->name);
+			if (env->value && env->value[0])
+				printf("=");
 			printf("%s", env->value);	
 			printf("\n");
 			env = env->next;
 		}
 		return ;
 	}
-	
+	while (args[i])
+	{
+		new = create_env_node(args[i]);
+		ft_envadd_back(&env, new);
+		i++;
+	}
+	if (args[2])
+	{
+		ft_export(NULL, env);
+		ft_env(env);
+	}
 }
-
-// int	main(int argc, char **argv, char **envp)
-// {	
-// 	t_env	*env;
-// 	(void)argc;
-// 	(void)argv;
-// 	env = init_env_list(envp);
-// 	ft_export(NULL, env);
-// 	return (0);
-// }
