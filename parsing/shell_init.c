@@ -2,7 +2,8 @@
 
 static t_env	*ft_env(char **envp);
 static t_env	*new_env_node(char *entry);
-static void	env_add_back(t_env **env, t_env *new);
+static void		env_add_back(t_env **env, t_env *new);
+static void		ft_shlvl(t_env *env);
 
 /// @brief initialize the super struct t_shell
 /// @param shell the super struct
@@ -20,8 +21,7 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->tokens = NULL;
 	shell->exit_status = 0;
 	shell->env = ft_env(envp);
-	if (!shell->env)
-		ft_clean_shell(shell, "Failed to create env\n");
+	ft_shlvl(shell->env);
 }
 
 static t_env	*ft_env(char **envp)
@@ -83,4 +83,25 @@ static void	env_add_back(t_env **env, t_env *new)
 	while (temp->next)
 		temp = temp->next;
 	temp->next = new;
+}
+
+static void	ft_shlvl(t_env *env)
+{
+	t_env	*current;
+	int		tmp;
+
+	if (!env)
+		return ;
+	current = env;
+	while (current)
+	{
+		if (!ft_strncmp(current->name, "SHLVL", 5))
+		{
+			tmp = ft_atoi(current->value);
+			free(current->value);
+			current->value = ft_itoa(tmp + 1);
+			return ;
+		}
+		current = current->next;
+	}
 }

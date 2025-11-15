@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:30:22 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/12 19:38:55 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/15 18:46:12 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 		return ;
 	if (shell->cmds)
 	{
-		ft_clean_cmd_lst(shell->cmds, msg);
+		ft_clean_cmd_lst(&shell->cmds, msg);
 		shell->cmds = NULL;
 	}
 	if (shell->env)
 	{
-		ft_clean_env(shell->env, msg);
+		ft_clean_env(&shell->env, msg);
 		shell->env = NULL;
 	}
 	if (shell->tokens)

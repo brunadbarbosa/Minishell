@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:42:27 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/14 20:49:02 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/15 19:38:35 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,14 @@ t_redir	*find_redirs(t_token *token)
 			node = redir_node(current);
 			if (node)
 				add_redir(&redir, node);
+			else
+			{
+				ft_clean_redirs(&redir);
+				return (NULL);
+			}
+			current = current->next;
 		}
 		current = current->next;
-		free(node);
 	}
 	return (redir);
 }
@@ -52,7 +57,17 @@ static t_redir	*redir_node(t_token *token)
 		return (NULL);
 	node->fd = -1;
 	node->type = redir_type(token);
+	if (node->type == 17)
+	{
+		free(node);
+		return (NULL);
+	}
 	node->file = ft_strdup(token->next->value);
+	if (!node->file)
+	{
+		free(node);
+		return (NULL);
+	}
 	node->next = NULL;
 	return (node);
 }
@@ -68,7 +83,7 @@ static int	redir_type(t_token *token)
 	else if (token->type == TOKEN_APPEND)
 		return (REDIR_APPEND);
 	else
-		return (-1);
+		return (17);
 }
 
 static void	add_redir(t_redir **lst, t_redir *new)

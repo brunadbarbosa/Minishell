@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/14 20:19:15 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:21:16 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ t_token	*ft_new_token(char *input, ssize_t size)
 	token = ft_init_token(size);
 	if (!token)
 		return (NULL);
-	token->value = ft_memmove(token->value, input, (size_t)size + 1);
-	token->value[(int)size] = '\0';
+	ft_strlcpy(token->value, input, (size_t)size + 1);
 	ft_settokentype(token);
 	return (token);
 }
@@ -50,7 +49,7 @@ void	ft_settokentype(t_token *token)
 		token->type = TOKEN_RED_OUT;
 	else if (!ft_strncmp(value, "|", 1))
 		token->type = TOKEN_PIPE;
-	else if (!ft_strncmp(value, "eof", 1))
+	else if (!ft_strncmp(value, "eof", 3))
 		token->type = TOKEN_EOF;
 	else
 		token->type = TOKEN_WORD;
@@ -59,20 +58,20 @@ void	ft_settokentype(t_token *token)
 /// @brief initializes token nodes
 /// @param token_size the size of the string to be allocated as token->value
 /// @return the initialized token
-t_token	*ft_init_token(ssize_t token_size)
+t_token	*	ft_init_token(ssize_t size)
 {
 	t_token	*token;
 
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->type = -1;
-	token->value = malloc(sizeof(char) * token_size + 1);//calloc?
+	token->value = malloc(sizeof(char) * (size + 1));
 	if (!token->value)
 	{
 		free(token);
 		return (NULL);
 	}
+	token->type = -1;
 	token->next = NULL;
 	return (token);
 }

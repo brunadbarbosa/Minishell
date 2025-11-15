@@ -7,7 +7,7 @@ void	ft_exit(t_shell *shell, char *input)
 	len = ft_strlen(input);
 	if (len == 0)
 		return ;
-	if (!ft_strncmp(input, "exit", len))
+	if (!ft_strncmp(input, "exit", 5))
 	{
 		ft_clean_shell(shell, NULL);
 		exit(EXIT_SUCCESS);
