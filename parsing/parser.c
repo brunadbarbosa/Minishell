@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 16:26:33 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 18:43:08 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/18 20:56:43 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static t_cmd	*build_cmd_list(t_token *tokens);
 static void		buildredir(t_cmd *cmd, t_token *tk);
 static void		buildcmd(t_cmd *cmd, t_token *tk);
-static char	**buildargs(char **args, char *str);
+static char		**buildargs(char **args, char *str);
 
 /// @brief generates the command list from the token list
 void	ft_parser(t_shell *shell)
@@ -57,7 +57,10 @@ static t_cmd	*build_cmd_list(t_token *tokens)
 			}
 			current = current->next;
 		}
-		tk = tk->next;
+		if (tk->next)
+			tk = tk->next;
+		else
+			break ;
 	}
 	return (head);
 }
@@ -74,7 +77,10 @@ static void	buildredir(t_cmd *cmd, t_token *tk)
 		return ;
 	redir->file = ft_strdup(tk->next->value);
 	if (!redir->file)
+	{
+		free(redir);
 		return ;
+	}
 	redir->fd = -1;
 	redir->type = redirtype(tk->type);
 	redir->next = NULL;
@@ -83,7 +89,7 @@ static void	buildredir(t_cmd *cmd, t_token *tk)
 	else
 	{
 		tmp = cmd->redirs;
-		while(tmp->next)
+		while (tmp->next)
 			tmp = tmp->next;
 		tmp->next = redir;
 	}

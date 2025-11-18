@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 14:19:29 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 15:25:29 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/18 20:38:28 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,11 @@ void static	ft_replace(char **str, t_env *env)
 
 void static	ft_removequotes(char **str, char *set)
 {
+	char	*trimmed;
+
 	if (!*str || !set)
 		return ;
-	*str = ft_strtrim(*str, set);
+	trimmed = ft_strtrim(*str, set);
+	free(*str);
+	*str = trimmed;
 }
