@@ -1,27 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 18:42:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 18:59:33 by adpinhei         ###   ########.fr       */
+/*   Created: 2025/11/18 20:40:24 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/18 20:53:33 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_redir_type	redirtype(t_token_type type)
+void	ft_syntax(t_shell *shell)
 {
-	if (type == TOKEN_APPEND)
-		return (REDIR_APPEND);
-	if (type == TOKEN_HEREDOC)
-		return (REDIR_HERE);
-	if (type == TOKEN_RED_IN)
-		return (REDIR_IN);
-	if (type == TOKEN_RED_OUT)
-		return (REDIR_OUT);
-	else
-		return (-1);
+	t_token	*tk;
+	if (!shell || !shell->tokens)
+		return ;
+	tk = shell->tokens;
+	if (tk->type != 0 && tk->type != 2 && tk->type != 5)
+	{
+		ft_clean_shell(shell, "Invalid syntax\n");
+		return ;
+	}
+	while (tk)
+	{
+		if (tk->type > 0 && tk->type < 6)
+		{
+			if (!tk->next || tk->next->type != TOKEN_WORD)
+			{
+				ft_clean_tokens(&shell->tokens, "Invalid syntax\n");
+				return ;
+			}
+		}
+		tk = tk->next;
+	}
 }

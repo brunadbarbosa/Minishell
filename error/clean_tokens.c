@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:17:25 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/10 19:49:06 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/18 20:31:30 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,13 @@ void	ft_clean_tokens(t_token **lst, char *msg)
 	if (!lst || !*lst)
 		return ;
 	current = *lst;
-	while (current->next)
+	while (current)
 	{
 		next = current->next;
 		free(current->value);
 		free(current);
 		current = next;
 	}
-	free(current->value);
-	free(current);
 	*lst = NULL;
 	if (msg)
 		ft_putstr_fd(msg, 2);

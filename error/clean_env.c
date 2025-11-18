@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:30:14 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/15 18:40:55 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:51:22 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_clean_env(t_env **env, char *msg)
 
 	if (!env || !*env)
 		return ;
-	while(*env)
+	while (*env)
 	{
 		current = *env;
 		*env = (*env)->next;

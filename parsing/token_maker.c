@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/15 17:21:16 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/18 20:35:05 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ t_token	*ft_new_token(char *input, ssize_t size)
 	if (!token)
 		return (NULL);
 	ft_strlcpy(token->value, input, (size_t)size + 1);
+	if (!token->value)
+	{
+		free(token);
+		return (NULL);
+	}
 	ft_settokentype(token);
 	return (token);
 }
@@ -56,9 +61,9 @@ void	ft_settokentype(t_token *token)
 }
 
 /// @brief initializes token nodes
-/// @param token_size the size of the string to be allocated as token->value
+/// @param size the size of the string to be allocated as token->value
 /// @return the initialized token
-t_token	*	ft_init_token(ssize_t size)
+t_token	*ft_init_token(ssize_t size)
 {
 	t_token	*token;
 
@@ -112,6 +117,7 @@ ssize_t	ft_tokensize(char *input)
 		return (-1);
 	return (i);
 }
+
 ssize_t	ft_operatorsize(char *input)
 {
 	int	i;
