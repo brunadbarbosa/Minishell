@@ -29,7 +29,7 @@ void	ft_lexer(t_shell *shell, char *input)
 	}
 	if (ft_close_token_lst(&shell->tokens))
 		ft_clean_shell(shell, "Failed to close token_lst\n");
-//	ft_expand(shell->tokens, shell->env);
+	ft_expand(&shell->tokens, shell->env);
 }
 
 /// @brief closes the token list with eof
