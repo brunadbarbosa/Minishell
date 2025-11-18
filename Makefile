@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/12 16:26:45 by adpinhei          #+#    #+#              #
-#    Updated: 2025/11/14 18:38:38 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/11/18 18:46:21 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,9 +48,9 @@ BUILD_DIR := build
 ERROR_FILES := clean_cmd.c clean_env.c clean_shell.c clean_tokens.c \
 				clean_utils.c
 
-PARSE_FILES := loop.c exit.c input_checker.c lexer.c build_cmd.c\
+PARSE_FILES := loop.c exit.c input_checker.c lexer.c parser_utils.c \
 				parser.c shell_init.c token_maker.c \
-				build_redir.c
+				expand_tk.c
 
 SRC_FILES := $(ERROR_FILES) $(PARSE_FILES)
 

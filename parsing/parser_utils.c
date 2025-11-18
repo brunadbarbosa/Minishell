@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/14 15:52:47 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 14:42:38 by adpinhei         ###   ########.fr       */
+/*   Created: 2025/11/18 18:42:08 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/18 18:45:46 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
 
-char	*ft_strtrim(char const *s1, char const *set)
+e_redir_type	redirtype(e_token_type type)
 {
-	size_t	start;
-	size_t	end;
-	char	*res;
-
-	start = 0;
-	if (!s1 || !set)
-		return (NULL);
-	end = ft_strlen(s1);
-	if (!s1 || !set)
-		return (NULL);
-	while (s1[start] && ft_strchr(set, s1[start]))
-		start++;
-	while (end > start && ft_strchr(set, s1[end - 1]))
-		end --;
-	res = ft_substr(s1, start, (end - start));
-	return (res);
+	if (type == TOKEN_APPEND)
+		return (REDIR_APPEND);
+	if (type == TOKEN_HEREDOC)
+		return (REDIR_HERE);
+	if (type == TOKEN_RED_IN)
+		return (REDIR_IN);
+	if (type == TOKEN_RED_OUT)
+		return (REDIR_OUT);
+	else
+		return (-1);
 }
