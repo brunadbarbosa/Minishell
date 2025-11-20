@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 19:10:28 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:50:37 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ typedef enum e_token_type
 	TOKEN_RED_OUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
-	TOKEN_EOF
 }	t_token_type;
 
 typedef enum e_redir_type
@@ -69,6 +68,8 @@ typedef struct s_cmd
 
 typedef struct s_shell
 {
+	int		std_in;
+	int		std_out;
 	t_env	*env;
 	t_token	*tokens;
 	t_cmd	*cmds;

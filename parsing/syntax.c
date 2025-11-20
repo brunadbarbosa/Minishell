@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 20:40:24 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 20:53:33 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 15:44:19 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	ft_syntax(t_shell *shell)
 {
 	t_token	*tk;
+
 	if (!shell || !shell->tokens)
 		return ;
 	tk = shell->tokens;
