@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 20:35:05 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 15:43:27 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void	ft_settokentype(t_token *token)
 		token->type = TOKEN_RED_OUT;
 	else if (!ft_strncmp(value, "|", 1))
 		token->type = TOKEN_PIPE;
-	else if (!ft_strncmp(value, "eof", 3))
-		token->type = TOKEN_EOF;
 	else
 		token->type = TOKEN_WORD;
 }
@@ -98,10 +96,7 @@ ssize_t	ft_tokensize(char *input)
 	while (input[i])
 	{
 		if (is_quote(input[i]) && !quotes)
-		{
-			quotes = input[i];
-			i++;
-		}
+			quotes = input[i++];
 		while (quotes && input[i])
 		{
 			if (input[i] == quotes)
@@ -113,9 +108,7 @@ ssize_t	ft_tokensize(char *input)
 		if (input[i])
 			i++;
 	}
-	if (quotes)
-		return (-1);
-	return (i);
+	return (ft_openquotes(i, quotes));
 }
 
 ssize_t	ft_operatorsize(char *input)

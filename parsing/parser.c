@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 16:26:33 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 20:56:43 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:45:21 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,8 @@ static t_cmd	*build_cmd_list(t_token *tokens)
 	t_cmd	*head;
 	t_cmd	*current;
 
-	if (!tokens)
+	if (ft_initcmdlist(&tk, tokens, &head, &current))
 		return (NULL);
-	head = ft_calloc(1, sizeof(t_cmd));
-	if (!head)
-		return (NULL);
-	current = head;
-	tk = tokens;
 	while (tk)
 	{
 		if (tk->type > 1 && tk->type < 6)
@@ -49,18 +44,12 @@ static t_cmd	*build_cmd_list(t_token *tokens)
 			buildcmd(current, tk);
 		else if (tk->type == TOKEN_PIPE)
 		{
-			current->next = ft_calloc(1, sizeof(t_cmd));
-			if (!current->next)
-			{
-				ft_clean_cmd_lst(&head, "Unable to allocate t_cmd\n");
+			if (ft_buildnextcmd(&current, head))
 				return (NULL);
-			}
-			current = current->next;
 		}
-		if (tk->next)
-			tk = tk->next;
-		else
+		if (!tk->next)
 			break ;
+		tk = tk->next;
 	}
 	return (head);
 }
@@ -75,15 +64,12 @@ static void	buildredir(t_cmd *cmd, t_token *tk)
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
 		return ;
-	redir->file = ft_strdup(tk->next->value);
+	ft_initredir(redir, tk);
 	if (!redir->file)
 	{
 		free(redir);
 		return ;
 	}
-	redir->fd = -1;
-	redir->type = redirtype(tk->type);
-	redir->next = NULL;
 	if (!cmd->redirs)
 		cmd->redirs = redir;
 	else

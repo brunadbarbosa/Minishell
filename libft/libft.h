@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 20:50:47 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/09/03 17:18:26 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 15:54:17 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,22 +85,6 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-
-/*get next line*/
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
-
-char	*get_next_line(int fd);
-
-/*get next line utils*/
-char	*ft_free_join(char *stash, char *buffer);
-
-/*get next line helpers*/
-char	*ft_read_file(int fd, char *res);
-char	*ft_line(char *stash);
-char	*ft_update(char *stash);
-void	get_next_line_clear(void);
 
 /*ft_printf and its helpers*/
 int		ft_printf(const char *str, ...);

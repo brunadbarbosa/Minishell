@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 20:49:34 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:45:07 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void			ft_lexer(t_shell *shell, char *input);
 void			ft_settokentype(t_token *token);
 void			ft_expand(t_token **lst, t_env *env);
 void			ft_syntax(t_shell *shell);
+void			ft_initredir(t_redir *redir, t_token *tk);
 
 t_token			*ft_new_token(char *input, ssize_t size);
 t_token			*ft_init_token(ssize_t size);
@@ -48,13 +49,17 @@ bool			is_operator(const char *str);
 bool			is_quote(const char str);
 bool			is_delimiter(const char *str);
 
+int				ft_openquotes(int i, int quotes);
+int				ft_buildnextcmd(t_cmd **current, t_cmd *head);
+int				ft_initcmdlist(t_token **tk, t_token *tks, t_cmd **h, t_cmd **c);
+
 t_redir_type	redirtype(t_token_type type);
 
 /*testing functions*/
 
-void	ft_printlst(t_shell *shell);
-void	print_env(t_shell *shell);
-void	ft_printcmd(t_shell *shell);
+void			ft_printlst(t_shell *shell);
+void			print_env(t_shell *shell);
+void			ft_printcmd(t_shell *shell);
 
 /******************************************************************************/
 /*                                Cleaning Functions                          */
