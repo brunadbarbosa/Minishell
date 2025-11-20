@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 16:50:37 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 18:34:29 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,16 @@ typedef enum e_redir_type
 	REDIR_HERE
 }	t_redir_type;
 
-typedef struct s_token // <
+typedef struct s_pipe
+{
+	pid_t	*pids;
+	int		pid_count;
+	int		fd_in;
+	int		fd_out;
+	char	**heredocs;
+}	t_pipe;
+
+typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
