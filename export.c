@@ -6,30 +6,24 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 15:26:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:49:04 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:06:20 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 #include "libft.h"
 
-int	check_args(char **args)
+int	check_args(char *args)
 {
 	int	i;
-	int	j;
-
+	
 	i = 0;
 	while (args[i])
 	{
-		j = 0;
-		while (args[i][j])
-		{
-			if ((args[i][j] >= 'a' && args[i][j] <= 'z') || (args[i][j] >= 'A' && args[i][j] <= 'Z') || args[i][j] == '_')
-				j++;
-			else
-				return (0);
-		}
-		i++;
+		if ((args[i] >= 'a' && args[i] <= 'z') || (args[i] >= 'A' && args[i] <= 'Z') || args[i] == '_')
+			i++;
+		else
+			return (0);
 	}
 	return (1);
 }
@@ -72,11 +66,6 @@ void	ft_export(char **args, t_env *env)
 
 	i = 0;
 	
-	if (!check_args(args))
-	{
-		printf("export: '%s': not a valid identifier\n", *args);
-		return ;
-	}
 	if (!args || !args[0])
 	{
 		while (env)
@@ -93,6 +82,11 @@ void	ft_export(char **args, t_env *env)
 	}
 	while (args[i])
 	{
+		if (!check_args(args[i]))
+		{
+			printf("export: '%s': not a valid identifier\n", *args);
+			return ;
+		}
 		new = create_env_node(args[i]);
 		ft_envadd_back(&env, new);
 		i++;

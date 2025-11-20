@@ -6,25 +6,42 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/16 17:33:16 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:08:51 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-void	remove_env(t_env *env, char *args)
+void	remove_env(t_env **env, char *name)
 {
-	
+	    t_env *current = *env;
+    	t_env *prev = NULL;
+
+    while (current)
+    {
+        if (strcmp(current->name, name) == 0)
+        {
+            if (prev == NULL)
+                *env = current->next;
+            else
+                prev->next = current->next;
+
+            free(current->name);
+            free(current->value);
+            free(current);
+            return;
+        }
+        prev = current;
+        current = current->next;
+    }
 }
 
-void	ft_unset(char **args, t_env *env)
+void	ft_unset(char **args, t_env **env)
 {
 	int	i;
 
 	i = 0;
 
-	if (!args[1])
-		return ;
 	while (args[i])
 	{
 		if (!check_args(args[i]))

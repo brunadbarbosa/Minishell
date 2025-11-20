@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 18:38:22 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:52:06 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,10 @@ int	main(int argc, char **argv, char **envp)
 	else if (ft_strncmp(argv[1], "export", 6) == 0)
 		ft_export(argv+2, env);
 	else if (ft_strncmp(argv[1], "unset", 5) == 0)
-		ft_unset();
+	{
+		ft_unset(argv+2, &env);
+		ft_env(env);
+	}
+	else if (ft_strncmp(argv[1], "cd", 5) == 0)
+		ft_cd(env, argv+2);
 }

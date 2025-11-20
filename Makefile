@@ -6,7 +6,7 @@
 #    By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/14 14:16:51 by brmaria-          #+#    #+#              #
-#    Updated: 2025/11/14 14:38:49 by brmaria-         ###   ########.fr        #
+#    Updated: 2025/11/20 15:35:54 by brmaria-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ SRC =	main.c\
 		echo.c\
 		env.c\
 		export.c\
-		pwd.c
+		pwd.c\
+		unset.c
 	
 OBJ = $(SRC:.c=.o)
 

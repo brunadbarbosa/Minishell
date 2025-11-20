@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:19:33 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 18:36:11 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:04:57 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ void	ft_env(t_env *env);
 t_env	*init_env_list(char **envp);
 t_env	*create_env_node(const char *env_str);
 //export
-int	check_args(char **args);
+int	check_args(char *args);
 void	ft_export(char **args, t_env *env);
 //pwd
 void	ft_pwd(t_env *env);
+//unset
+void	ft_unset(char **args, t_env **env);
 
 #endif
