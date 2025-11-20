@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 16:45:07 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:53:27 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <stdarg.h>
 # include <stdlib.h>
 # include <strings.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdbool.h>
@@ -60,6 +63,12 @@ t_redir_type	redirtype(t_token_type type);
 void			ft_printlst(t_shell *shell);
 void			print_env(t_shell *shell);
 void			ft_printcmd(t_shell *shell);
+
+/*****************************************************************************/
+/*                                  Exec Functions                           */
+/*****************************************************************************/
+
+void			ft_exec(t_shell *shell);
 
 /******************************************************************************/
 /*                                Cleaning Functions                          */

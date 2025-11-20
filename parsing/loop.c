@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 15:28:43 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/20 18:42:46 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,10 @@ void	loop(t_shell *shell)
 		ft_syntax(shell);
 //		ft_printlst(shell);
 		ft_parser(shell);
-		ft_printcmd(shell);
+//		ft_printcmd(shell);
 		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);
+		ft_exec(shell);
 		ft_clean_cmd_lst(&shell->cmds, NULL);
 	}
 }

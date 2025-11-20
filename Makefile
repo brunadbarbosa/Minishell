@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/12 16:26:45 by adpinhei          #+#    #+#              #
-#    Updated: 2025/11/20 15:43:42 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/11/20 18:40:26 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,9 +26,10 @@ LDFLAGS := -lreadline
 ###############################################################################
 #                                    vpath                                    #
 ###############################################################################
-vpath %.c includes
+vpath %.h includes
 vpath %.c error
 vpath %.c parsing
+vpath %.c exec
 
 ###############################################################################
 #                            Libft path and archive                           #
@@ -52,7 +53,9 @@ PARSE_FILES := loop.c exit.c input_checker.c lexer.c parser_utils.c \
 				parser.c shell_init.c token_maker.c syntax.c\
 				expand_tk.c test.c token_utils.c
 
-SRC_FILES := $(ERROR_FILES) $(PARSE_FILES)
+EXEC_FILES := exec.c
+
+SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(EXEC_FILES)
 
 ###############################################################################
 #                               Object Files                                  #
