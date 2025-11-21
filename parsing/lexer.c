@@ -6,13 +6,17 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 15:26:47 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/21 19:18:41 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 static void	ft_add_token(t_token **lst, t_token *new);
+static void	ft_rmempty(t_token **tokens);
+static int	ft_isemptytoken(t_token *token);
+static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev);
+
 
 /// @brief tokenizes the input
 /// @param input line from the user
@@ -39,6 +43,7 @@ void	ft_lexer(t_shell *shell, char *input)
 		i += size;
 	}
 	ft_expand(&shell->tokens, shell->env);
+	ft_rmempty(&shell->tokens);
 }
 
 /// @brief adds newly generated token nodes to the token list
@@ -59,4 +64,48 @@ static void	ft_add_token(t_token **lst, t_token *new)
 	while (current->next)
 		current = current->next;
 	current->next = new;
+}
+/// @brief removes tokens with empty value
+static void	ft_rmempty(t_token **tokens)
+{
+	t_token *curr;
+	t_token *prev;
+
+	if (!tokens || !*tokens)
+		return ;
+	curr = *tokens;
+	prev = NULL;
+	while (curr)
+	{
+		if (ft_isemptytoken(curr))
+			ft_removenode(tokens, &curr, prev);
+		else
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+}
+static int	ft_isemptytoken(t_token *token)
+{
+	int	i;
+
+	i = 0;
+	while (token->value[i] && ft_isspace(token->value[i]))
+		i++;
+	return (token->value[i] == '\0');
+}
+
+static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev)
+{
+	t_token	*next;
+
+	next = (*curr)->next;
+	if (prev == NULL)
+		*tokens = next;
+	else
+		prev->next = next;
+	free((*curr)->value);
+	free(*curr);
+	*curr = next;
 }

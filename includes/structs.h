@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 18:34:29 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:03:41 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef enum e_redir_type
 	REDIR_HERE
 }	t_redir_type;
 
+/// @brief to be used in execution phase to deal with fd redirections
 typedef struct s_pipe
 {
 	pid_t	*pids;
