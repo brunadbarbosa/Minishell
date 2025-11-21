@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/12 16:26:45 by adpinhei          #+#    #+#              #
-#    Updated: 2025/11/20 18:40:26 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/11/21 16:21:55 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ PARSE_FILES := loop.c exit.c input_checker.c lexer.c parser_utils.c \
 				parser.c shell_init.c token_maker.c syntax.c\
 				expand_tk.c test.c token_utils.c
 
-EXEC_FILES := exec.c
+#EXEC_FILES := exec.c
 
 SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(EXEC_FILES)
 
