@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/21 15:32:06 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:42:48 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 static int		init_pipe(t_pipe *pipe, t_cmd *cmds);
 static pid_t	ft_process(t_cmd *cmd, t_env *env, t_shell *shell);
 static void		ft_wait(t_pipe *pipe);
-static void		ft_closepipe(int fd1, int fd2, char *str);
 
+/// @brief starts the processes and waits on them
 void	ft_exec(t_shell *shell)
 {
 	t_pipe	pipe;
@@ -39,6 +39,10 @@ void	ft_exec(t_shell *shell)
 	ft_wait(&pipe);
 }
 
+/// @brief initializes the t_pipe struct
+/// @param pipe the pipe struct to be initialized
+/// @param cmds the list of commands from t_shell
+/// @return 0 on sucess, greater on failure
 static int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 {
 	int		node_counter;
@@ -66,6 +70,11 @@ static int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 	return (0);
 }
 
+/// @brief forks processes
+/// @param cmd the list of commands
+/// @param env the environment
+/// @param shell the main struct
+/// @return the pid of the child process	
 static pid_t	ft_process(t_cmd *cmd, t_env *env, t_shell *shell)
 {
 	pid_t	pid;
@@ -92,6 +101,7 @@ static pid_t	ft_process(t_cmd *cmd, t_env *env, t_shell *shell)
 	return (pid);
 }
 
+/// @brief waits on the child processes to be finished
 static void	ft_wait(t_pipe *pipe)
 {
 	int	i;
@@ -108,25 +118,9 @@ static void	ft_wait(t_pipe *pipe)
 		i = 0;
 		while (pipe->heredocs[i])
 		{
-			free(pipe->heredocs[i]);
+			free(pipe->heredocs[i]); //build loop/function to unlink heredocs
 			i++;
 		}
 		free(pipe->heredocs);
 	}
-}
-
-static void	ft_closepipe(int fd1, int fd2, char *str)
-{
-	if (fd1 >= 0)
-	{
-		close(fd1);
-		fd1 = -1;
-	}
-	if (fd2 >= 0)
-	{
-		close(fd2);
-		fd2 = -1;
-	}
-	if (str)
-		ft_putstr_fd(str, 2);
 }
