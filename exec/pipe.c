@@ -6,36 +6,56 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:34:09 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 15:47:16 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/24 16:45:44 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_pipe(int *pipefd, t_cmd *cmd)
+int	ft_pipe(t_cmd *cmdlst)
 {
-	t_redir	*red;
+	t_cmd	*cmd;
 
-	if (!pipefd || !cmd)
+	if (!cmdlst)
 		return ;
-	if (!cmd->redirs)
+	cmd = cmdlst;
+	while (cmd)
 	{
-		if (cmd->next)
+		if (cmd->redirs)
 		{
-			if ((dup2(pipefd[1], STDOUT_FILENO) == -1))
+			while (cmd->redirs)
 			{
-				ft_closepipe(pipefd[0], pipefd[1], "Failed to dup STDOUT");
-				return ;
+				if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd));
+					return (1) ;
+				cmd->redirs = cmd->redirs->next;
 			}
 		}
+		else if (cmd->next)
+			//regular pipe
+		cmd = cmd->next;
 	}
-	else
+	return (0);
+}
+
+static int	ft_redcmd(int type, int fd)
+{
+	if (type == REDIR_IN || type == REDIR_HERE)
 	{
-		red = cmd->redirs;
-		while (red)
+		if ((dup2(fd, STDIN_FILENO)) == -1)
 		{
-			
-			red = red->next;
+			close(fd);
+			ft_putstr_fd("Failed stdin at ft_redcmd\n", 2);
+			return (1);
 		}
 	}
+	else if (type == REDIR_OUT || type == REDIR_APPEND)
+	{
+		if ((dup2(fd, STDOUT_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd("Failed stdout at ft_redcmd\n", 2);
+			return (2);
+		}
+	}
+	return (0);
 }
