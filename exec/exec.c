@@ -6,14 +6,14 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 15:42:48 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:19:36 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 static int		init_pipe(t_pipe *pipe, t_cmd *cmds);
-static pid_t	ft_process(t_cmd *cmd, t_env *env, t_shell *shell);
+static pid_t	ft_fork(t_cmd *cmd, t_env *env, t_shell *shell);
 static void		ft_wait(t_pipe *pipe);
 
 /// @brief starts the processes and waits on them
@@ -49,8 +49,6 @@ static int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 	int		here_counter;
 	t_cmd	*node;
 
-	pipe->fd_in = -1;
-	pipe->fd_out = -1;
 	pipe->pid_count = 0;
 	node_counter = 0;
 	node = cmds;
@@ -75,28 +73,17 @@ static int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 /// @param env the environment
 /// @param shell the main struct
 /// @return the pid of the child process	
-static pid_t	ft_process(t_cmd *cmd, t_env *env, t_shell *shell)
+static pid_t	ft_fork(t_cmd *cmd, t_env *env, t_shell *shell)
 {
 	pid_t	pid;
-	int		pipefd[2];
 
-	if (pipe(pipefd) == -1)
-		perror("Failed to pipe in ft_process");
 	pid = fork();
-	if (pid == -1)
-		ft_closepipe(pipefd[0], pipefd[1], "Failed to fork in ft_process");
-	else if (pid == 0)
+	if (pid == 0)
 	{
-		if((dup2(pipefd[1], STDOUT_FILENO)) == -1)
-			perror("dup2 failed in child process");
-		ft_closepipe(pipefd[0], pipefd[1], NULL);
-		ft_execute(cmd, env, pipefd);
-	}
-	else
-	{
-		if ((dup2(pipefd[0], STDIN_FILENO)) == -1)
-			perror("dup2 failed in parent process");
-		ft_closepipe(pipefd[0], pipefd[1], NULL);
+		if (ft_pipe(cmd))
+			ft_clean_shell(shell, "Failed at child\n");
+		else
+			ft_execve(cmd, env, shell);
 	}
 	return (pid);
 }

@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 16:07:38 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/24 17:53:12 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void			ft_printcmd(t_shell *shell);
 
 void			ft_exec(t_shell *shell);
 void			ft_openredirs(t_cmd *cmdlst);
+int				ft_pipe(t_cmd *cmdlst);
 
 /******************************************************************************/
 /*                                Cleaning Functions                          */

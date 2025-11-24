@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/21 16:03:41 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/24 17:57:00 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ typedef struct s_pipe
 {
 	pid_t	*pids;
 	int		pid_count;
-	int		fd_in;
-	int		fd_out;
 	char	**heredocs;
 }	t_pipe;
 
