@@ -5,70 +5,106 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 19:49:00 by adpinhei         ###   ########.fr       */
+/*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/25 11:40:35 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/// @brief passes the command to execve
-/// @param cmd the command to be executed
-/// @param env environment to be turned into char** and then passed
-/// @param shell the main struct
-void	ft_execve(t_cmd *cmd, t_env *env, t_shell *shell)
+static char	*ft_path(char *cmd, char **envp);
+static void	ft_free(char **str);
+static char	*ft_str2join(char *path, char *str1, char *str2);
+
+/// @brief calls execve
+/// @param cmd the arguments contained in t_cmd->args
+/// @param envp the environment parsed into char**
+void	ft_execve(char **cmd, char **envp)
 {
-	if (!cmd || !shell)
+	char	*path;
+
+	if (!cmd || !*cmd || !envp || !*envp)
 		return ;
-	/*turn env into a char**
-	  find the path
-	  pass it to execve
-	  clean if execve returns*/
+	path = ft_path(cmd[0], envp);
+	if (!path)
+	{
+		ft_putstr_fd("Failed at ft_execve\n", 2);
+		return ;
+	}
+	execve(path, cmd, envp);
+	free(path);
+	path = NULL;
 }
 
-/// @brief turns t_env *env into char **envstr
-/// @return the char** that holds the environment
-static char	**ft_envstr(t_env *lst)
+/// @brief finds the path to the command
+/// @return a str containing the actual path for execve to execute or NULL
+static char	*ft_path(char *cmd, char **envp)
 {
-	char	**envstr;
-	t_env	*env;
+	char	**path;
+	char	*path_cmd;
 	int		i;
 
-	if (!lst)
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
+		i++;
+	if (envp[i] == NULL)
+		return (ft_putstr_fd("PATH not found\n", 2), NULL);
+	path = ft_split(envp[i] + 5, ':');
+	if (!path)
 		return (NULL);
 	i = 0;
-	env = lst;
-	while (env)
+	while (path[i++])
 	{
-		i++;
-		env = env->next;
+		path_cmd = ft_str2join(path[i], "/", cmd);
+		if (!path_cmd)
+			return (ft_free(path), NULL);
+		if (access(path_cmd, F_OK | X_OK) == 0)
+			return (ft_free(path), path_cmd);
+		free(path_cmd);
 	}
-	envstr = malloc(sizeof(char *) * (i + 1));
-	if (!envstr)
-		return (NULL);
-	envstr[i] = NULL;
-	i = 0;
-	env = lst;
-	while (envstr[i])
-	{
-		envstr[i] = get_env_name(env);
-		if (!envstr[i])
-		{
-			//clear envstr and return NULL
-		}
-		i++;
-		env = env->next;
-	}
-	return (envstr);
+	ft_free(path);
+	return (NULL);
 }
 
-static char	*get_env_name(t_env *env)
+/// @brief helper function to free a char**
+/// @param str 
+static void	ft_free(char **str)
 {
-	char	*res;
+	int	i;
 
-	if (!env)
+	i = 0;
+	if (!str || !*str)
+		return ;
+	while (str[i])
+	{
+		free(str[i]);
+		str[i] = NULL;
+		i++;
+	}
+	free(str);
+	str = NULL;
+}
+
+/// @brief calls ft_strjoin twice, concatenating three strings
+/// @return the triple concatenated str or NULL
+static char	*ft_str2join(char *path, char *str1, char *str2)
+{
+	char	*temp;
+	char	*dest;
+
+	if (!path || !str1 || !str2)
 		return (NULL);
-	res = /*strdup of env->name*/
-	/*concatenate '='
-	  concatenate env->value*/
+	temp = ft_strjoin(path, str1);
+	if (!temp)
+		return (NULL);
+	dest = ft_strjoin(temp, str2);
+	if (!dest)
+	{
+		free(temp);
+		temp = NULL;
+		return (NULL);
+	}
+	free(temp);
+	temp = NULL;
+	return (dest);
 }

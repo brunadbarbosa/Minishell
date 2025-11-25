@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:34:09 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 18:02:24 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/25 11:42:09 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_pipe(t_cmd *cmdlst)
 	t_cmd	*cmd;
 
 	if (!cmdlst)
-		return ;
+		return (1);
 	cmd = cmdlst;
 	if (cmd)
 	{
@@ -31,14 +31,14 @@ int	ft_pipe(t_cmd *cmdlst)
 		{
 			while (cmd->redirs)
 			{
-				if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd));
-					return (1) ;
+				if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
+					return (2) ;
 				cmd->redirs = cmd->redirs->next;
 			}
 		}
 		else
-			if (ft_regpipe(cmd, &cmdlst));
-				return (2);
+			if (ft_regpipe(cmd, &cmdlst))
+				return (3);
 	}
 	return (0);
 }
@@ -57,6 +57,7 @@ static int	ft_redcmd(int type, int fd)
 			ft_putstr_fd("Failed stdin at ft_redcmd\n", 2);
 			return (1);
 		}
+		close(fd);
 	}
 	else if (type == REDIR_OUT || type == REDIR_APPEND)
 	{
@@ -66,6 +67,7 @@ static int	ft_redcmd(int type, int fd)
 			ft_putstr_fd("Failed stdout at ft_redcmd\n", 2);
 			return (2);
 		}
+		close(fd);
 	}
 	return (0);
 }
@@ -81,7 +83,7 @@ static int	ft_regpipe(t_cmd *node, t_cmd **head)
 	int		pipefd[2];
 
 	if (!node || !head || !*head)
-		return ;
+		return (4);
 	if (pipe(pipefd) == -1)
 		return (perror("regpipe err1"), 1);
 	cmd = node;
@@ -95,6 +97,7 @@ static int	ft_regpipe(t_cmd *node, t_cmd **head)
 	{
 		if ((dup2(pipefd[1], STDOUT_FILENO)) == -1)
 			return (ft_closepipe(pipefd[0], pipefd[1], "regpipe err3\n"), 3);
+		close(pipefd[1]);
 	}
 	return (0);
 }

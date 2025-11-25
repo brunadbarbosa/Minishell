@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   startproc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 18:19:36 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:04:44 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static pid_t	ft_fork(t_cmd *cmd, t_env *env, t_shell *shell);
 static void		ft_wait(t_pipe *pipe);
 
 /// @brief starts the processes and waits on them
-void	ft_exec(t_shell *shell)
+void	ft_startproc(t_shell *shell)
 {
 	t_pipe	pipe;
 	t_cmd	*cmd;
@@ -32,7 +32,7 @@ void	ft_exec(t_shell *shell)
 	}
 	while(cmd)
 	{
-		pipe.pids[pipe.pid_count] = ft_process(cmd, shell->env, shell);
+		pipe.pids[pipe.pid_count] = ft_fork(cmd, shell->env, shell);
 		pipe.pid_count++;
 		cmd = cmd->next;
 	}
@@ -48,23 +48,28 @@ static int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 	int		node_counter;
 	int		here_counter;
 	t_cmd	*node;
+	int		i;
 
 	pipe->pid_count = 0;
 	node_counter = 0;
+	here_counter = 0;
 	node = cmds;
 	while (node)
 	{
-		node = node->next;
 		node_counter++;
 		if (node->redirs && node->redirs->type == REDIR_HERE)
 			here_counter++;
+		node = node->next;
 	}
-	pipe->pids = malloc(sizeof(pid_t) * (node_counter - 1));
+	pipe->pids = malloc(sizeof(pid_t) * node_counter);
 	if (!pipe->pids)
 		return (1);
-	pipe->heredocs = malloc(sizeof(char *) * here_counter + 1);
+	pipe->heredocs = malloc(sizeof(char *) * (here_counter + 1));
 	if (!pipe->heredocs)
 		return (free(pipe->pids), 2);
+	i = 0;
+	while (i <= here_counter)
+		pipe->heredocs[i++] = NULL;
 	return (0);
 }
 
@@ -83,7 +88,7 @@ static pid_t	ft_fork(t_cmd *cmd, t_env *env, t_shell *shell)
 		if (ft_pipe(cmd))
 			ft_clean_shell(shell, "Failed at child\n");
 		else
-			ft_execve(cmd, env, shell);
+			ft_execute(cmd, env, shell);
 	}
 	return (pid);
 }
@@ -105,6 +110,7 @@ static void	ft_wait(t_pipe *pipe)
 		i = 0;
 		while (pipe->heredocs[i])
 		{
+			unlink(pipe->heredocs[i]);
 			free(pipe->heredocs[i]); //build loop/function to unlink heredocs
 			i++;
 		}
