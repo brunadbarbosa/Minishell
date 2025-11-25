@@ -1,1 +1,3 @@
+Pipes must be created in the parent process.
+
 Built-ins that use env can only be the 1st command

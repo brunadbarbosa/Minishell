@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/25 12:04:44 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:13:21 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	ft_wait(t_pipe *pipe)
 		while (pipe->heredocs[i])
 		{
 			unlink(pipe->heredocs[i]);
-			free(pipe->heredocs[i]); //build loop/function to unlink heredocs
+			free(pipe->heredocs[i]);
 			i++;
 		}
 		free(pipe->heredocs);

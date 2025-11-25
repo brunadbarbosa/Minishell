@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/25 11:56:13 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:13:07 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static char	**ft_envstr(t_env *lst);
 static char	*get_envp(t_env *env);
-//static char	*ft_mkarg(char **args);
 static int	ft_envsize(t_env *lst);
 
 /// @brief passes the command to execve
@@ -24,22 +23,14 @@ static int	ft_envsize(t_env *lst);
 void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 {
 	char	**envp;
-	//char	*arg;
 
 	if (!cmd || !shell)
 		return ;
 	envp = ft_envstr(env);
 	if (!envp)
 		return ;
-	// arg = ft_mkarg(cmd->args);
-	// if (!arg)
-	// {
-	// 	ft_free_args(envp);
-	// 	return ;
-	// }
 	ft_execve(cmd->args, envp);
 	ft_free_args(envp);
-	//free(arg);
 }
 
 /// @brief turns t_env *env into char **envstr
@@ -95,34 +86,6 @@ static char	*get_envp(t_env *env)
 	return (res);
 }
 
-// static char	*ft_mkarg(char **args)
-// {
-// 	char	*str;
-// 	char	*tmp;
-// 	int		i;
-
-// 	if (!args || !*args)
-// 		return (NULL);
-// 	i = 0;
-// 	str = ft_strdup(args[i]);
-// 	if (!str)
-// 		return (NULL);
-// 	i++;
-// 	while (args[i])
-// 	{
-// 		tmp = ft_strjoin(str, args[i]);
-// 		if (!tmp)
-// 		{
-// 			free(str);
-// 			return (NULL);
-// 		}
-// 		free(str);
-// 		str = tmp;
-// 		tmp = NULL;
-// 		i++;
-// 	}
-// 	return (str);
-// }
 
 static int	ft_envsize(t_env *lst)
 {
