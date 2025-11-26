@@ -1,6 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/24 13:32:22 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+char	*copy_from_env(char **args, t_shell **shell)
+{
+	
+}
+
+char	*get_current_path(void)
+{
+	char	*cwd;
+	int	size;
+
+	size = 1024;
+	cwd = malloc(size);
+	if (!cwd)
+	{
+		perror("cd");
+		return (1);
+	}
+	getcwd(cwd, size);
+	return (cwd);
+}
+
+void	ft_cd(char **args, t_shell **shell)
+{
+	char	*old_pwd;
+	char	*pwd;
+	char	*target_pwd;
+	int		result;
+	
+	if (!args)
+		return (1);
+	old_pwd = get_current_path();
+	pwd = copy_from_env(args, shell);
+	result = chdir(target_pwd);
+	if (result == -1)
+	{
+		//error message
+		//free o que for necessario
+		return (1);
+	}
+}/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
@@ -249,7 +302,7 @@ void	ft_export(char **args, t_env *env)
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/20 15:58:57 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:52:06 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,6 +328,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_unset(argv+2, &env);
 		ft_env(env);
 	}
+	else if (ft_strncmp(argv[1], "cd", 5) == 0)
+		ft_cd(env, argv+2);
 }
 /* ************************************************************************** */
 /*                                                                            */
@@ -284,11 +339,28 @@ int	main(int argc, char **argv, char **envp)
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:14:29 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/23 19:43:34 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+#include "libft.h"
+
+char	*get_current_path(void)
+{
+	char	*cwd;
+	int	size;
+
+	size = 1024;
+	cwd = malloc(size);
+	if (!cwd)
+	{
+		perror("cd");
+		return (1);
+	}
+	getcwd(cwd, size);
+	return (cwd);
+}
 
 /// @brief Gets PWD's content from env
 /// @param env env's list
@@ -297,11 +369,10 @@ char *getpwd(t_env *env)
 {
 	while(env)
 	{
-		if (!strncmp(env->name, "PWD", 3))
-			return (strdup(env->value));
+		if (!ft_strncmp(env->name, "PWD", 3))
+			return (ft_strdup(env->value));
 		env = env->next;
 	}
-	return (NULL);
 }
 /// @brief prints PWD
 /// @param env env's list
@@ -320,7 +391,7 @@ void	ft_pwd(t_env *env)
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/20 16:06:30 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:08:51 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -356,8 +427,6 @@ void	ft_unset(char **args, t_env **env)
 
 	i = 0;
 
-	if (!args[1])
-		return ;
 	while (args[i])
 	{
 		if (!check_args(args[i]))
