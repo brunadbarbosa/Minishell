@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/27 18:21:51 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:02:58 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,59 @@
 static int		init_pipe(t_pipe *pipe, t_cmd *cmds);
 static void		ft_wait(t_pipe *pipe);
 static int		ft_redcmd(int type, int fd);
+static int		ft_dup2close(int pipefd, int stdfd);
+static void		ft_freepipe_st(t_pipe *pipe_st);
 
 /// @brief starts the processes and waits on them
 void	ft_startproc(t_shell *shell)
 {
-	t_pipe	pipest;
+	t_pipe	pipe_st;
 	t_cmd	*cmd;
 	int		pipefd[2];
 	int		prev_read_fd;
 
 	if (!shell || !shell->cmds || !shell->env)
 		return ;
-	if(init_pipe(&pipest, shell->cmds))
+	if(init_pipe(&pipe_st, shell->cmds))
 		return (ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2));
 	cmd = shell->cmds;
 	prev_read_fd = -1;
 	while(cmd)
 	{
 		if (cmd->next && (pipe(pipefd) == -1))
-			return ;
-		pipest.pids[pipest.pid_count] = fork();
-		if (pipest.pids[pipest.pid_count] == 0)
+			return (ft_freepipe_st(&pipe_st));
+		pipe_st.pids[pipe_st.pid_count] = fork();
+		if (pipe_st.pids[pipe_st.pid_count] == 0)
 		{
 			if (prev_read_fd != -1)
 			{
-				dup2(prev_read_fd, STDIN_FILENO);
-				close(prev_read_fd);
+				if (ft_dup2close(prev_read_fd, STDIN_FILENO))
+				{
+					ft_freepipe_st(&pipe_st);
+					return ;
+				}
 			}
 			if (cmd->next)
 			{
 				close(pipefd[0]);
-				dup2(pipefd[1], STDOUT_FILENO);
-				close(pipefd[1]);
+				if (ft_dup2close(pipefd[1], STDOUT_FILENO))
+				{
+					ft_freepipe_st(&pipe_st);
+					return ;
+				}
 			}
 			while (cmd->redirs)
 			{
 				if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
+				{
+					ft_freepipe_st(&pipe_st);
 					return ;
+				}
 				cmd->redirs = cmd->redirs->next;
 			}
+			ft_freepipe_st(&pipe_st);
 			ft_execute(cmd, shell->env, shell);
+			ft_clean_shell(shell, NULL);
 			exit (1);
 		}
 		if (prev_read_fd != -1)
@@ -64,12 +77,12 @@ void	ft_startproc(t_shell *shell)
 			close(pipefd[1]);
 			prev_read_fd = pipefd[0];
 		}
-		pipest.pid_count++;
+		pipe_st.pid_count++;
 		cmd = cmd->next;
 	}
 	if (prev_read_fd != -1)
 		close(prev_read_fd);
-	ft_wait(&pipest);
+	ft_wait(&pipe_st);
 }
 
 /// @brief initializes the t_pipe struct
@@ -158,4 +171,35 @@ static int	ft_redcmd(int type, int fd)
 		close(fd);
 	}
 	return (0);
+}
+
+/// @brief calls dup2 and closes the pipe end
+/// @param pipefd the end to be duplicated and then closed
+/// @param stdfd STD_FILENO
+/// @return 0 on success, greater on error
+static int		ft_dup2close(int pipefd, int stdfd)
+{
+	int	i;
+
+	i = dup2(pipefd, stdfd);
+	if (i == -1)
+		return (1);
+	close(pipefd);
+	return (0);
+}
+
+static void		ft_freepipe_st(t_pipe *pipe_st)
+{
+	int	i;
+
+	if (!pipe_st)
+		return ;
+	free(pipe_st->pids);
+	i = 0;
+	while (pipe_st->heredocs[i])
+	{
+		free(pipe_st->heredocs[i]);
+		i++;
+	}
+	free(pipe_st->heredocs);
 }
