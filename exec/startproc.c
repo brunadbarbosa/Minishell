@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/27 19:02:58 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:56:18 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ static int		ft_dup2close(int pipefd, int stdfd);
 static void		ft_freepipe_st(t_pipe *pipe_st);
 
 /// @brief starts the processes and waits on them
+/*
+put pipefd[2] inside pipe_st. When initializing pipe_st, put the two allocations in a helper function
+maybe put prev_read_fd inside the struct as well
+
+child and parent processes can be different functions
+*/
 void	ft_startproc(t_shell *shell)
 {
 	t_pipe	pipe_st;
@@ -42,27 +48,18 @@ void	ft_startproc(t_shell *shell)
 			if (prev_read_fd != -1)
 			{
 				if (ft_dup2close(prev_read_fd, STDIN_FILENO))
-				{
-					ft_freepipe_st(&pipe_st);
-					return ;
-				}
+					return ft_freepipe_st(&pipe_st);
 			}
 			if (cmd->next)
 			{
 				close(pipefd[0]);
 				if (ft_dup2close(pipefd[1], STDOUT_FILENO))
-				{
-					ft_freepipe_st(&pipe_st);
-					return ;
-				}
+					return ft_freepipe_st(&pipe_st);
 			}
 			while (cmd->redirs)
 			{
 				if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
-				{
-					ft_freepipe_st(&pipe_st);
-					return ;
-				}
+					return ft_freepipe_st(&pipe_st);
 				cmd->redirs = cmd->redirs->next;
 			}
 			ft_freepipe_st(&pipe_st);

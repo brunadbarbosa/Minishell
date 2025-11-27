@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/25 11:43:27 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:51:02 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ bool			is_delimiter(const char *str);
 
 int				ft_openquotes(int i, int quotes);
 int				ft_buildnextcmd(t_cmd **current, t_cmd *head);
-int				ft_initcmdlist(t_token **tk, t_token *tks, t_cmd **h, t_cmd **c);
+int				ft_initcmdlist(t_token **tk, t_token *tks, t_cmd **h,\
+				t_cmd **c);
 
 t_redir_type	redirtype(t_token_type type);
 

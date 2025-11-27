@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/21 19:18:41 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:53:21 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	ft_add_token(t_token **lst, t_token *new);
 static void	ft_rmempty(t_token **tokens);
 static int	ft_isemptytoken(t_token *token);
 static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev);
-
 
 /// @brief tokenizes the input
 /// @param input line from the user
@@ -65,11 +64,12 @@ static void	ft_add_token(t_token **lst, t_token *new)
 		current = current->next;
 	current->next = new;
 }
+
 /// @brief removes tokens with empty value
 static void	ft_rmempty(t_token **tokens)
 {
-	t_token *curr;
-	t_token *prev;
+	t_token	*curr;
+	t_token	*prev;
 
 	if (!tokens || !*tokens)
 		return ;
@@ -86,6 +86,7 @@ static void	ft_rmempty(t_token **tokens)
 		}
 	}
 }
+
 static int	ft_isemptytoken(t_token *token)
 {
 	int	i;

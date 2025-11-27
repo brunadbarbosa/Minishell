@@ -1,3 +1,7 @@
-Pipes must be created in the parent process.
+Must adjust execution for relative and absolute paths. Must be able to execute minishell within minishell
+
+1 path absoluto
+2 path relativo
+3 $PATH
 
 Built-ins that use env can only be the 1st command

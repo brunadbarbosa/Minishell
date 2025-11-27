@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/25 12:13:07 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:51:59 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ static char	*get_envp(t_env *env)
 	tmp = NULL;
 	return (res);
 }
-
 
 static int	ft_envsize(t_env *lst)
 {
