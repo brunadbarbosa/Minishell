@@ -6,37 +6,70 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/25 12:13:21 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/27 18:21:51 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 static int		init_pipe(t_pipe *pipe, t_cmd *cmds);
-static pid_t	ft_fork(t_cmd *cmd, t_env *env, t_shell *shell);
 static void		ft_wait(t_pipe *pipe);
+static int		ft_redcmd(int type, int fd);
 
 /// @brief starts the processes and waits on them
 void	ft_startproc(t_shell *shell)
 {
-	t_pipe	pipe;
+	t_pipe	pipest;
 	t_cmd	*cmd;
+	int		pipefd[2];
+	int		prev_read_fd;
 
 	if (!shell || !shell->cmds || !shell->env)
 		return ;
+	if(init_pipe(&pipest, shell->cmds))
+		return (ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2));
 	cmd = shell->cmds;
-	if(init_pipe(&pipe, shell->cmds))
-	{
-		ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2);
-		return ;
-	}
+	prev_read_fd = -1;
 	while(cmd)
 	{
-		pipe.pids[pipe.pid_count] = ft_fork(cmd, shell->env, shell);
-		pipe.pid_count++;
+		if (cmd->next && (pipe(pipefd) == -1))
+			return ;
+		pipest.pids[pipest.pid_count] = fork();
+		if (pipest.pids[pipest.pid_count] == 0)
+		{
+			if (prev_read_fd != -1)
+			{
+				dup2(prev_read_fd, STDIN_FILENO);
+				close(prev_read_fd);
+			}
+			if (cmd->next)
+			{
+				close(pipefd[0]);
+				dup2(pipefd[1], STDOUT_FILENO);
+				close(pipefd[1]);
+			}
+			while (cmd->redirs)
+			{
+				if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
+					return ;
+				cmd->redirs = cmd->redirs->next;
+			}
+			ft_execute(cmd, shell->env, shell);
+			exit (1);
+		}
+		if (prev_read_fd != -1)
+			close(prev_read_fd);
+		if (cmd->next)
+		{
+			close(pipefd[1]);
+			prev_read_fd = pipefd[0];
+		}
+		pipest.pid_count++;
 		cmd = cmd->next;
 	}
-	ft_wait(&pipe);
+	if (prev_read_fd != -1)
+		close(prev_read_fd);
+	ft_wait(&pipest);
 }
 
 /// @brief initializes the t_pipe struct
@@ -73,26 +106,6 @@ static int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 	return (0);
 }
 
-/// @brief forks processes
-/// @param cmd the list of commands
-/// @param env the environment
-/// @param shell the main struct
-/// @return the pid of the child process	
-static pid_t	ft_fork(t_cmd *cmd, t_env *env, t_shell *shell)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		if (ft_pipe(cmd))
-			ft_clean_shell(shell, "Failed at child\n");
-		else
-			ft_execute(cmd, env, shell);
-	}
-	return (pid);
-}
-
 /// @brief waits on the child processes to be finished
 static void	ft_wait(t_pipe *pipe)
 {
@@ -116,4 +129,33 @@ static void	ft_wait(t_pipe *pipe)
 		}
 		free(pipe->heredocs);
 	}
+}
+
+/// @brief redirects command to its infile and outfile
+/// @param type the redirection type
+/// @param fd the file descriptor of the redirection file
+/// @return 0 on success, greater then 0 on failure
+static int	ft_redcmd(int type, int fd)
+{
+	if (type == REDIR_IN || type == REDIR_HERE)
+	{
+		if ((dup2(fd, STDIN_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd("Failed stdin at ft_redcmd\n", 2);
+			return (1);
+		}
+		close(fd);
+	}
+	else if (type == REDIR_OUT || type == REDIR_APPEND)
+	{
+		if ((dup2(fd, STDOUT_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd("Failed stdout at ft_redcmd\n", 2);
+			return (2);
+		}
+		close(fd);
+	}
+	return (0);
 }
