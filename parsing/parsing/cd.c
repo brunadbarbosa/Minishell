@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/25 17:17:11 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/28 14:22:39 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ char	*copy_from_env(char **args, t_shell *shell)
 	t_env	*tmp;
 	if (args[0] == NULL )
 	{
-		
-		printf("cheguei aqui 2\n");
 		tmp = shell->env;
 		while (tmp)
 		{
@@ -102,7 +100,6 @@ void	ft_cd(t_shell *shell)
 	args = shell->cmds->args + 1;
 	if (!args[0] || !args[0][0])
 	{
-		printf("cheguei aqui\n");
 		old_pwd = get_current_path();
 		change_dir = chdir(copy_from_env(args, shell));
 		pwd = get_current_path();

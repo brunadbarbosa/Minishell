@@ -1,0 +1,1479 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/25 17:17:11 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	change_env(char *old_pwd, char *new_pwd, t_shell *shell)
+{
+	t_env	*env;
+
+	env = shell->env;
+	
+	while (env)
+	{
+		if (ft_strncmp(env->name, "OLDPWD", 6) == 0)
+		{
+			free(env->value);
+			env->value = ft_strdup(old_pwd);
+		}
+		else if (ft_strncmp(env->name, "PWD", 3) == 0)
+		{
+			free(env->value);
+			env->value = ft_strdup(new_pwd);
+		}
+		env = env->next;
+	}
+}
+
+char	*get_bigger_buffer(char *prev, int prev_len, int new_prev_len)
+{
+	char	*new_cwd;
+	
+	new_cwd = malloc(new_prev_len);
+	if (!new_cwd)
+	{
+		free(prev);
+		return (NULL);
+	}
+	ft_memcpy(new_cwd, prev, prev_len);
+	free(prev);
+	return (new_cwd);
+}
+
+char	*copy_from_env(char **args, t_shell *shell)
+{
+	t_env	*tmp;
+	if (args[0] == NULL )
+	{
+		
+		printf("cheguei aqui 2\n");
+		tmp = shell->env;
+		while (tmp)
+		{
+			if (ft_strncmp(tmp->name, "HOME", 4) == 0)
+				return(ft_strdup(tmp->value));
+			tmp = tmp->next;
+		}
+		return (NULL);
+	}
+	return (ft_strdup(args[0]));
+}
+
+char	*get_current_path(void)
+{
+	char	*cwd;
+	int	len;
+
+	len = 1024;
+	cwd = malloc(len);
+	if (!cwd)
+		return (NULL);
+    while (getcwd(cwd, len) == NULL)
+    {
+        if (errno != ERANGE)
+        {
+            free(cwd);
+            return NULL;
+        }
+        cwd = get_bigger_buffer(cwd, len, len * 2);
+        if (!cwd)
+            return NULL;
+        len *= 2;
+    }
+	return (cwd);
+}
+
+void	ft_cd(t_shell *shell)
+{
+	char	**args;
+	char	*pwd;
+	char	*old_pwd;
+	int		change_dir;
+
+	args = shell->cmds->args + 1;
+	if (!args[0] || !args[0][0])
+	{
+		printf("cheguei aqui\n");
+		old_pwd = get_current_path();
+		change_dir = chdir(copy_from_env(args, shell));
+		pwd = get_current_path();
+		change_env(old_pwd, pwd, shell);
+		return ;
+	}
+	if (args[0] && args[1])
+	{
+		printf("minishell: cd: too many arguments.\n");
+		return ;
+	}
+	old_pwd = get_current_path();
+	change_dir = chdir(args[0]);
+	if (change_dir == -1)
+	{
+		perror("cd");
+		return ;
+	}
+	pwd = get_current_path();
+	change_env(old_pwd, pwd, shell);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/25 12:51:47 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+/// @brief check my option -n
+/// @param args check if argument is a -n
+/// @return positive if it is -n
+static int	ft_checkflag(char *args)
+{
+	int	i;
+
+	i = 0;
+	if (!args || args[0] != '-')
+		return (0);
+	i++;
+	while(args[i])
+	{
+		if (args[i] == 'n')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+/// @brief will print what was writen on the terminal
+/// @param args the arguments from terminal
+void	ft_echo(char **args)
+{
+	int	i;
+	int	sign;
+
+	i = 0;
+	sign = 0;
+	if (!args[i])
+	{
+		printf("\n");
+		return ;		
+	}
+	if (ft_checkflag(args[i]))
+	{
+		i++;
+		sign = 1;		
+	}
+	while (args[i])
+	{
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf(" ");
+		i++;
+	}
+	if (sign == 0)
+		printf("\n");
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/08 17:59:27 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/24 14:44:41 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+ 
+/// @brief Will print all env's list
+/// @param env to be printed
+void	ft_env(t_env *env)
+{
+	while (env)
+	{
+		if (env->value && env->value[0])
+		{
+			printf("%s=", env->name);
+			printf("%s", env->value);	
+			printf("\n");
+		}
+			env = env->next;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 19:07:07 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/26 17:29:26 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+// #include "../includes/minishell.h"
+
+// void	ft_exit(t_shell *shell, char *input)
+// {
+// 	size_t	len;
+
+// 	len = ft_strlen(input);
+// 	if (len == 0)
+// 		return ;
+// 	if (!ft_strncmp(input, "exit", 5))
+// 	{
+// 		free(input);
+// 		ft_clean_shell(shell, NULL);
+// 		exit(EXIT_SUCCESS);
+// 	}
+// }
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_tk.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 14:19:29 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/18 20:38:28 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void static	ft_replace(char **str, t_env *env);
+void static	ft_removequotes(char **str, char *set);
+
+/// @brief expands the tokens when necessary
+/// @param lst token list
+/// @param env environment
+void	ft_expand(t_token **lst, t_env *env)
+{
+	t_token	*current;
+	t_env	*var;
+
+	if (!lst || !env)
+		return ;
+	current = *lst;
+	var = env;
+	while (current)
+	{
+		if (current->type == TOKEN_WORD)
+		{
+			if (current->value[0] == '\'')
+				ft_removequotes(&current->value, "\'");
+			else if (current->value[0] == '\"')
+			{
+				ft_removequotes(&current->value, "\"");
+				ft_replace(&current->value, var);
+			}
+			else if (current->value[0] == '$' && current->value[1] != '?')
+				ft_replace(&current->value, var);
+		}
+		current = current->next;
+	}
+}
+
+/// @brief replaces the str with the expanded value
+void static	ft_replace(char **str, t_env *env)
+{
+	t_env	*current;
+	int		len;
+	char	*clean_name;
+
+	if (!str || !env || *str[0] != '$')
+		return ;
+	current = env;
+	clean_name = ft_strtrim(*str, "$");
+	if (!clean_name)
+		return ;
+	while (current)
+	{
+		len = ft_strlen(current->name);
+		if (!ft_strncmp(clean_name, current->name, len))
+		{
+			free(*str);
+			*str = ft_strdup(current->value);
+			free(clean_name);
+			return ;
+		}
+		current = current->next;
+	}
+}
+
+void static	ft_removequotes(char **str, char *set)
+{
+	char	*trimmed;
+
+	if (!*str || !set)
+		return ;
+	trimmed = ft_strtrim(*str, set);
+	free(*str);
+	*str = trimmed;
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 15:26:29 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/26 17:38:41 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	ft_env(t_env *env);
+
+/// @brief this function will create a new node
+/// @param env_str the argument that I'll use to fill env node
+/// @return new node
+t_env	*create_env_node(const char *env_str)
+{
+	t_env	*node;
+	char	*equal;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+
+	equal = strchr(env_str, '=');
+
+	if (equal)
+	{
+		node->name = strndup(env_str, equal - env_str);
+		node->value = strdup(equal + 1);
+	}
+	else
+	{
+		node->name = strdup(env_str);
+		node->value = strdup("");
+	}
+	node->next = NULL;
+	return (node);
+}
+
+/// @brief creating the env list
+/// @param envp to be copied
+/// @return the list
+t_env	*init_env_list(char **envp)
+{
+	t_env	*head = NULL;
+	t_env	*tail = NULL;
+	t_env	*new_node;
+	int		i = 0;
+
+	while (envp[i])
+	{
+		new_node = create_env_node(envp[i]);
+		if (!new_node)
+			return (NULL);
+		if (!head)
+			head = new_node;
+		else
+			tail->next = new_node;
+		tail = new_node;
+		i++;
+	}
+	return (head);
+}
+
+int	check_args(char *args)
+{
+	int	i;
+	
+	i = 0;
+	while (args[i])
+	{
+		if ((args[i] >= 'a' && args[i] <= 'z') || (args[i] >= 'A' && args[i] <= 'Z') || args[i] == '_')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+/// @brief find the last node of the list
+/// @param lst env's list
+/// @return the address of the last list's node
+static t_env	*ft_envlast(t_env *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+/// @brief adding the variable created by export to the end of env's list
+/// @param lst env's list
+/// @param  new the new node
+static void	ft_envadd_back(t_env *lst, t_env *new)
+{
+	t_env	*last;
+
+	if (!lst || !new)
+		return ;
+	if (lst == NULL)
+		lst = new;
+	else
+	{
+		last = ft_envlast(lst);
+		last->next = new;
+	}
+}
+/// @brief replicating export's behaviours
+/// @param args the arguments received from terminal
+/// @param env env's list
+void	ft_export(char **args, t_shell *shell)
+{
+	int	i;
+	t_env	*new;
+	t_env	*env;
+
+	i = 0;
+	env = shell->env;	
+	if (!args || !args[1])
+	{
+		while (env)
+		{
+			printf("declare -x ");
+			printf("%s", env->name);
+			if (env->value && env->value[0])
+				printf("=");
+			printf("%s", env->value);	
+			printf("\n");
+			env = env->next;
+		}
+		return ;
+	}
+	while (args[i])
+	{
+		printf("entrei aqui!");
+		if (!check_args(args[i]))
+		{
+			printf("export: '%s': not a valid identifier\n", *args);
+			return ;
+		}
+		new = create_env_node(args[i]);
+		ft_envadd_back(env, new);
+		i++;
+	}
+	if (args[2])
+	{
+		ft_export(NULL, shell);
+		ft_env(env);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input_checker.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/04 15:20:13 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/15 17:08:01 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+bool	ft_isspace(const char c)
+{
+	return ((c > 8 && c < 14) || c == 32);
+}
+
+bool	is_operator(const char *str)
+{
+	if (!str)
+		return (false);
+	else if (ft_strncmp(str, "<<", 2) == 0)
+		return (true);
+	else if (ft_strncmp(str, ">>", 2) == 0)
+		return (true);
+	else if (*str == '>' || *str == '<' || *str == '|' || *str == ' ')
+		return (true);
+	else
+		return (false);
+}
+
+bool	is_quote(const char str)
+{
+	if (!str)
+		return (false);
+	else if (str == '"' || str == '\'')
+		return (true);
+	else
+		return (false);
+}
+
+bool	is_delimiter(const char *str)
+{
+	if (!str)
+		return (false);
+	else if (is_operator(str) || ft_isspace(*str))
+		return (true);
+	else
+		return (false);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   is_builtin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/26 17:36:53 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	ft_env(t_env *env);
+void	ft_echo(char **args);
+void	ft_export(char **args, t_shell *shell);
+void	ft_pwd(t_env *env);
+void	ft_unset(char **args, t_env **env);
+void	ft_cd(t_shell *shell);
+void	my_exit(char **args, char *cmd, t_shell *shell);
+
+void	check_is_builtin(t_shell *shell)
+{
+
+	char **args = shell->cmds->args + 1;
+	
+	t_env	*env;
+	char	*cmd;
+	
+	env = shell->env;
+	cmd = shell->cmds->cmd;
+	if (ft_strncmp(cmd, "pwd", 3) == 0)
+		ft_pwd(env);
+	else if (ft_strncmp(cmd, "echo", 4) == 0)
+		ft_echo(args);
+	else if (ft_strncmp(cmd, "env", 3) == 0)
+		ft_env(env);		
+	else if (ft_strncmp(cmd, "export", 6) == 0)
+		ft_export(args, shell);
+	else if (ft_strncmp(cmd, "unset", 5) == 0)
+	{
+		ft_unset(args, &env);
+		ft_env(env);
+	}
+	 else if (ft_strncmp(cmd, "cd", 2) == 0)
+	 	ft_cd(shell);
+	else if (ft_strncmp(cmd, "exit", 4) == 0)
+		my_exit(args, cmd, shell);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/21 19:18:41 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static void	ft_add_token(t_token **lst, t_token *new);
+static void	ft_rmempty(t_token **tokens);
+static int	ft_isemptytoken(t_token *token);
+static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev);
+
+
+/// @brief tokenizes the input
+/// @param input line from the user
+void	ft_lexer(t_shell *shell, char *input)
+{
+	t_token	*token_node;
+	ssize_t	size;
+	int		i;
+
+	if (!input)
+		return ;
+	i = 0;
+	while (input[i])
+	{
+		while (ft_isspace(input[i]))
+			i++;
+		size = ft_tokensize(&input[i]);
+		if (size == -1)
+			return (ft_putstr_fd("Unclosed quotes\n", 2));
+		token_node = ft_new_token(&input[i], size);
+		if (!token_node)
+			return (ft_clean_shell(shell, "Failed to allocate token\n"));
+		ft_add_token(&shell->tokens, token_node);
+		i += size;
+	}
+	ft_expand(&shell->tokens, shell->env);
+	ft_rmempty(&shell->tokens);
+}
+
+/// @brief adds newly generated token nodes to the token list
+/// @param lst the head of the token list
+/// @param new the new token to be added to the list
+static void	ft_add_token(t_token **lst, t_token *new)
+{
+	t_token	*current;
+
+	if (!new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	current = *lst;
+	while (current->next)
+		current = current->next;
+	current->next = new;
+}
+/// @brief removes tokens with empty value
+static void	ft_rmempty(t_token **tokens)
+{
+	t_token *curr;
+	t_token *prev;
+
+	if (!tokens || !*tokens)
+		return ;
+	curr = *tokens;
+	prev = NULL;
+	while (curr)
+	{
+		if (ft_isemptytoken(curr))
+			ft_removenode(tokens, &curr, prev);
+		else
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+}
+static int	ft_isemptytoken(t_token *token)
+{
+	int	i;
+
+	i = 0;
+	while (token->value[i] && ft_isspace(token->value[i]))
+		i++;
+	return (token->value[i] == '\0');
+}
+
+static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev)
+{
+	t_token	*next;
+
+	next = (*curr)->next;
+	if (prev == NULL)
+		*tokens = next;
+	else
+		prev->next = next;
+	free((*curr)->value);
+	free(*curr);
+	*curr = next;
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   loop.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/26 17:40:05 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	check_is_builtin(t_shell *shell);
+
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	shell;
+
+	(void)argc;
+	(void)argv;
+	ft_init_shell(&shell, envp);
+//	print_env(&shell);
+	loop(&shell);
+	ft_clean_shell(&shell, NULL);
+	return (shell.exit_status);
+}
+
+void	loop(t_shell *shell)
+{
+	char	*input;
+
+	if (!shell)
+		return ;
+	while (true)
+	{
+		input = readline("minishell> ");
+		// ft_exit(shell, input);
+		add_history(input);
+		ft_lexer(shell, input);
+		ft_syntax(shell);
+		//ft_printlst(shell);
+		ft_parser(shell);
+		check_is_builtin(shell);
+//		ft_printcmd(shell);
+		free(input);
+		ft_clean_tokens(&shell->tokens, NULL);
+//		ft_exec(shell);
+		ft_clean_cmd_lst(&shell->cmds, NULL);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/25 17:19:03 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/26 17:22:05 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+int	is_int(char *args)
+{
+	int	i;
+
+	i = 0;
+	if (!args || !args[0])
+		return (0);
+	if (args[i] == '+' || args[i] == '-')
+		i++;
+	while (args[i])
+	{
+		if (args[i] < '0' || args[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	my_exit(char **args, char *cmd, t_shell *shell)
+{
+	if (ft_strncmp(cmd, "exit", 4) == 0)
+	{
+		printf("exit\n");
+		if (!args[0])
+		{
+			shell->exit_status = 0;
+			exit(shell->exit_status);
+		}
+		else if (!is_int(args[0]))
+		{
+			printf("exit: %s: numeric argument required.\n", args[0]);
+			shell->exit_status = 255;
+			exit(shell->exit_status);
+		}
+		else if (args[1])
+		{
+			printf("minishel: exit: too many arguments.\n");
+			shell->exit_status = 1;
+			return ;
+		}
+		shell->exit_status = ft_atoi(args[0]) % 256;
+		exit(shell->exit_status);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 16:26:33 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/24 14:54:01 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static t_cmd	*build_cmd_list(t_token *tokens);
+static void		buildredir(t_cmd *cmd, t_token *tk);
+static void		buildcmd(t_cmd *cmd, t_token *tk);
+static char		**buildargs(char **args, char *str);
+
+/// @brief generates the command list from the token list
+void	ft_parser(t_shell *shell)
+{
+	if (!shell || !shell->tokens)
+		return ;
+	shell->cmds = build_cmd_list(shell->tokens);
+}
+
+static t_cmd	*build_cmd_list(t_token *tokens)
+{
+	t_token	*tk;
+	t_cmd	*head;
+	t_cmd	*current;
+
+	if (ft_initcmdlist(&tk, tokens, &head, &current))
+		return (NULL);
+	while (tk)
+	{
+		if (tk->type > 1 && tk->type < 6)
+		{
+			buildredir(current, tk);
+			tk = tk->next;
+		}
+		else if (tk->type == TOKEN_WORD)
+			buildcmd(current, tk);
+		else if (tk->type == TOKEN_PIPE)
+		{
+			if (ft_buildnextcmd(&current, head))
+				return (NULL);
+		}
+		if (!tk->next)
+			break ;
+		tk = tk->next;
+	}
+	return (head);
+}
+
+static void	buildredir(t_cmd *cmd, t_token *tk)
+{
+	t_redir	*redir;
+	t_redir	*tmp;
+
+	if (!cmd || !tk || !tk->next)
+		return ;
+	redir = malloc(sizeof(t_redir));
+	if (!redir)
+		return ;
+	ft_initredir(redir, tk);
+	if (!redir->file)
+	{
+		free(redir);
+		return ;
+	}
+	if (!cmd->redirs)
+		cmd->redirs = redir;
+	else
+	{
+		tmp = cmd->redirs;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = redir;
+	}
+}
+
+static void	buildcmd(t_cmd *cmd, t_token *tk)
+{
+	if (!cmd || !tk)
+		return ;
+	if (!cmd->cmd)
+	{
+		cmd->cmd = ft_strdup(tk->value);
+		cmd->args = malloc(sizeof(char *) * 2);
+		if (!cmd->args)
+			return ;
+		cmd->args[0] = ft_strdup(tk->value);
+		cmd->args[1] = NULL;
+	}
+	else
+		cmd->args = buildargs(cmd->args, tk->value);
+}
+
+static char	**buildargs(char **args, char *str)
+{
+	char	**new_args;
+	int		i;
+
+	i = 0;
+	while (args[i])
+		i++;
+	new_args = malloc(sizeof(char *) * (i + 2));
+	if (!new_args)
+		return (args);
+	i = 0;
+	while (args[i])
+	{
+		new_args[i] = args[i];
+		i++;
+	}
+	new_args[i] = ft_strdup(str);
+	new_args[i + 1] = NULL;
+	free(args);
+	return (new_args);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 18:42:08 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/20 16:47:45 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+t_redir_type	redirtype(t_token_type type)
+{
+	if (type == TOKEN_APPEND)
+		return (REDIR_APPEND);
+	if (type == TOKEN_HEREDOC)
+		return (REDIR_HERE);
+	if (type == TOKEN_RED_IN)
+		return (REDIR_IN);
+	if (type == TOKEN_RED_OUT)
+		return (REDIR_OUT);
+	else
+		return (-1);
+}
+
+void	ft_initredir(t_redir *redir, t_token *tk)
+{
+	if (!redir || !tk)
+		return ;
+	redir->file = ft_strdup(tk->next->value);
+	redir->fd = -1;
+	redir->type = redirtype(tk->type);
+	redir->next = NULL;
+}
+
+int	ft_buildnextcmd(t_cmd **current, t_cmd *head)
+{
+	(*current)->next = ft_calloc(1, sizeof(t_cmd));
+	if (!(*current)->next)
+	{
+		ft_clean_cmd_lst(&head, "Unable to allocate t_cmd\n");
+		return (1);
+	}
+	(*current) = (*current)->next;
+	return (0);
+}
+
+int	ft_initcmdlist(t_token **tk, t_token *tks, t_cmd **h, t_cmd **c)
+{
+	*h = ft_calloc(1, sizeof(t_cmd));
+	if (!*h)
+		return (1);
+	*c = *h;
+	*tk = tks;
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/25 17:00:38 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+/// @brief Gets PWD's content from env
+/// @param env env's list
+/// @return PWD's content
+char *getpwd(t_env *env)
+{
+	while(env)
+	{
+		if (!ft_strncmp(env->name, "PWD", 3))
+			return (ft_strdup(env->value));
+		env = env->next;
+	}
+	return (NULL);
+}
+/// @brief prints PWD
+/// @param env env's list
+void	ft_pwd(t_env *env)
+{
+	char	*dir;
+	
+	dir = getpwd(env);
+	printf("%s\n", dir);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell_init.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 19:07:18 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/20 16:51:05 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static t_env	*ft_env(char **envp);
+static t_env	*new_env_node(char *entry);
+static void		env_add_back(t_env **env, t_env *new);
+static void		ft_shlvl(t_env *env);
+
+/// @brief initialize the super struct t_shell
+/// @param shell the super struct
+/// @param envp the pointer to the environment variables
+void	ft_init_shell(t_shell *shell, char **envp)
+{
+	if (!shell)
+		return ;
+	if (!envp)
+	{
+		ft_putstr_fd("No environment\n", 2);
+		return ;
+	}
+	shell->std_in = STDIN_FILENO;
+	shell->std_out = STDOUT_FILENO;
+	shell->cmds = NULL;
+	shell->tokens = NULL;
+	shell->exit_status = 0;
+	shell->env = ft_env(envp);
+	ft_shlvl(shell->env);
+}
+
+static t_env	*ft_env(char **envp)
+{
+	t_env	*env;
+	t_env	*node;
+	int		i;
+
+	if (!envp || !envp[0])
+		return (NULL);
+	env = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		node = new_env_node(envp[i]);
+		if (!node)
+			return (NULL);
+		env_add_back(&env, node);
+		i++;
+	}
+	return (env);
+}
+
+static t_env	*new_env_node(char *entry)
+{
+	t_env	*node;
+	int		j;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	j = 0;
+	while (entry[j] && entry[j] != '=')
+		j++;
+	node->name = malloc(sizeof(char) * (j + 1));
+	if (!node->name)
+		return (NULL);
+	ft_strlcpy(node->name, entry, j + 1);
+	if (entry[j] == '=')
+		node->value = ft_strdup(entry + j + 1);
+	else
+		node->value = ft_strdup("");
+	if (!node->value)
+		return (NULL);
+	node->next = NULL;
+	return (node);
+}
+
+static void	env_add_back(t_env **env, t_env *new)
+{
+	t_env	*temp;
+
+	if (!*env)
+	{
+		*env = new;
+		return ;
+	}
+	temp = *env;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
+}
+
+static void	ft_shlvl(t_env *env)
+{
+	t_env	*current;
+	int		tmp;
+
+	if (!env)
+		return ;
+	current = env;
+	while (current)
+	{
+		if (!ft_strncmp(current->name, "SHLVL", 5))
+		{
+			tmp = ft_atoi(current->value);
+			free(current->value);
+			current->value = ft_itoa(tmp + 1);
+			return ;
+		}
+		current = current->next;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 20:40:24 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/20 17:21:08 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	ft_syntax(t_shell *shell)
+{
+	t_token	*tk;
+
+	if (!shell || !shell->tokens)
+		return ;
+	tk = shell->tokens;
+	if (tk->type != 0 && tk->type != 2 && tk->type != 5)
+	{
+		ft_clean_tokens(&shell->tokens, "Invalid syntax\n");
+		return ;
+	}
+	while (tk)
+	{
+		if (tk->type > TOKEN_WORD)
+		{
+			if (!tk->next || tk->next->type != TOKEN_WORD)
+				return (ft_clean_tokens(&shell->tokens, "Invalid syntax\n"));
+		}
+		if (!tk->next && tk->type != TOKEN_WORD)
+			return (ft_clean_tokens(&shell->tokens, "Invalid syntax\n"));
+		tk = tk->next;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 19:10:51 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/18 21:11:30 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	ft_printlst(t_shell *shell)
+{
+	int	i = 1;
+	if (!shell)
+		return ;
+	t_token *current = shell->tokens;
+	while (current)
+	{
+		ft_printf("TOKEN #%i\n [value: %s]\n [type: %i]\n***\n",i, current->value, current->type);
+		i++;
+		current = current->next;
+	}
+}
+
+void	print_env(t_shell *shell)
+{
+	if (!shell)
+	{
+		ft_printf("No shell\n");
+		return ;
+	}
+	t_env	*env = shell->env;
+	while(env->next)
+	{
+		ft_printf("[var name] %s\n", env->name);
+		ft_printf("\t[value] %s\n", env->value);
+		env = env->next;
+	}
+	ft_printf("[var name] %s\n", env->name);
+	ft_printf("\t[value] %s\n", env->value);
+}
+
+void	ft_printcmd(t_shell *shell)
+{
+	if (!shell)
+		return ;
+	t_cmd	*current = shell->cmds;
+	while (current)
+	{
+		ft_printf("[cmd name] %s\n", current->cmd);
+		if (current->args)
+		{
+			int	j = 0;
+			while (current->args[j])
+			{
+				ft_printf("\t\t[args] %s\n", current->args[j]);
+				j++;
+			}
+		}
+		if (current->redirs)
+		{
+			t_redir	*tmp = current->redirs;
+			while (tmp)
+			{
+				ft_printf("\t\t[redir type] %i\n", tmp->type);
+				ft_printf("\t\t[redir file] %s\n", tmp->file);
+				tmp = tmp->next;;
+			}
+		}
+		if (current->next)
+			ft_printf("\t\t[pipes to] %s\n", current->next->cmd);
+		ft_printf("\n\n");
+		current = current->next;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_maker.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/20 15:43:27 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+/// @brief copies from the input to a new_token node
+/// @param input the string from the user
+/// @param size the size of the token returned by ft_tokensize()
+/// @return the new token
+t_token	*ft_new_token(char *input, ssize_t size)
+{
+	t_token	*token;
+
+	if (!input || size == -1)
+		return (NULL);
+	token = ft_init_token(size);
+	if (!token)
+		return (NULL);
+	ft_strlcpy(token->value, input, (size_t)size + 1);
+	if (!token->value)
+	{
+		free(token);
+		return (NULL);
+	}
+	ft_settokentype(token);
+	return (token);
+}
+
+/// @brief determine the token type
+/// @param token the newly created token node
+void	ft_settokentype(t_token *token)
+{
+	char	*value;
+
+	if (!token)
+		return ;
+	value = token->value;
+	if (!ft_strncmp(value, "<<", 2))
+		token->type = TOKEN_HEREDOC;
+	else if (!ft_strncmp(value, ">>", 2))
+		token->type = TOKEN_APPEND;
+	else if (!ft_strncmp(value, "<", 1))
+		token->type = TOKEN_RED_IN;
+	else if (!ft_strncmp(value, ">", 1))
+		token->type = TOKEN_RED_OUT;
+	else if (!ft_strncmp(value, "|", 1))
+		token->type = TOKEN_PIPE;
+	else
+		token->type = TOKEN_WORD;
+}
+
+/// @brief initializes token nodes
+/// @param size the size of the string to be allocated as token->value
+/// @return the initialized token
+t_token	*ft_init_token(ssize_t size)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->value = malloc(sizeof(char) * (size + 1));
+	if (!token->value)
+	{
+		free(token);
+		return (NULL);
+	}
+	token->type = -1;
+	token->next = NULL;
+	return (token);
+}
+
+/// @brief finds the size of the next token
+/// @param input the current position in the input
+/// @return the size of the token, or -1 if the quotes are open
+ssize_t	ft_tokensize(char *input)
+{
+	int		i;
+	char	quotes;
+
+	if (!input)
+		return (0);
+	i = 0;
+	quotes = 0;
+	if (is_operator(&input[i]))
+		return (ft_operatorsize(&input[i]));
+	while (input[i])
+	{
+		if (is_quote(input[i]) && !quotes)
+			quotes = input[i++];
+		while (quotes && input[i])
+		{
+			if (input[i] == quotes)
+				quotes = 0;
+			i++;
+		}
+		if (!quotes && is_delimiter(&input[i]) && input[i])
+			break ;
+		if (input[i])
+			i++;
+	}
+	return (ft_openquotes(i, quotes));
+}
+
+ssize_t	ft_operatorsize(char *input)
+{
+	int	i;
+
+	i = 0;
+	if (!input)
+		return (0);
+	if (input[i] == '|')
+		return (1);
+	if (input[i] == '>')
+	{
+		if (input[i + 1] == '>')
+			return (2);
+		else
+			return (1);
+	}
+	if (input[i] == '<')
+	{
+		if (input[i + 1] == '<')
+			return (2);
+		else
+			return (1);
+	}
+	else
+		return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/20 15:43:03 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/20 15:43:29 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+int	ft_openquotes(int i, int quotes)
+{
+	if (quotes)
+		return (quotes);
+	return (i);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/11/24 14:50:41 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+int	check_args(char *args);
+
+void	remove_env(t_env **env, char *name)
+{
+	    t_env *current = *env;
+    	t_env *prev = NULL;
+
+    while (current)
+    {
+        if (strcmp(current->name, name) == 0)
+        {
+            if (prev == NULL)
+                *env = current->next;
+            else
+                prev->next = current->next;
+
+            free(current->name);
+            free(current->value);
+            free(current);
+            return;
+        }
+        prev = current;
+        current = current->next;
+    }
+}
+
+void	ft_unset(char **args, t_env **env)
+{
+	int	i;
+
+	i = 0;
+
+	while (args[i])
+	{
+		if (!check_args(args[i]))
+			printf("unset: `%s': not a valid identifier\n", args[i]);
+		else
+			remove_env(env, args[i]);
+		i++;
+	}
+}
