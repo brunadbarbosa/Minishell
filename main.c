@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 13:15:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/28 18:56:15 by adpinhei         ###   ########.fr       */
+/*   Created: 2025/11/28 19:01:19 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/28 19:01:49 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "includes/minishell.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int	main(int argc, char **argv, char **envp)
 {
-	int				i;
-	unsigned char	*c1;
-	unsigned char	*c2;
+	t_shell	shell;
 
-	c1 = (unsigned char *)s1;
-	c2 = (unsigned char *)s2;
-	i = 0;
-	if (n == 0)
-		return (0);
-	while ((c1[i] != '\0' || c2[i] != '\0') && n > 0)
-	{
-		if (c1[i] != c2[i])
-			return (c1[i] - c2[i]);
-		i++;
-		n--;
-	}
-	if (c1[i] != c2[i])
-		return (c1[i] - c2[i]);
-	return (0);
+	(void)argc;
+	(void)argv;
+	ft_init_shell(&shell, envp);
+//	print_env(&shell);
+	loop(&shell);
+	ft_clean_shell(&shell, NULL);
+	return (shell.exit_status);
 }

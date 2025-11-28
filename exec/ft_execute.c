@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/27 19:51:59 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/28 18:58:35 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static char	**ft_envstr(t_env *lst);
 static char	*get_envp(t_env *env);
 static int	ft_envsize(t_env *lst);
+static int	is_builtin(t_cmd *cmd);
 
 /// @brief passes the command to execve
 /// @param cmd the command to be executed
@@ -26,11 +27,19 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 
 	if (!cmd || !shell)
 		return ;
-	envp = ft_envstr(env);
-	if (!envp)
+	if (is_builtin(cmd))
+	{
+		ft_printf("This is a built in!\n");
 		return ;
-	ft_execve(cmd->args, envp);
-	ft_free_args(envp);
+	}
+	else
+	{
+		envp = ft_envstr(env);
+		if (!envp)
+			return ;
+		ft_execve(cmd->args, envp);
+		ft_free_args(envp);
+	}
 }
 
 /// @brief turns t_env *env into char **envstr
@@ -99,4 +108,28 @@ static int	ft_envsize(t_env *lst)
 		lst = lst->next;
 	}
 	return (len);
+}
+
+static int	is_builtin(t_cmd *cmd)
+{
+	int		size;
+
+	if (!cmd)
+		return (0);
+	size = ft_strlen(cmd->cmd);
+	if (!ft_strncmp("echo", cmd->cmd, size))
+		return (1);
+	if (!ft_strncmp("cd", cmd->cmd, size))
+		return (1);
+	if (!ft_strncmp("pwd", cmd->cmd, size))
+		return (1);
+	if (!ft_strncmp("export", cmd->cmd, size))
+		return (1);
+	if (!ft_strncmp("unset", cmd->cmd, size))
+		return (1);
+	if (!ft_strncmp("env", cmd->cmd, size))
+		return (1);
+	if (!ft_strncmp("exit", cmd->cmd, size))
+		return (1);
+	return (0);
 }

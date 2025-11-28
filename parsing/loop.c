@@ -6,25 +6,14 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/25 11:59:11 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/28 19:02:30 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell	shell;
-
-	(void)argc;
-	(void)argv;
-	ft_init_shell(&shell, envp);
-//	print_env(&shell);
-	loop(&shell);
-	ft_clean_shell(&shell, NULL);
-	return (shell.exit_status);
-}
-
+/// @brief the shell loop. Goes on purposeful exit from user
+/// @param shell the master struct
 void	loop(t_shell *shell)
 {
 	char	*input;
@@ -34,7 +23,7 @@ void	loop(t_shell *shell)
 	while (true)
 	{
 		input = readline("minishell> ");
-		ft_exit(shell, input);
+		ft_exit(shell, input); //that goes out
 		add_history(input);
 		ft_lexer(shell, input);
 		ft_syntax(shell);
