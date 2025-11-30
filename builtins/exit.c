@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:19:03 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:02:47 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/30 18:08:06 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	safe_atoll(const char *str, long long *out)
 	return (1);
 }
 
-void	my_exit(char **args, char *cmd, t_shell *shell)
+void	ft_exit(char **args, char *cmd, t_shell *shell)
 {
 	long long	val;
 
@@ -96,3 +96,17 @@ void	my_exit(char **args, char *cmd, t_shell *shell)
 		exit((unsigned char)val);
 	}
 }
+
+// {
+// 	size_t	len;
+
+// 	len = ft_strlen(input);
+// 	if (len == 0)
+// 		return ;
+// 	if (!ft_strncmp(input, "exit", 5))
+// 	{
+// 		free(input);
+// 		ft_clean_shell(shell, NULL);
+// 		exit(EXIT_SUCCESS);
+// 	}
+// }

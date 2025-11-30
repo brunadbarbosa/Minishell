@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   loop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/21 16:21:32 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/11/30 18:15:02 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	loop(t_shell *shell)
 	while (true)
 	{
 		input = readline("minishell> ");
-		ft_exit(shell, input);
+		my_exit(shell, input);
 		add_history(input);
 		ft_lexer(shell, input);
 		ft_syntax(shell);
-		ft_printlst(shell);
+		// ft_printlst(shell);
 		ft_parser(shell);
 //		ft_printcmd(shell);
 		free(input);
