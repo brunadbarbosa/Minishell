@@ -6,11 +6,11 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/20 16:08:51 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/30 17:03:24 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "../includes/minishell.h"
 
 void	remove_env(t_env **env, char *name)
 {
@@ -36,7 +36,7 @@ void	remove_env(t_env **env, char *name)
     }
 }
 
-void	ft_unset(char **args, t_env **env)
+void	ft_unset(char **args, t_env *env, t_shell *shell)
 {
 	int	i;
 
@@ -44,10 +44,9 @@ void	ft_unset(char **args, t_env **env)
 
 	while (args[i])
 	{
-		if (!check_args(args[i]))
-			printf("unset: `%s': not a valid identifier\n", args[i]);
-		else
-			remove_env(env, args[i]);
+		remove_env(&env, args[i]);
+		shell->exit_status = 0;
 		i++;
 	}
+	shell->exit_status = 0;
 }

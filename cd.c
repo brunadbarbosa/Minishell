@@ -6,11 +6,9 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/25 17:18:25 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/11/30 17:02:07 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "builtins.h"
 
 #include "../includes/minishell.h"
 
@@ -106,11 +104,13 @@ void	ft_cd(t_shell *shell)
 		change_dir = chdir(copy_from_env(args, shell));
 		pwd = get_current_path();
 		change_env(old_pwd, pwd, shell);
+		shell->exit_status = 0;
 		return ;
 	}
 	if (args[0] && args[1])
 	{
-		printf("minishell: cd: too many arguments.\n");
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		shell->exit_status = 1;
 		return ;
 	}
 	old_pwd = get_current_path();
@@ -118,8 +118,11 @@ void	ft_cd(t_shell *shell)
 	if (change_dir == -1)
 	{
 		perror("cd");
+		shell->exit_status = 1;
 		return ;
 	}
 	pwd = get_current_path();
 	change_env(old_pwd, pwd, shell);
+	shell->exit_status = 0;
+	return ;
 }
