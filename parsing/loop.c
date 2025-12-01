@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 16:32:29 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:41:45 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	loop(t_shell *shell)
 		ft_syntax(shell);
 		// ft_printlst(shell);
 		ft_parser(shell);
-		
 //		ft_printcmd(shell);
 		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);
