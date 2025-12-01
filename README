@@ -4,4 +4,6 @@ Must adjust execution for relative and absolute paths. Must be able to execute m
 2 path relativo
 3 $PATH
 
+not expand env in heredoc
+
 Built-ins that use env can only be the 1st command
