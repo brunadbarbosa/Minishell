@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/30 18:11:56 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/01 19:15:01 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdarg.h>

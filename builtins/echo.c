@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:02:20 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:11:48 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	ft_echo(char **args, t_shell *shell)
 	{
 		printf("%d\n", shell->exit_status);
 		return ;
-	}
+	}	
 
 	i = 0;
 	sign = 0;
