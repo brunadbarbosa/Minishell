@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 16:21:29 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:21:26 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,19 @@ void	ft_execve(char **cmd, char **envp)
 
 	if (!cmd || !*cmd || !envp || !*envp)
 		return ;
-	path = ft_path(cmd[0], envp);
-	if (!path)
+	if (cmd[0][0] == '/' || (cmd [0][0] == '.' && cmd[0][1] == '/'))
 	{
-		ft_putstr_fd("Failed at ft_execve\n", 2);
-		return ;
+		if (access(cmd[0], F_OK | X_OK))
+		{
+			ft_putstr_fd("Command not found\n", 2);
+			return ;
+		}
+		path = cmd[0];
 	}
+	else
+		path = ft_path(cmd[0], envp);
+	if (!path)
+		return ;
 	execve(path, cmd, envp);
 	free(path);
 	path = NULL;

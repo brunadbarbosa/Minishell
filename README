@@ -1,8 +1,3 @@
-Must adjust execution for relative and absolute paths. Must be able to execute minishell within minishell
-
-1 path absoluto
-2 path relativo
-3 $PATH
 
 not expand env in heredoc
 
