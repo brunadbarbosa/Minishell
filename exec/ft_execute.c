@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 17:22:25 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:51:50 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 	if (is_builtin(cmd))
 	{
 		ft_printf("This is a built in!\n");
-		return ;
+//		return ;
 	}
-	else
-	{
+//	else
+//	{
 		envp = ft_envstr(env);
 		if (!envp)
 			return ;
 		ft_execve(cmd->args, envp);
 		ft_free_args(envp);
-	}
+//	}
 }
 
 /// @brief turns t_env *env into char **envstr

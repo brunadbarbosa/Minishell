@@ -6,13 +6,12 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 14:19:29 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 20:38:28 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/01 20:40:50 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void static	ft_replace(char **str, t_env *env);
 void static	ft_removequotes(char **str, char *set);
 
 /// @brief expands the tokens when necessary
@@ -21,12 +20,11 @@ void static	ft_removequotes(char **str, char *set);
 void	ft_expand(t_token **lst, t_env *env)
 {
 	t_token	*current;
-	t_env	*var;
+	char	*expanded;
 
 	if (!lst || !env)
 		return ;
 	current = *lst;
-	var = env;
 	while (current)
 	{
 		if (current->type == TOKEN_WORD)
@@ -36,42 +34,21 @@ void	ft_expand(t_token **lst, t_env *env)
 			else if (current->value[0] == '\"')
 			{
 				ft_removequotes(&current->value, "\"");
-				ft_replace(&current->value, var);
+				ft_replace(current->value, &expanded, env);
 			}
-			else if (current->value[0] == '$' && current->value[1] != '?')
-				ft_replace(&current->value, var);
+			else
+			{
+				ft_replace(&current->value, &expanded, env);
+				current->value = expanded;
+			}
 		}
 		current = current->next;
 	}
 }
 
-/// @brief replaces the str with the expanded value
-void static	ft_replace(char **str, t_env *env)
-{
-	t_env	*current;
-	int		len;
-	char	*clean_name;
-
-	if (!str || !env || *str[0] != '$')
-		return ;
-	current = env;
-	clean_name = ft_strtrim(*str, "$");
-	if (!clean_name)
-		return ;
-	while (current)
-	{
-		len = ft_strlen(current->name);
-		if (!ft_strncmp(clean_name, current->name, len))
-		{
-			free(*str);
-			*str = ft_strdup(current->value);
-			free(clean_name);
-			return ;
-		}
-		current = current->next;
-	}
-}
-
+/// @brief trims quotes from token->value
+/// @param str the string to be trimmed
+/// @param set the quotes to be removed
 void static	ft_removequotes(char **str, char *set)
 {
 	char	*trimmed;
@@ -81,4 +58,11 @@ void static	ft_removequotes(char **str, char *set)
 	trimmed = ft_strtrim(*str, set);
 	free(*str);
 	*str = trimmed;
+}
+
+static void	ft_replace(char **old, char **new, t_env *env)
+{
+	if (!env || !old || !*old)
+		return ;
+	
 }
