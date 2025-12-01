@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/28 18:58:35 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:27:00 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,24 +112,21 @@ static int	ft_envsize(t_env *lst)
 
 static int	is_builtin(t_cmd *cmd)
 {
-	int		size;
-
 	if (!cmd)
 		return (0);
-	size = ft_strlen(cmd->cmd);
-	if (!ft_strncmp("echo", cmd->cmd, size))
+	if (!ft_strncmp("echo", cmd->cmd, 5))
 		return (1);
-	if (!ft_strncmp("cd", cmd->cmd, size))
+	if (!ft_strncmp("cd", cmd->cmd, 3))
 		return (1);
-	if (!ft_strncmp("pwd", cmd->cmd, size))
+	if (!ft_strncmp("pwd", cmd->cmd, 4))
 		return (1);
-	if (!ft_strncmp("export", cmd->cmd, size))
+	if (!ft_strncmp("export", cmd->cmd, 7))
 		return (1);
-	if (!ft_strncmp("unset", cmd->cmd, size))
+	if (!ft_strncmp("unset", cmd->cmd, 6))
 		return (1);
-	if (!ft_strncmp("env", cmd->cmd, size))
+	if (!ft_strncmp("env", cmd->cmd, 4))
 		return (1);
-	if (!ft_strncmp("exit", cmd->cmd, size))
+	if (!ft_strncmp("exit", cmd->cmd, 5))
 		return (1);
 	return (0);
 }

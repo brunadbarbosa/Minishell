@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:15:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/28 18:56:15 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:22:54 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,5 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		i++;
 		n--;
 	}
-	if (c1[i] != c2[i])
-		return (c1[i] - c2[i]);
 	return (0);
 }
