@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 19:20:41 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/02 19:47:43 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,16 @@ void			ft_settokentype(t_token *token);
 void			ft_expand(t_token **lst, t_env *env);
 void			ft_syntax(t_shell *shell);
 void			ft_initredir(t_redir *redir, t_token *tk);
+void			ft_makenewstr(char *old, t_env *env, char **new);
+
+char			*ft_findexp(char *var_start, int *var_len, t_env *env);
 
 t_token			*ft_new_token(char *input, ssize_t size);
 t_token			*ft_init_token(ssize_t size);
 
 ssize_t			ft_tokensize(char *input);
 ssize_t			ft_operatorsize(char *input);
+size_t			ft_newstrsize(char *old, t_env *env);
 
 bool			ft_isspace(const char c);
 bool			is_operator(const char *str);
