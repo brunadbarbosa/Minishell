@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+         #
+#    By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/12 16:26:45 by adpinhei          #+#    #+#              #
-#    Updated: 2025/12/01 16:41:49 by brmaria-         ###   ########.fr        #
+#    Updated: 2025/12/04 13:01:34 by brmaria-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ vpath %.c error
 vpath %.c parsing
 vpath %.c exec
 vpath %.c builtins
+vpath %.c signals
 
 ###############################################################################
 #                            Libft path and archive                           #
@@ -56,9 +57,11 @@ PARSE_FILES := loop.c my_exit.c input_checker.c lexer.c parser_utils.c \
 				
 BUILTIN_FILES := cd.c echo.c env.c exit.c export.c pwd.c unset.c is_builtin.c \
 
+SIGNALS_FILES := signal.c
+
 #EXEC_FILES := exec.c
 
-SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(BUILTIN_FILES) $(EXEC_FILES)
+SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(BUILTIN_FILES) $(SIGNALS_FILES) $(EXEC_FILES)
 
 ###############################################################################
 #                               Object Files                                  #

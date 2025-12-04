@@ -3,29 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 18:30:44 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/01 19:49:30 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/04 17:00:01 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+t_shell *global_shell;
 
 void	sig_handler(int signum)
 {
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-int	setup_signal(int signum, void(*handler)(int))
-{
-	struct sigaction *sa;
+	if (signum == SIGINT)
+	{
+		global_shell->exit_status = 130;
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 	
-	ft_memset(&sa, 0, sizeof(sa));
 }
 
 void	init_interactive_mode(void)
