@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/12/02 19:47:43 by adpinhei         ###   ########.fr       */
+=======
+/*   Updated: 2025/11/30 18:11:56 by brmaria-         ###   ########.fr       */
+>>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +37,7 @@
 
 void			loop(t_shell *shell);
 void			ft_init_shell(t_shell *shell, char **envp);
-void			ft_exit(t_shell *shell, char *input);
+void			my_exit(t_shell *shell, char *input);
 void			ft_parser(t_shell *shell);
 void			ft_lexer(t_shell *shell, char *input);
 void			ft_settokentype(t_token *token);
@@ -68,6 +72,37 @@ t_redir_type	redirtype(t_token_type type);
 void			ft_printlst(t_shell *shell);
 void			print_env(t_shell *shell);
 void			ft_printcmd(t_shell *shell);
+
+/*****************************************************************************/
+/*                                  Builtin Functions                        */
+/*****************************************************************************/
+
+void	change_env(char *old_pwd, char *new_pwd, t_shell *shell);
+char	*get_bigger_buffer(char *prev, int prev_len, int new_prev_len);
+char	*copy_from_env(char **args, t_shell *shell);
+char	*get_current_path(void);
+void	ft_cd(t_shell *shell);
+
+void	ft_echo(char **args, t_shell *shell);
+
+void	ft_env(t_env *env);
+
+int		safe_atoll(const char *str, long long *out);
+void	ft_exit(char **args, char *cmd, t_shell *shell);
+
+t_env	*create_env_node(const char *env_str);
+int		check_args(char *args);
+t_env	*get_value(t_env *env, char *name);
+void 	set_value(char *str, t_env **env);
+void	ft_export(char **args, t_shell *shell);
+
+void	check_is_builtin(t_shell *shell);
+
+char 	*getpwd(t_env *env);
+void	ft_pwd(t_env *env);
+
+void	remove_env(t_env **env, char *name);
+void	ft_unset(char **args, t_env *env, t_shell *shell);
 
 /*****************************************************************************/
 /*                                  Exec Functions                           */

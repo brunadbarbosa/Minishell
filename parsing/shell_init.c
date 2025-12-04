@@ -3,16 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   shell_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:07:18 by adpinhei          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/12/02 20:41:57 by adpinhei         ###   ########.fr       */
+=======
+/*   Updated: 2025/11/30 18:00:45 by brmaria-         ###   ########.fr       */
+>>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static t_env	*ft_env(char **envp);
+static t_env	*ft_create_env(char **envp);
 static t_env	*new_env_node(char *entry);
 static void		env_add_back(t_env **env, t_env *new);
 static void		ft_shlvl(t_env *env);
@@ -34,12 +38,16 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->cmds = NULL;
 	shell->tokens = NULL;
 	shell->exit_status = 0;
+<<<<<<< HEAD
 	shell->env = ft_env(envp);
 	shell->heredoc = NULL;
+=======
+	shell->env = ft_create_env(envp);
+>>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
 	ft_shlvl(shell->env);
 }
 
-static t_env	*ft_env(char **envp)
+static t_env	*ft_create_env(char **envp)
 {
 	t_env	*env;
 	t_env	*node;
