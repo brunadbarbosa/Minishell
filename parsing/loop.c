@@ -33,7 +33,7 @@ void	loop(t_shell *shell)
 //		ft_printcmd(shell);
 		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);
-		ft_openredirs(shell->cmds);
+		ft_openredirs(shell->cmds, shell);
 //		print_env(shell);
 		ft_startproc(shell);
 		ft_clean_cmd_lst(&shell->cmds, NULL);
