@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 16:05:30 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/02 20:48:14 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,9 @@ static void	get_redir(t_redir *red)
 	else if (red->type == REDIR_HERE)
 		ft_printf("Heredoc!");
 	return ;
+}
+
+static void	get_here(t_shell *shell)
+{
+	
 }

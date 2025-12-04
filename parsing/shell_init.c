@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:07:18 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 16:51:05 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/02 20:41:57 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->tokens = NULL;
 	shell->exit_status = 0;
 	shell->env = ft_env(envp);
+	shell->heredoc = NULL;
 	ft_shlvl(shell->env);
 }
 

@@ -1,8 +1,3 @@
-aspas simples dentro de duplas:
-	mantem aspas simples mas expande
-
-varias coisas em aspas duplas: expande tudo
-
 not expand env in heredoc
 
 Built-ins that use env can only be the 1st command
