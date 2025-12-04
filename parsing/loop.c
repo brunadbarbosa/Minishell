@@ -6,10 +6,11 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/02 19:43:02 by adpinhei         ###   ########.fr       */
-/*   Updated: 2025/12/01 17:48:24 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:38:57 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 
 #include "../includes/minishell.h"
 
@@ -24,12 +25,12 @@ void	loop(t_shell *shell)
 	while (true)
 	{
 		input = readline("minishell> ");
-		ft_exit(shell, input); //that goes out. Replace this for a simple quote syntax checker
 		add_history(input);
 		ft_lexer(shell, input);
 		ft_syntax(shell);
-//		ft_printlst(shell);
+		// ft_printlst(shell);
 		ft_parser(shell);
+		// check_is_builtin(shell);
 //		ft_printcmd(shell);
 		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);

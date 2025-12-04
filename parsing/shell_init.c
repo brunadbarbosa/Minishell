@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   shell_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 19:07:18 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/02 20:41:57 by adpinhei         ###   ########.fr       */
+/*   Created: 2025/12/04 17:27:45 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/12/04 17:28:32 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static t_env	*ft_env(char **envp);
+static t_env	*ft_create_env(char **envp);
 static t_env	*new_env_node(char *entry);
 static void		env_add_back(t_env **env, t_env *new);
 static void		ft_shlvl(t_env *env);
@@ -34,12 +34,11 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->cmds = NULL;
 	shell->tokens = NULL;
 	shell->exit_status = 0;
-	shell->env = ft_env(envp);
-	shell->heredoc = NULL;
+	shell->env = ft_create_env(envp);
 	ft_shlvl(shell->env);
 }
 
-static t_env	*ft_env(char **envp)
+static t_env	*ft_create_env(char **envp)
 {
 	t_env	*env;
 	t_env	*node;
