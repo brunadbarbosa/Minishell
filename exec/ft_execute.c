@@ -6,10 +6,10 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 17:51:50 by adpinhei         ###   ########.fr       */
-/*   Updated: 2025/12/01 17:47:32 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:27:40 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../includes/minishell.h"
 
@@ -30,17 +30,17 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 		return ;
 	if (is_builtin(cmd))
 	{
-		ft_printf("This is a built in!\n");
-//		return ;
+		ft_printf("This is a built in!\n"); //goes to function that calls built-ins and executes them
+		return ;
 	}
-//	else
-//	{
+	else
+	{
 		envp = ft_envstr(env);
 		if (!envp)
 			return ;
 		ft_execve(cmd->args, envp);
 		ft_free_args(envp);
-//	}
+	}
 }
 
 /// @brief turns t_env *env into char **envstr

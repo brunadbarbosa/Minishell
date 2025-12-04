@@ -3,3 +3,7 @@ not expand env in heredoc
 Built-ins that use env can only be the 1st command
 
 Update clean_shell to unlink the shell->heredoc
+
+startproc.c
+
+ft_execute.c

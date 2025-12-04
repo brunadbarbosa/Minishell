@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/28 18:31:39 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:26:05 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_startproc(t_shell *shell)
 
 	if (!shell || !shell->cmds || !shell->env)
 		return ;
-	if (init_pipe(&pipe_st, shell->cmds))
+	if (init_pipe(&pipe_st, shell->cmds)) //pass the heredocs here?
 		return (ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2));
 	ft_fork(shell->cmds, &pipe_st, shell);
 	if (pipe_st.prev_read_fd != -1)

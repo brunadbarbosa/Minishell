@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/02 20:48:14 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:24:59 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ static char	*gen_filename(void);
 static void	ft_add_here(char ***heredoc, char *file);
 static void	ft_add_here_util(char ***heredoc, char *file);
 
+/// @brief iterates through the command list to find redirections
+/// @param cmdlst the list of commands
+/// @param shell the master struct
 void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 {
 	t_cmd	*cmd;
@@ -40,6 +43,8 @@ void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 	}
 }
 
+/// @brief gets the file descriptors for the redirections
+/// @param red the t_redir struct with redirection info
 static void	get_redir(t_redir *red, t_shell *shell)
 {
 	char	*filename;
@@ -62,6 +67,8 @@ static void	get_redir(t_redir *red, t_shell *shell)
 	return ;
 }
 
+/// @brief generates a random filename based on /dev/urandom
+/// @return the filename
 static char	*gen_filename(void)
 {
 	char	*filename;
@@ -79,19 +86,21 @@ static char	*gen_filename(void)
 	filename = malloc(sizeof(char) * 22);
 	if (!filename)
 		return (NULL);
-	j = 1;
-	filename[j] = '.';
-	while (j < 22)
+	filename[0] = '.';
+	j = 0;
+	while (++j < 22)
 	{
 		if (buffer[j] < 32 || buffer[j] > 126)
 			filename[j] = '0';
 		else
 			filename[j] = buffer[j];
-		j++;
 	}
 	return (filename[j] = '\0', filename);
 }
 
+/// @brief allocates the filename's string into shell->heredoc
+/// @param heredoc the head to shell->heredoc
+/// @param file the name of file to be used to store heredoc
 static void	ft_add_here(char ***heredoc, char *file)
 {
 	if (!file)
@@ -110,6 +119,7 @@ static void	ft_add_here(char ***heredoc, char *file)
 		ft_add_here_util(heredoc, file);
 }
 
+/// @brief adds a new string at the end of shell->heredoc
 static void	ft_add_here_util(char ***heredoc, char *file)
 {
 	int		i;
