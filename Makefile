@@ -3,14 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+         #
+#    By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/11/12 16:26:45 by adpinhei          #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2025/12/02 19:34:58 by adpinhei         ###   ########.fr        #
-=======
-#    Updated: 2025/12/01 16:41:49 by brmaria-         ###   ########.fr        #
->>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
+#    Created: 2025/12/04 17:25:19 by brmaria-          #+#    #+#              #
+#    Updated: 2025/12/04 17:26:01 by brmaria-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,24 +52,16 @@ ERROR_FILES := clean_cmd.c clean_env.c clean_shell.c clean_tokens.c \
 
 PARSE_FILES := loop.c my_exit.c input_checker.c lexer.c parser_utils.c \
 				parser.c shell_init.c token_maker.c syntax.c\
-<<<<<<< HEAD
 				expand_tk.c test.c token_utils.c expand_tk_utils.c
-=======
-				expand_tk.c test.c token_utils.c 
 				
 BUILTIN_FILES := cd.c echo.c env.c exit.c export.c pwd.c unset.c is_builtin.c \
->>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
 
 EXEC_FILES := startproc.c open_redirs.c ft_execute.c ft_execve.c pipe_utils.c \
 				proc_utils.c
 
-<<<<<<< HEAD
 MAIN_FILES := main.c
 
-SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(EXEC_FILES) $(MAIN_FILES)
-=======
-SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(BUILTIN_FILES) $(EXEC_FILES)
->>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
+SRC_FILES := $(ERROR_FILES) $(PARSE_FILES) $(BUILTIN_FILES) $(EXEC_FILES) $(MAIN_FILES)
 
 ###############################################################################
 #                               Object Files                                  #

@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/12/01 17:51:50 by adpinhei         ###   ########.fr       */
-=======
-/*   Updated: 2025/12/01 17:47:32 by adpinhei         ###   ########.fr       */
->>>>>>> main
+/*   Updated: 2025/12/04 18:04:23 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +16,7 @@ static char	**ft_envstr(t_env *lst);
 static char	*get_envp(t_env *env);
 static int	ft_envsize(t_env *lst);
 static int	is_builtin(t_cmd *cmd);
+void		execute_builtin(t_shell *shell);
 
 /// @brief passes the command to execve
 /// @param cmd the command to be executed
@@ -33,17 +30,17 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 		return ;
 	if (is_builtin(cmd))
 	{
-		ft_printf("This is a built in!\n");
-//		return ;
+		execute_builtin(shell);
+		return ;
 	}
-//	else
-//	{
+	else
+	{
 		envp = ft_envstr(env);
 		if (!envp)
 			return ;
 		ft_execve(cmd->args, envp);
 		ft_free_args(envp);
-//	}
+	}
 }
 
 /// @brief turns t_env *env into char **envstr

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_redirs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/02 20:48:14 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/04 17:32:43 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	get_redir(t_redir *red)
 	return ;
 }
 
-static void	get_here(t_shell *shell)
-{
+// static void	get_here(t_shell *shell)
+// {
 	
-}
+// }

@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/12/02 19:47:43 by adpinhei         ###   ########.fr       */
-=======
-/*   Updated: 2025/11/30 18:11:56 by brmaria-         ###   ########.fr       */
->>>>>>> 34c332dfdc4124a4b0ad3bfa44fb57c5539ee2ad
+/*   Updated: 2025/12/04 18:08:38 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +92,7 @@ t_env	*get_value(t_env *env, char *name);
 void 	set_value(char *str, t_env **env);
 void	ft_export(char **args, t_shell *shell);
 
-void	check_is_builtin(t_shell *shell);
+void	execute_builtin(t_shell *shell);
 
 char 	*getpwd(t_env *env);
 void	ft_pwd(t_env *env);
