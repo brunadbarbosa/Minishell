@@ -34,4 +34,6 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 		ft_clean_tokens(&shell->tokens, msg);
 		shell->tokens = NULL;
 	}
+	if (shell->heredoc)
+		ft_free_args(shell->heredoc);
 }

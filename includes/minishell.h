@@ -74,7 +74,7 @@ void			ft_printcmd(t_shell *shell);
 /*****************************************************************************/
 
 void			ft_startproc(t_shell *shell);
-void			ft_openredirs(t_cmd *cmdlst);
+void			ft_openredirs(t_cmd *cmdlst, t_shell *shell);
 void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp);
 void			ft_freepipe_st(t_pipe *pipe_st);

@@ -22,7 +22,7 @@ typedef enum e_token_type
 	TOKEN_RED_IN,
 	TOKEN_RED_OUT,
 	TOKEN_APPEND,
-	TOKEN_HEREDOC,
+	TOKEN_HEREDOC
 }	t_token_type;
 
 typedef enum e_redir_type

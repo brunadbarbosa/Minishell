@@ -28,7 +28,7 @@ void	ft_syntax(t_shell *shell)
 	{
 		if (tk->type > TOKEN_WORD)
 		{
-			if (!tk->next || tk->next->type != TOKEN_WORD)
+			if (!tk->next || (tk->type != TOKEN_PIPE && tk->next->type != TOKEN_WORD))
 				return (ft_clean_tokens(&shell->tokens, "Invalid syntax\n"));
 		}
 		if (tk->type != TOKEN_WORD && !tk->next)

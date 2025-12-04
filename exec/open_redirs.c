@@ -12,9 +12,12 @@
 
 #include "../includes/minishell.h"
 
-static void	get_redir(t_redir *red);
+static void	get_redir(t_redir *red, t_shell *shell);
+static char	*gen_filename(void);
+static void	ft_add_here(char ***heredoc, char *file);
+static void	ft_add_here_util(char ***heredoc, char *file);
 
-void	ft_openredirs(t_cmd *cmdlst)
+void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 {
 	t_cmd	*cmd;
 	t_redir	*red;
@@ -29,7 +32,7 @@ void	ft_openredirs(t_cmd *cmdlst)
 		{
 			while (red)
 			{
-				get_redir(red);
+				get_redir(red, shell);
 				red = red->next;
 			}
 		}
@@ -37,8 +40,10 @@ void	ft_openredirs(t_cmd *cmdlst)
 	}
 }
 
-static void	get_redir(t_redir *red)
+static void	get_redir(t_redir *red, t_shell *shell)
 {
+	char	*filename;
+
 	if (red->type == REDIR_APPEND)
 		red->fd = open(red->file, O_RDWR | O_CREAT | O_APPEND, 0644);
 	else if (red->type == REDIR_IN)
@@ -46,11 +51,90 @@ static void	get_redir(t_redir *red)
 	else if (red->type == REDIR_OUT)
 		red->fd = open(red->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (red->type == REDIR_HERE)
-		ft_printf("Heredoc!");
+	{
+		filename = gen_filename();
+		red->fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (red->fd < 0)
+			return ;
+		ft_add_here(&shell->heredoc, filename);
+		free(filename);
+	}
 	return ;
 }
 
-static void	get_here(t_shell *shell)
+static char	*gen_filename(void)
 {
-	
+	char	*filename;
+	char	buffer[20];
+	ssize_t	i;
+	int		j;
+
+	j = open("/dev/urandom", O_RDONLY);
+	if (j < 0)
+		return (NULL);
+	i = read(j, &buffer, 20);
+	close (j);
+	if (i < 0)
+		return (NULL);
+	filename = malloc(sizeof(char) * 22);
+	if (!filename)
+		return (NULL);
+	j = 1;
+	filename[j] = '.';
+	while (j < 22)
+	{
+		if (buffer[j] < 32 || buffer[j] > 126)
+			filename[j] = '0';
+		else
+			filename[j] = buffer[j];
+		j++;
+	}
+	return (filename[j] = '\0', filename);
+}
+
+static void	ft_add_here(char ***heredoc, char *file)
+{
+	if (!file)
+		return ;
+	if (!*heredoc)
+	{
+		*heredoc = malloc(sizeof(char *) * 2);
+		if (!*heredoc)
+			return ;
+		(*heredoc)[0] = ft_strdup(file);
+		if (!*heredoc)
+			return ;
+		(*heredoc)[1] = NULL;
+	}
+	else
+		ft_add_here_util(heredoc, file);
+}
+
+static void	ft_add_here_util(char ***heredoc, char *file)
+{
+	int		i;
+	char	**temp;
+
+	i = 0;
+	while ((*heredoc)[i])
+		i++;
+	temp = malloc(sizeof(char *) * (i + 2));
+	if (!temp)
+		return ;
+	i = 0;
+	while ((*heredoc)[i])
+	{
+		temp[i] = (*heredoc)[i];
+		i++;
+	}
+	temp[i] = ft_strdup(file);
+	if (!temp[i])
+	{
+		ft_free_args(temp);
+		return ;
+	}
+	temp[++i] = NULL;
+	free(*heredoc);
+	*heredoc = temp;
+	free(temp);
 }
