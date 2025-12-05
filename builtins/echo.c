@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:02:20 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/05 18:15:36 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,6 @@ void	ft_echo(char **args, t_shell *shell)
 {
 	int	i;
 	int	sign;
-	if (args[0] && ft_strncmp(args[0], "$?", 2) == 0)
-	{
-		printf("%d\n", shell->exit_status);
-		return ;
-	}
 
 	i = 0;
 	sign = 0;

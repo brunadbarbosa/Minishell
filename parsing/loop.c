@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:26 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/04 17:37:37 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/05 19:06:24 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,18 @@ void	loop(t_shell *shell)
 		add_history(input);
 		ft_lexer(shell, input);
 		ft_syntax(shell);
-		// ft_printlst(shell);
 		ft_parser(shell);
-		// check_is_builtin(shell);
-//		ft_printcmd(shell);
-		free(input);
+		if (ft_is_parent_builtin(shell->cmds))
+		{
+			execute_builtin(shell);
+		}
+		else
+		{
+			ft_openredirs(shell->cmds);
+			ft_startproc(shell);
+		}
+		free(input);	
 		ft_clean_tokens(&shell->tokens, NULL);
-		ft_openredirs(shell->cmds);
-//		print_env(shell);
-		ft_startproc(shell);
 		ft_clean_cmd_lst(&shell->cmds, NULL);
 	}
 }

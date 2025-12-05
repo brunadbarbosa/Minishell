@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:19:03 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 18:08:06 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/05 17:29:14 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,3 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 		exit((unsigned char)val);
 	}
 }
-
-// {
-// 	size_t	len;
-
-// 	len = ft_strlen(input);
-// 	if (len == 0)
-// 		return ;
-// 	if (!ft_strncmp(input, "exit", 5))
-// 	{
-// 		free(input);
-// 		ft_clean_shell(shell, NULL);
-// 		exit(EXIT_SUCCESS);
-// 	}
-// }

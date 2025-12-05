@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 19:20:57 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:18:13 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_lexer(t_shell *shell, char *input)
 		ft_add_token(&shell->tokens, token_node);
 		i += size;
 	}
-	ft_expand(&shell->tokens, shell->env);
+	ft_expand(&shell->tokens, shell);
 	ft_rmempty(&shell->tokens);
 }
 

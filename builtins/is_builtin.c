@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/04 17:44:01 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/05 19:06:38 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,18 @@ void	ft_unset(char **args, t_env *env, t_shell *shell);
 void	ft_cd(t_shell *shell);
 void	ft_exit(char **args, char *cmd, t_shell *shell);
 
-void	check_is_builtin(t_shell *shell)
+void	execute_builtin(t_shell *shell)
 {
-	char **args = shell->cmds->args + 1;
+	char **args;
 	
 	t_env	*env;
 	char	*cmd;
-	
+
+	// if(!shell->cmds)
+	// {
+	// 	return ;
+	// }
+	args = shell->cmds->args + 1;
 	env = shell->env;
 	cmd = shell->cmds->cmd;
 	if (ft_strncmp(cmd, "pwd", ft_strlen(cmd) + 1) == 0)
@@ -48,4 +53,20 @@ void	check_is_builtin(t_shell *shell)
 		shell->exit_status = 127;
 		ft_putstr_fd(" command not found\n", 2);
 	}
+}
+
+
+int	ft_is_parent_builtin(t_cmd *cmd)
+{
+	if (!cmd || !cmd->cmd)
+		return (1);
+	if (ft_strncmp(cmd->cmd, "cd", ft_strlen(cmd->cmd)) == 0 
+		|| ft_strncmp(cmd->cmd, "exit", ft_strlen(cmd->cmd)) == 0
+			|| ft_strncmp(cmd->cmd, "export", ft_strlen(cmd->cmd)) == 0
+				|| ft_strncmp(cmd->cmd, "unset", ft_strlen(cmd->cmd)) == 0
+					|| ft_strncmp(cmd->cmd, "echo", ft_strlen(cmd->cmd)) == 0
+						|| ft_strncmp(cmd->cmd, "pwd", ft_strlen(cmd->cmd)) == 0
+							|| ft_strncmp(cmd->cmd, "env", ft_strlen(cmd->cmd)) == 0)
+		return (1);
+	return (0);
 }

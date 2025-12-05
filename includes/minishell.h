@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 18:08:38 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/05 18:00:18 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ void			my_exit(t_shell *shell, char *input);
 void			ft_parser(t_shell *shell);
 void			ft_lexer(t_shell *shell, char *input);
 void			ft_settokentype(t_token *token);
-void			ft_expand(t_token **lst, t_env *env);
+void			ft_expand(t_token **lst, t_shell *shell);
 void			ft_syntax(t_shell *shell);
 void			ft_initredir(t_redir *redir, t_token *tk);
-void			ft_makenewstr(char *old, t_env *env, char **new);
+void			ft_makenewstr(char *old, t_shell *shell, char **new);
 
 char			*ft_findexp(char *var_start, int *var_len, t_env *env);
 
@@ -93,6 +93,7 @@ void 	set_value(char *str, t_env **env);
 void	ft_export(char **args, t_shell *shell);
 
 void	execute_builtin(t_shell *shell);
+int		ft_is_parent_builtin(t_cmd *cmd);
 
 char 	*getpwd(t_env *env);
 void	ft_pwd(t_env *env);
@@ -107,11 +108,11 @@ void	ft_unset(char **args, t_env *env, t_shell *shell);
 void			ft_startproc(t_shell *shell);
 void			ft_openredirs(t_cmd *cmdlst);
 void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
-void			ft_execve(char **arg, char **envp);
+void			ft_execve(char **arg, char **envp, t_shell *shell);
 void			ft_freepipe_st(t_pipe *pipe_st);
 void			ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell);
 
-int				ft_pipe(t_cmd *cmdlst);
+//int				ft_pipe(t_cmd *cmdlst);
 int				init_pipe(t_pipe *pipe, t_cmd *cmds);
 /******************************************************************************/
 /*                                Cleaning Functions                          */

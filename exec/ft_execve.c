@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/01 17:21:26 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/05 18:02:05 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*ft_str2join(char *path, char *str1, char *str2);
 /// @brief calls execve
 /// @param cmd the arguments contained in t_cmd->args
 /// @param envp the environment parsed into char**
-void	ft_execve(char **cmd, char **envp)
+void	ft_execve(char **cmd, char **envp, t_shell *shell)
 {
 	char	*path;
 
@@ -37,7 +37,14 @@ void	ft_execve(char **cmd, char **envp)
 	else
 		path = ft_path(cmd[0], envp);
 	if (!path)
-		return ;
+	{
+		ft_putstr_fd(cmd[0], 2);
+		ft_putendl_fd(": command not found", 2);
+		if (path)
+			free(path);
+		shell->exit_status = 127;
+		exit(127);
+	}
 	execve(path, cmd, envp);
 	free(path);
 	path = NULL;
