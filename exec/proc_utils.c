@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   proc_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 17:55:52 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/06 19:41:28 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
 /// @param shell the master struct
 static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 {
+	t_cmd	*redir = cmd->redirs;
 	if (!pipe_st || !cmd || !shell)
 		exit (1);
 	if (pipe_st->prev_read_fd != -1)
@@ -73,15 +74,14 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 		}
 			// return (ft_freepipe_st(pipe_st));
 	}
-	while (cmd->redirs)
+	while (redir)
 	{
-		if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
-		{
-			ft_freepipe_st(pipe_st);
-			exit(1);
-		}
-//			return (ft_freepipe_st(pipe_st));
-		cmd->redirs = cmd->redirs->next;
+    if (ft_redcmd(redir->type, redir->fd))
+    {
+        ft_freepipe_st(pipe_st);
+        exit(1);
+    }
+    redir = redir->next;
 	}
 	ft_freepipe_st(pipe_st);
 	ft_execute(cmd, shell->env, shell);

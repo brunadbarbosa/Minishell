@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   loop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:26 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/05 19:06:24 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/06 19:36:16 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,10 @@ void	loop(t_shell *shell)
 		ft_lexer(shell, input);
 		ft_syntax(shell);
 		ft_parser(shell);
-		if (ft_is_parent_builtin(shell->cmds))
+		if (ft_is_parent_builtin(shell->cmds) && !shell->cmds->next)
 		{
 			execute_builtin(shell);
+			exit(shell->exit_status);
 		}
 		else
 		{

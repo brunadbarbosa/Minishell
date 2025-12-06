@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/05 18:02:05 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/06 17:58:53 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_execve(char **cmd, char **envp, t_shell *shell)
 	{
 		if (access(cmd[0], F_OK | X_OK))
 		{
-			ft_putstr_fd("Command not found\n", 2);
+			ft_putstr_fd(": command not found", 2);
 			return ;
 		}
 		path = cmd[0];

@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:03:24 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/06 19:36:58 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ void	ft_unset(char **args, t_env *env, t_shell *shell)
 
 	while (args[i])
 	{
-		remove_env(&env, args[i]);
-		shell->exit_status = 0;
+		remove_env(&shell->env, args[i]);
 		i++;
 	}
 	shell->exit_status = 0;

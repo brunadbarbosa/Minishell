@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 15:26:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:02:55 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/06 17:53:48 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ void	ft_export(char **args, t_shell *shell)
 			printf("%s", env->name);
 			if (env->value && env->value[0])
 				printf("=");
-			printf("%s", env->value);	
+			printf("\"%s\"", env->value);	
 			printf("\n");
 			env = env->next;
 		}

@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:02:07 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/06 19:38:15 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void	ft_cd(t_shell *shell)
 	char	*pwd;
 	char	*old_pwd;
 	int		change_dir;
+	char	*path_to_change;
 
 	args = shell->cmds->args + 1;
 	if (!args[0] || !args[0][0])
@@ -113,6 +114,7 @@ void	ft_cd(t_shell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
+	path_to_change = copy_from_env(args, shell);
 	old_pwd = get_current_path();
 	change_dir = chdir(args[0]);
 	if (change_dir == -1)

@@ -1,0 +1,590 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_execute.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/12/06 17:39:03 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static char	**ft_envstr(t_env *lst);
+static char	*get_envp(t_env *env);
+static int	ft_envsize(t_env *lst);
+static int	is_builtin(t_cmd *cmd);
+
+/// @brief passes the command to execve
+/// @param cmd the command to be executed
+/// @param env environment to be turned into char** and then passed
+/// @param shell the main struct
+void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
+{
+	char	**envp;
+
+	if (!cmd || !shell)
+		return ;
+	if (is_builtin(cmd))
+	{
+    	execute_builtin(shell);
+		return ;
+	}
+	else
+	{
+		envp = ft_envstr(env);
+		if (!envp)
+			return ;
+		ft_execve(cmd->args, envp, shell);
+		ft_free_args(envp);
+	}
+}
+
+/// @brief turns t_env *env into char **envstr
+/// @return the char** that holds the environment
+static char	**ft_envstr(t_env *lst)
+{
+	char	**envstr;
+	t_env	*env;
+	int		i;
+
+	if (!lst)
+		return (NULL);
+	i = 0;
+	envstr = malloc(sizeof(char *) * (ft_envsize(lst) + 1));
+	if (!envstr)
+		return (NULL);
+	i = 0;
+	env = lst;
+	while (env)
+	{
+		envstr[i] = get_envp(env);
+		if (!envstr[i])
+		{
+			ft_free_args(envstr);
+			return (NULL);
+		}
+		i++;
+		env = env->next;
+	}
+	envstr[i] = NULL;
+	return (envstr);
+}
+
+/// @brief concatenates env->name + '=' + env->value
+/// @param env the t_env node
+/// @return the string with a variable in envp format
+static char	*get_envp(t_env *env)
+{
+	char	*res;
+	char	*tmp;
+
+	if (!env)
+		return (NULL);
+	res = ft_strdup(env->name);
+	tmp = ft_strjoin(res, "=");
+	free(res);
+	res = tmp;
+	tmp = NULL;
+	tmp = ft_strjoin(res, env->value);
+	free(res);
+	res = tmp;
+	tmp = NULL;
+	return (res);
+}
+
+static int	ft_envsize(t_env *lst)
+{
+	int	len;
+
+	if (!lst)
+		return (0);
+	len = 0;
+	while (lst != NULL)
+	{
+		len++;
+		lst = lst->next;
+	}
+	return (len);
+}
+
+static int	is_builtin(t_cmd *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (!ft_strncmp("echo", cmd->cmd, 5))
+		return (1);
+	if (!ft_strncmp("cd", cmd->cmd, 3))
+		return (1);
+	if (!ft_strncmp("pwd", cmd->cmd, 4))
+		return (1);
+	if (!ft_strncmp("export", cmd->cmd, 7))
+		return (1);
+	if (!ft_strncmp("unset", cmd->cmd, 6))
+		return (1);
+	if (!ft_strncmp("env", cmd->cmd, 4))
+		return (1);
+	if (!ft_strncmp("exit", cmd->cmd, 5))
+		return (1);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_execve.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/12/06 16:07:30 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static char	*ft_path(char *cmd, char **envp);
+static void	ft_free(char **str);
+static char	*ft_str2join(char *path, char *str1, char *str2);
+
+/// @brief calls execve
+/// @param cmd the arguments contained in t_cmd->args
+/// @param envp the environment parsed into char**
+void	ft_execve(char **cmd, char **envp, t_shell *shell)
+{
+	char	*path;
+
+	if (!cmd || !*cmd || !envp || !*envp)
+		return ;
+	if (cmd[0][0] == '/' || (cmd [0][0] == '.' && cmd[0][1] == '/'))
+	{
+		if (access(cmd[0], F_OK | X_OK))
+		{
+			ft_putstr_fd("Command not found", 2);
+			return ;
+		}
+		path = cmd[0];
+	}
+	else
+		path = ft_path(cmd[0], envp);
+	if (!path)
+	{
+		ft_putstr_fd(cmd[0], 2);
+		ft_putendl_fd(": command not found", 2);
+		if (path)
+			free(path);
+		shell->exit_status = 127;
+		exit(127);
+	}
+	execve(path, cmd, envp);
+	free(path);
+	path = NULL;
+}
+
+/// @brief finds the path to the command
+/// @return a str containing the actual path for execve to execute or NULL
+static char	*ft_path(char *cmd, char **envp)
+{
+	char	**path;
+	char	*path_cmd;
+	int		i;
+
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
+		i++;
+	if (envp[i] == NULL)
+		return (ft_putstr_fd("PATH not found\n", 2), NULL);
+	path = ft_split(envp[i] + 5, ':');
+	if (!path)
+		return (NULL);
+	i = 0;
+	while (path[i++])
+	{
+		path_cmd = ft_str2join(path[i], "/", cmd);
+		if (!path_cmd)
+			return (ft_free(path), NULL);
+		if (access(path_cmd, F_OK | X_OK) == 0)
+			return (ft_free(path), path_cmd);
+		free(path_cmd);
+	}
+	ft_free(path);
+	return (NULL);
+}
+
+/// @brief helper function to free a char**
+/// @param str 
+static void	ft_free(char **str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !*str)
+		return ;
+	while (str[i])
+	{
+		free(str[i]);
+		str[i] = NULL;
+		i++;
+	}
+	free(str);
+	str = NULL;
+}
+
+/// @brief calls ft_strjoin twice, concatenating three strings
+/// @return the triple concatenated str or NULL
+static char	*ft_str2join(char *path, char *str1, char *str2)
+{
+	char	*temp;
+	char	*dest;
+
+	if (!path || !str1 || !str2)
+		return (NULL);
+	temp = ft_strjoin(path, str1);
+	if (!temp)
+		return (NULL);
+	dest = ft_strjoin(temp, str2);
+	if (!dest)
+	{
+		free(temp);
+		temp = NULL;
+		return (NULL);
+	}
+	free(temp);
+	temp = NULL;
+	return (dest);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   open_redirs.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/12/04 17:32:43 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static void	get_redir(t_redir *red);
+
+void	ft_openredirs(t_cmd *cmdlst)
+{
+	t_cmd	*cmd;
+	t_redir	*red;
+
+	if (!cmdlst)
+		return ;
+	cmd = cmdlst;
+	while (cmd)
+	{
+		red = cmd->redirs;
+		if (red)
+		{
+			while (red)
+			{
+				get_redir(red);
+				red = red->next;
+			}
+		}
+		cmd = cmd->next;
+	}
+}
+
+static void	get_redir(t_redir *red)
+{
+	if (red->type == REDIR_APPEND)
+		red->fd = open(red->file, O_RDWR | O_CREAT | O_APPEND, 0644);
+	else if (red->type == REDIR_IN)
+		red->fd = open(red->file, O_RDONLY, 0644);
+	else if (red->type == REDIR_OUT)
+		red->fd = open(red->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (red->type == REDIR_HERE)
+		ft_printf("Heredoc!");
+	return ;
+}
+
+// static void	get_here(t_shell *shell)
+// {
+	
+// }/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/28 17:44:30 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/11/28 18:00:23 by adpinhei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt);
+
+/// @brief initializes the t_pipe struct
+/// @param pipe the pipe struct to be initialized
+/// @param cmds the list of commands from t_shell
+/// @return 0 on sucess, greater on failure
+int	init_pipe(t_pipe *pipe, t_cmd *cmds)
+{
+	int		node_counter;
+	int		here_counter;
+	int		i;
+
+	pipe->pid_count = 0;
+	pipe->prev_read_fd = -1;
+	node_counter = 0;
+	here_counter = 0;
+	ft_node_and_here(cmds, &node_counter, &here_counter);
+	pipe->pids = malloc(sizeof(pid_t) * node_counter);
+	if (!pipe->pids)
+		return (1);
+	pipe->heredocs = malloc(sizeof(char *) * (here_counter + 1));
+	if (!pipe->heredocs)
+		return (free(pipe->pids), 2);
+	i = 0;
+	while (i <= here_counter)
+		pipe->heredocs[i++] = NULL;
+	return (0);
+}
+
+/// @brief counts the number of nodes and here_docs.
+/// @param cmds the t_cmd list
+/// @param nd_cnt node counter
+/// @param hr_cnt here counter
+static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt)
+{
+	t_cmd	*node;
+
+	if (!cmds)
+		return ;
+	node = cmds;
+	while (node)
+	{
+		*nd_cnt += 1;
+		if (node->redirs && node->redirs->type == REDIR_HERE)
+			*hr_cnt += 1;
+		node = node->next;
+	}
+}
+
+/// @brief frees the t_pipe struct after the pipe execution
+/// @param pipe_st the struct allocated at ft_startproc
+void	ft_freepipe_st(t_pipe *pipe_st)
+{
+	int	i;
+
+	if (!pipe_st)
+		return ;
+	free(pipe_st->pids);
+	i = 0;
+	while (pipe_st->heredocs[i])
+	{
+		free(pipe_st->heredocs[i]);
+		i++;
+	}
+	free(pipe_st->heredocs);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   proc_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/12/06 17:41:03 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell);
+static int	ft_redcmd(int type, int fd);
+static int	ft_dup2close(int pipefd, int stdfd);
+
+/// @brief forks parent and child processes
+/// @param lst the command list
+/// @param pipe_st the struct with pipe information
+/// @param shell the master struct
+void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
+{
+	t_cmd	*cmd;
+
+	if (!lst || !pipe_st)
+		return ;
+	cmd = lst;
+	while (cmd)
+	{
+		if (cmd->next && (pipe(pipe_st->pipefd) == -1))
+			return (ft_freepipe_st(pipe_st));
+		pipe_st->pids[pipe_st->pid_count] = fork();
+		if (pipe_st->pids[pipe_st->pid_count] == 0)
+			ft_child(pipe_st, cmd, shell);
+		if (pipe_st->prev_read_fd != -1)
+			close(pipe_st->prev_read_fd);
+		if (cmd->next)
+		{
+			close(pipe_st->pipefd[0]);
+			pipe_st->prev_read_fd = pipe_st->pipefd[0];
+		}
+		pipe_st->pid_count++;
+		cmd = cmd->next;
+	}
+}
+
+/// @brief Structures the pipes in the child process and call ft_execute
+/// @param pipe_st the pipe struct
+/// @param cmd the command node
+/// @param shell the master struct
+static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
+{
+	if (!pipe_st || !cmd || !shell)
+		exit (1);
+	if (pipe_st->prev_read_fd != -1)
+	{
+		if (ft_dup2close(pipe_st->prev_read_fd, STDIN_FILENO))
+		{
+			ft_freepipe_st(pipe_st);
+			exit(1);
+		}
+			// return (ft_freepipe_st(pipe_st));
+	}
+	if (cmd->next)
+	{
+		close(pipe_st->pipefd[0]);
+		if (ft_dup2close(pipe_st->pipefd[1], STDOUT_FILENO))
+		{
+			ft_freepipe_st(pipe_st);
+			exit(1);
+		}
+			// return (ft_freepipe_st(pipe_st));
+	}
+	while (cmd->redirs)
+	{
+		if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
+		{
+			ft_freepipe_st(pipe_st);
+			exit(1);
+		}
+//			return (ft_freepipe_st(pipe_st));
+		cmd->redirs = cmd->redirs->next;
+	}
+	ft_freepipe_st(pipe_st);
+	ft_execute(cmd, shell->env, shell);
+	ft_clean_shell(shell, NULL);
+	exit (1);
+}
+
+/// @brief redirects command to its infile and outfile
+/// @param type the redirection type
+/// @param fd the file descriptor of the redirection file
+/// @return 0 on success, greater then 0 on failure
+static int	ft_redcmd(int type, int fd)
+{
+	if (type == REDIR_IN || type == REDIR_HERE)
+	{
+		if ((dup2(fd, STDIN_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd(" No such file or directory\n", 2);
+			return (1);
+		}
+		close(fd);
+	}
+	else if (type == REDIR_OUT || type == REDIR_APPEND)
+	{
+		if ((dup2(fd, STDOUT_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd(" Permission denied\n", 2);
+			return (2);
+		}
+		close(fd);
+	}
+	return (0);
+}
+
+/// @brief calls dup2 and closes the pipe end
+/// @param pipefd the end to be duplicated and then closed
+/// @param stdfd STD_FILENO
+/// @return 0 on success, greater on error
+static int	ft_dup2close(int pipefd, int stdfd)
+{
+	int	i;
+
+	i = dup2(pipefd, stdfd);
+	if (i == -1)
+		return (1);
+	close(pipefd);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   startproc.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
+/*   Updated: 2025/12/06 17:40:13 by brmaria-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+static void		ft_wait(t_pipe *pipe, t_shell *shell);
+
+/// @brief starts the processes and waits on them
+void	ft_startproc(t_shell *shell)
+{
+	t_pipe	pipe_st;
+
+	if (!shell || !shell->cmds || !shell->env)
+		return ;
+	if (init_pipe(&pipe_st, shell->cmds))
+		return (ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2));
+	ft_fork(shell->cmds, &pipe_st, shell);
+	if (pipe_st.prev_read_fd != -1)
+		close(pipe_st.prev_read_fd);
+	ft_wait(&pipe_st, shell);
+}
+
+/// @brief waits on the child processes to be finished
+static void	ft_wait(t_pipe *pipe, t_shell *shell)
+{
+	int	i;
+	int	status;
+
+	i = 0;
+	while (i < pipe->pid_count)
+	{
+		waitpid(pipe->pids[i], &status, 0);
+		if (i == pipe->pid_count - 1)
+		{
+			if (WIFEXITED(status))
+				shell->exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				shell->exit_status = 128 + WTERMSIG(status);
+			else
+				shell->exit_status = 1;
+		}
+		i++;
+	}
+	free(pipe->pids);
+	if (pipe->heredocs)
+	{
+		i = 0;
+		while (pipe->heredocs[i])
+		{
+			unlink(pipe->heredocs[i]);
+			free(pipe->heredocs[i]);
+			i++;
+		}
+		free(pipe->heredocs);
+	}
+}
