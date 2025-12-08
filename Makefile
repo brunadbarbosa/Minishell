@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/04 17:25:19 by brmaria-          #+#    #+#              #
-#    Updated: 2025/12/08 17:17:58 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/12/08 19:29:30 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ BUILD_DIR := build
 ERROR_FILES := clean_cmd.c clean_env.c clean_shell.c clean_tokens.c \
 				clean_utils.c close_pipe.c
 
-PARSE_FILES := loop.c my_exit.c input_checker.c lexer.c parser_utils.c \
+PARSE_FILES := loop.c input_checker.c lexer.c parser_utils.c \
 				parser.c shell_init.c token_maker.c syntax.c\
 				expand_tk.c test.c token_utils.c expand_tk_utils.c \
 				heredoc.c

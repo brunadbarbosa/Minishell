@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 18:50:14 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:30:40 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@
 
 void			loop(t_shell *shell);
 void			ft_init_shell(t_shell *shell, char **envp);
-void			my_exit(t_shell *shell, char *input);
 void			ft_parser(t_shell *shell);
 void			ft_lexer(t_shell *shell, char *input);
 void			ft_settokentype(t_token *token);
