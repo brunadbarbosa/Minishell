@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 20:37:43 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 15:31:33 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 		return ;
 	if (is_builtin(cmd))
 	{
-		execute_builtin(shell);
+//		execute_builtin(shell);
+		printf("builtin\n");
 		return ;
 	}
 	else

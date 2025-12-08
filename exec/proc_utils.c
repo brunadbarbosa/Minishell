@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   proc_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 17:55:52 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/08 15:38:50 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,40 +53,27 @@ void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
 static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 {
 	if (!pipe_st || !cmd || !shell)
-		exit (1);
+		return ;
 	if (pipe_st->prev_read_fd != -1)
 	{
 		if (ft_dup2close(pipe_st->prev_read_fd, STDIN_FILENO))
-		{
-			ft_freepipe_st(pipe_st);
-			exit(1);
-		}
-			// return (ft_freepipe_st(pipe_st));
+			return (ft_freepipe_st(pipe_st));
 	}
 	if (cmd->next)
 	{
 		close(pipe_st->pipefd[0]);
 		if (ft_dup2close(pipe_st->pipefd[1], STDOUT_FILENO))
-		{
-			ft_freepipe_st(pipe_st);
-			exit(1);
-		}
-			// return (ft_freepipe_st(pipe_st));
+			return (ft_freepipe_st(pipe_st));
 	}
 	while (cmd->redirs)
 	{
 		if (ft_redcmd(cmd->redirs->type, cmd->redirs->fd))
-		{
-			ft_freepipe_st(pipe_st);
-			exit(1);
-		}
-//			return (ft_freepipe_st(pipe_st));
+			return (ft_freepipe_st(pipe_st));
 		cmd->redirs = cmd->redirs->next;
 	}
 	ft_freepipe_st(pipe_st);
 	ft_execute(cmd, shell->env, shell);
 	ft_clean_shell(shell, NULL);
-	exit (1);
 }
 
 /// @brief redirects command to its infile and outfile

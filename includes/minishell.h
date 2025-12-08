@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 18:08:38 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/08 15:33:55 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void			ft_expand(t_token **lst, t_env *env);
 void			ft_syntax(t_shell *shell);
 void			ft_initredir(t_redir *redir, t_token *tk);
 void			ft_makenewstr(char *old, t_env *env, char **new);
+void			cpy_heredoc(char ***dest_here, char ***src_here);
 
 char			*ft_findexp(char *var_start, int *var_len, t_env *env);
 

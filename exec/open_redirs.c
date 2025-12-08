@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 20:38:22 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 16:14:28 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,14 @@ static void	get_redir(t_redir *red, t_shell *shell)
 	else if (red->type == REDIR_HERE)
 	{
 		filename = gen_filename();
-		red->fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		red->fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (red->fd < 0)
-			return ;
+			return (free(filename));
+		read_into_here(red->fd, red->file);
+		close(red->fd);
+		red->fd = open(filename, O_RDONLY);
+		if (red->fd < 0)
+			return (free(filename));
 		ft_add_here(&shell->heredoc, filename);
 		free(filename);
 	}
