@@ -6,10 +6,9 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 19:01:19 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/04 20:38:45 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:19:02 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "includes/minishell.h"
 

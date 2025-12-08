@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 20:40:24 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/24 15:10:02 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:24:10 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	ft_syntax(t_shell *shell)
 	{
 		if (tk->type > TOKEN_WORD)
 		{
-			if (!tk->next || (tk->type != TOKEN_PIPE && tk->next->type != TOKEN_WORD))
+			if (!tk->next || (tk->type != TOKEN_PIPE && \
+tk->next->type != TOKEN_WORD))
 				return (ft_clean_tokens(&shell->tokens, "Invalid syntax\n"));
 		}
 		if (tk->type != TOKEN_WORD && !tk->next)
