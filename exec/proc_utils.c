@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 15:38:50 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:12:48 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
 static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 {
 	if (!pipe_st || !cmd || !shell)
-		return ;
+		exit (1);
 	if (pipe_st->prev_read_fd != -1)
 	{
 		if (ft_dup2close(pipe_st->prev_read_fd, STDIN_FILENO))
@@ -74,6 +74,7 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 	ft_freepipe_st(pipe_st);
 	ft_execute(cmd, shell->env, shell);
 	ft_clean_shell(shell, NULL);
+	exit (1);
 }
 
 /// @brief redirects command to its infile and outfile

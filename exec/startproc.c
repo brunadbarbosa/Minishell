@@ -6,13 +6,13 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 15:25:26 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:58:44 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void		ft_wait(t_pipe *pipe);
+static void		ft_wait(t_pipe *pipe, t_shell *shell);
 
 /// @brief starts the processes and waits on them
 void	ft_startproc(t_shell *shell)
@@ -23,15 +23,14 @@ void	ft_startproc(t_shell *shell)
 		return ;
 	if (init_pipe(&pipe_st, shell->cmds))
 		return (ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2));
-	cpy_heredoc(&pipe_st.heredocs, &shell->heredoc);
 	ft_fork(shell->cmds, &pipe_st, shell);
 	if (pipe_st.prev_read_fd != -1)
 		close(pipe_st.prev_read_fd);
-	ft_wait(&pipe_st);
+	ft_wait(&pipe_st, shell);
 }
 
 /// @brief waits on the child processes to be finished
-static void	ft_wait(t_pipe *pipe)
+static void	ft_wait(t_pipe *pipe, t_shell *shell)
 {
 	int	i;
 
@@ -41,16 +40,18 @@ static void	ft_wait(t_pipe *pipe)
 		waitpid(pipe->pids[i], NULL, 0);
 		i++;
 	}
-	free(pipe->pids);
-	if (pipe->heredocs)
+	if (pipe->pids)
+		free(pipe->pids);
+	if (shell->heredoc)
 	{
 		i = 0;
-		while (pipe->heredocs[i])
+		while (shell->heredoc[i])
 		{
-			unlink(pipe->heredocs[i]);
-			free(pipe->heredocs[i]);
+			unlink(shell->heredoc[i]);
+			free(shell->heredoc[i]);
 			i++;
 		}
-		free(pipe->heredocs);
+		free(shell->heredoc);
+		shell->heredoc = NULL;
 	}
 }

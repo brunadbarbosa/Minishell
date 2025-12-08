@@ -6,13 +6,13 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:44:30 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 15:33:20 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:49:57 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt);
+static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt);
 
 /// @brief initializes the t_pipe struct
 /// @param pipe the pipe struct to be initialized
@@ -21,31 +21,22 @@ static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt);
 int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 {
 	int		node_counter;
-	int		here_counter;
-	int		i;
 
 	pipe->pid_count = 0;
 	pipe->prev_read_fd = -1;
 	node_counter = 0;
-	here_counter = 0;
-	ft_node_and_here(cmds, &node_counter, &here_counter);
+	ft_node_and_here(cmds, &node_counter);
 	pipe->pids = malloc(sizeof(pid_t) * node_counter);
 	if (!pipe->pids)
 		return (1);
-	pipe->heredocs = malloc(sizeof(char *) * (here_counter + 1));
-	if (!pipe->heredocs)
-		return (free(pipe->pids), 2);
-	i = 0;
-	while (i <= here_counter)
-		pipe->heredocs[i++] = NULL;
 	return (0);
 }
 
-/// @brief counts the number of nodes and here_docs.
+/// @brief counts the number of nodes.
 /// @param cmds the t_cmd list
 /// @param nd_cnt node counter
 /// @param hr_cnt here counter
-static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt)
+static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt)
 {
 	t_cmd	*node;
 
@@ -55,8 +46,6 @@ static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt)
 	while (node)
 	{
 		*nd_cnt += 1;
-		if (node->redirs && node->redirs->type == REDIR_HERE)
-			*hr_cnt += 1;
 		node = node->next;
 	}
 }
@@ -65,16 +54,7 @@ static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt, int *hr_cnt)
 /// @param pipe_st the struct allocated at ft_startproc
 void	ft_freepipe_st(t_pipe *pipe_st)
 {
-	int	i;
-
 	if (!pipe_st)
 		return ;
 	free(pipe_st->pids);
-	i = 0;
-	while (pipe_st->heredocs[i])
-	{
-		free(pipe_st->heredocs[i]);
-		i++;
-	}
-	free(pipe_st->heredocs);
 }

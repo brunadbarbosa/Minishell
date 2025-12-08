@@ -9,3 +9,5 @@ startproc.c
 ft_execute.c
 
 rl_clear_history before exiting
+
+maybe don't need cpy_heredoc. Maybe don't need to have jeredocs in t_pipe

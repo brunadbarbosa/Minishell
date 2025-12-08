@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:45 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/04 17:28:32 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:46:36 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->exit_status = 0;
 	shell->env = ft_create_env(envp);
 	ft_shlvl(shell->env);
+	shell->heredoc = NULL;
 }
 
 static t_env	*ft_create_env(char **envp)
