@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:36 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 18:11:37 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:56:14 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	loop(t_shell *shell)
 //		ft_printcmd(shell);
 		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);
-		ft_openredirs(shell->cmds, shell);
+		ft_openredirs(shell->cmds);
 //		print_env(shell);
 		ft_startproc(shell);
 		ft_clean_cmd_lst(&shell->cmds, NULL);
