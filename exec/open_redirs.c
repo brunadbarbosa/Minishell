@@ -6,21 +6,19 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 16:14:28 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:49:57 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	get_redir(t_redir *red, t_shell *shell);
+static void	get_redir(t_redir *red);
 static char	*gen_filename(void);
-static void	ft_add_here(char ***heredoc, char *file);
-static void	ft_add_here_util(char ***heredoc, char *file);
 
 /// @brief iterates through the command list to find redirections
 /// @param cmdlst the list of commands
 /// @param shell the master struct
-void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
+void	ft_openredirs(t_cmd *cmdlst)
 {
 	t_cmd	*cmd;
 	t_redir	*red;
@@ -35,7 +33,7 @@ void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 		{
 			while (red)
 			{
-				get_redir(red, shell);
+				get_redir(red);
 				red = red->next;
 			}
 		}
@@ -45,7 +43,7 @@ void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 
 /// @brief gets the file descriptors for the redirections
 /// @param red the t_redir struct with redirection info
-static void	get_redir(t_redir *red, t_shell *shell)
+static void	get_redir(t_redir *red)
 {
 	char	*filename;
 
@@ -64,9 +62,7 @@ static void	get_redir(t_redir *red, t_shell *shell)
 		read_into_here(red->fd, red->file);
 		close(red->fd);
 		red->fd = open(filename, O_RDONLY);
-		if (red->fd < 0)
-			return (free(filename));
-		ft_add_here(&shell->heredoc, filename);
+		unlink(filename);
 		free(filename);
 	}
 	return ;
@@ -76,80 +72,12 @@ static void	get_redir(t_redir *red, t_shell *shell)
 /// @return the filename
 static char	*gen_filename(void)
 {
-	char	*filename;
-	char	buffer[20];
-	ssize_t	i;
-	int		j;
+	static int	i = 0;
+	char		*num;
+	char		*name;
 
-	j = open("/dev/urandom", O_RDONLY);
-	if (j < 0)
-		return (NULL);
-	i = read(j, &buffer, 20);
-	close (j);
-	if (i < 0)
-		return (NULL);
-	filename = malloc(sizeof(char) * 22);
-	if (!filename)
-		return (NULL);
-	filename[0] = '.';
-	j = 0;
-	while (++j < 22)
-	{
-		if (buffer[j] < 32 || buffer[j] > 126)
-			filename[j] = '0';
-		else
-			filename[j] = buffer[j];
-	}
-	return (filename[j] = '\0', filename);
-}
-
-/// @brief allocates the filename's string into shell->heredoc
-/// @param heredoc the head to shell->heredoc
-/// @param file the name of file to be used to store heredoc
-static void	ft_add_here(char ***heredoc, char *file)
-{
-	if (!file)
-		return ;
-	if (!*heredoc)
-	{
-		*heredoc = malloc(sizeof(char *) * 2);
-		if (!*heredoc)
-			return ;
-		(*heredoc)[0] = ft_strdup(file);
-		if (!*heredoc)
-			return ;
-		(*heredoc)[1] = NULL;
-	}
-	else
-		ft_add_here_util(heredoc, file);
-}
-
-/// @brief adds a new string at the end of shell->heredoc
-static void	ft_add_here_util(char ***heredoc, char *file)
-{
-	int		i;
-	char	**temp;
-
-	i = 0;
-	while ((*heredoc)[i])
-		i++;
-	temp = malloc(sizeof(char *) * (i + 2));
-	if (!temp)
-		return ;
-	i = 0;
-	while ((*heredoc)[i])
-	{
-		temp[i] = (*heredoc)[i];
-		i++;
-	}
-	temp[i] = ft_strdup(file);
-	if (!temp[i])
-	{
-		ft_free_args(temp);
-		return ;
-	}
-	temp[++i] = NULL;
-	free(*heredoc);
-	*heredoc = temp;
-	free(temp);
+	num = ft_itoa(i++);
+	name = ft_strjoin(".tmp_heredoc_", num);
+	free(num);
+	return (name);
 }

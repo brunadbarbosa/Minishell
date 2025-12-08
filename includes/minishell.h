@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 17:47:18 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:50:14 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	ft_unset(char **args, t_env *env, t_shell *shell);
 /*****************************************************************************/
 
 void			ft_startproc(t_shell *shell);
-void			ft_openredirs(t_cmd *cmdlst, t_shell *shell);
+void			ft_openredirs(t_cmd *cmdlst);
 void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp);
 void			ft_freepipe_st(t_pipe *pipe_st);

@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:29:06 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 17:47:39 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:47:39 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ typedef struct s_shell
 	t_env	*env;
 	t_token	*tokens;
 	t_cmd	*cmds;
-	char	**heredoc;
 	int		exit_status;
 }	t_shell;
 

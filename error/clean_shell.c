@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:30:22 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/15 18:46:12 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:47:50 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,4 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 		ft_clean_tokens(&shell->tokens, msg);
 		shell->tokens = NULL;
 	}
-	if (shell->heredoc)
-		ft_free_args(shell->heredoc);
 }
