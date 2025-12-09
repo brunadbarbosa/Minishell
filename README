@@ -1,5 +1,10 @@
-not expand env in heredoc
+'''
+1. On exit, before closing the program, the function must call ft_clean_shell. I did it, but do not
+understand how it affects exit codes and exist statuses.
 
-rl_clear_history before exiting
+2. echo mut be able to be redirected. If the user puts "echo text > outfile" ou "echo text >> outfile",
+there will be a cmd->redirs in that node, which will have the fd of the file, already opened with
+the necessary permissions (truncate or append). Maybe if !cmd->redirs it prints to the STDOUT_FILENO,
+and if cmd->redirs it prints to cmd->redirs->fd.
 
-on exit, before closing the program, the process must call for clean_shell
+'''

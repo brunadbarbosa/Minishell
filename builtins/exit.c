@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:19:03 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 18:08:06 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:28:16 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,16 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 	{
 		printf("exit\n");
 		if (!args[0])
+		{
+			ft_clean_shell(shell, NULL);
 			exit(shell->exit_status);
-		if (!safe_atoll(args[0], &val) 
-			)
+		}
+		if (!safe_atoll(args[0], &val))
 		{
 			ft_putstr_fd("exit: ", 2);
 			ft_putstr_fd(args[0], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
+			ft_clean_shell(shell, NULL);
 			exit(2);
 		}
 		if (args[1])
@@ -93,6 +96,7 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 			return ;
 		}
 		shell->exit_status = val % 256;
+		ft_clean_shell(shell, NULL);
 		exit((unsigned char)val);
 	}
 }

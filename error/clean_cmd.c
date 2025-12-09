@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:29:21 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/18 21:12:43 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:52:29 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ void	ft_clean_cmd_lst(t_cmd **lst, char *msg)
 
 	if (!lst || !*lst)
 		return ;
+	rl_clear_history();
 	while (*lst)
 	{
 		current = *lst;
 		*lst = (*lst)->next;
 		if (current->redirs)
-			ft_clean_redirs(&current->redirs);
+			ft_clean_redirs(current->redirs);
 		if (current->cmd)
 		{
 			free(current->cmd);
@@ -44,16 +45,15 @@ void	ft_clean_cmd_lst(t_cmd **lst, char *msg)
 
 /// @brief cleans the redirections
 /// @param redirs the list of redirections for an specific t_cmd
-void	ft_clean_redirs(t_redir **redirs)
+void	ft_clean_redirs(t_redir *redirs)
 {
 	t_redir	*current;
 
-	if (!redirs || !*redirs)
+	if (!redirs)
 		return ;
-	while (*redirs)
+	current = redirs;
+	while (current)
 	{
-		current = *redirs;
-		*redirs = (*redirs)->next;
 		if (current->file)
 		{
 			free(current->file);
@@ -64,8 +64,6 @@ void	ft_clean_redirs(t_redir **redirs)
 			close(current->fd);
 			current->fd = -1;
 		}
-		free(current);
-		current = NULL;
+		current = current->next;
 	}
-	*redirs = NULL;
 }

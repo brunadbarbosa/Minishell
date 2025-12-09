@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/09 18:27:46 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:34:26 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void			ft_clean_shell(t_shell *shell, char *msg);
 void			ft_clean_cmd_lst(t_cmd **lst, char *msg);
 void			ft_clean_env(t_env **env, char *msg);
 void			ft_clean_tokens(t_token **lst, char *msg);
-void			ft_clean_redirs(t_redir **redirs);
+void			ft_clean_redirs(t_redir *redirs);
 void			ft_free_args(char **args);
 void			ft_closepipe(int fd1, int fd2, char *str);
 
