@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 19:30:40 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:59:13 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp);
 void			ft_freepipe_st(t_pipe *pipe_st);
 void			ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell);
+void			parent_builtin(t_shell *shell);
 
 int				ft_pipe(t_cmd *cmdlst);
 int				init_pipe(t_pipe *pipe, t_cmd *cmds);
