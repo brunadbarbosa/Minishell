@@ -1,11 +1,5 @@
 not expand env in heredoc
 
-Built-ins that use env can only be the 1st command
-
 rl_clear_history before exiting
 
-tudo que modifica o env deve correr no processo pai, se nao houver mais nada.
-
-pwd env echo no filho
-
-cd exit export unset no pai
+on exit, before closing the program, the process must call for clean_shell
