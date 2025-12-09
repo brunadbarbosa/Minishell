@@ -6,13 +6,13 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 17:44:30 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 17:49:57 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:12:52 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt);
+static void	ft_node(t_cmd *cmds, int *nd_cnt);
 
 /// @brief initializes the t_pipe struct
 /// @param pipe the pipe struct to be initialized
@@ -25,7 +25,7 @@ int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 	pipe->pid_count = 0;
 	pipe->prev_read_fd = -1;
 	node_counter = 0;
-	ft_node_and_here(cmds, &node_counter);
+	ft_node(cmds, &node_counter);
 	pipe->pids = malloc(sizeof(pid_t) * node_counter);
 	if (!pipe->pids)
 		return (1);
@@ -36,7 +36,7 @@ int	init_pipe(t_pipe *pipe, t_cmd *cmds)
 /// @param cmds the t_cmd list
 /// @param nd_cnt node counter
 /// @param hr_cnt here counter
-static void	ft_node_and_here(t_cmd *cmds, int *nd_cnt)
+static void	ft_node(t_cmd *cmds, int *nd_cnt)
 {
 	t_cmd	*node;
 

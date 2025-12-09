@@ -6,7 +6,7 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/08 18:12:48 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:12:13 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell);
 static int	ft_redcmd(int type, int fd);
 static int	ft_dup2close(int pipefd, int stdfd);
+static void	ft_close_remaining(t_cmd *cmd, t_cmd *head);
 
 /// @brief forks parent and child processes
 /// @param lst the command list
@@ -72,6 +73,7 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 		cmd->redirs = cmd->redirs->next;
 	}
 	ft_freepipe_st(pipe_st);
+	ft_close_remaining(cmd, shell->cmds);
 	ft_execute(cmd, shell->env, shell);
 	ft_clean_shell(shell, NULL);
 	exit (1);
@@ -119,4 +121,25 @@ static int	ft_dup2close(int pipefd, int stdfd)
 		return (1);
 	close(pipefd);
 	return (0);
+}
+
+static void	ft_close_remaining(t_cmd *cmd, t_cmd *head)
+{
+	t_cmd	*node;
+	t_cmd	*lst;
+
+	if (!cmd || !head)
+		return ;
+	node = cmd;
+	lst = head;
+	while (lst)
+	{
+		if (lst != node)
+			while (lst->redirs)
+			{
+				close (lst->redirs->fd);
+				lst->redirs = lst->redirs->next;
+			}
+		lst = lst->next;
+	}
 }
