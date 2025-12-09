@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parent_builtin.c                                   :+:      :+:    :+:   */
+/*   parent.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,9 +13,10 @@
 #include "../includes/minishell.h"
 
 static int	is_pipe(t_token *head);
+static int	is_builtin(t_cmd *cmd);
 
 /// @brief calls the builtins in the parent process if there are no pipes
-void	parent_builtin(t_shell *shell)
+void	parent(t_shell *shell)
 {
 	int	i;
 
@@ -27,10 +28,12 @@ void	parent_builtin(t_shell *shell)
 	else if (i > 0)
 		ft_startproc(shell);
 	else
-		check_is_builtin(shell);
-	//check for pipes
-	//check for parent builtins
-	//call builtin function
+	{
+		if (is_builtin(shell->cmds))
+			check_is_builtin(shell);
+		else
+			ft_startproc(shell);
+	}
 }
 
 /// @brief checks if there is a pipe in the command line
@@ -48,5 +51,26 @@ static int	is_pipe(t_token *head)
 			return (1);
 		node = node->next;
 	}
+	return (0);
+}
+
+static int	is_builtin(t_cmd *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (!ft_strncmp("echo", cmd->cmd, 5))
+		return (1);
+	if (!ft_strncmp("cd", cmd->cmd, 3))
+		return (1);
+	if (!ft_strncmp("pwd", cmd->cmd, 4))
+		return (1);
+	if (!ft_strncmp("export", cmd->cmd, 7))
+		return (1);
+	if (!ft_strncmp("unset", cmd->cmd, 6))
+		return (1);
+	if (!ft_strncmp("env", cmd->cmd, 4))
+		return (1);
+	if (!ft_strncmp("exit", cmd->cmd, 5))
+		return (1);
 	return (0);
 }
