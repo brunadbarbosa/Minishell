@@ -6,7 +6,7 @@
 #    By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/04 17:25:19 by brmaria-          #+#    #+#              #
-#    Updated: 2025/12/08 19:29:30 by adpinhei         ###   ########.fr        #
+#    Updated: 2025/12/09 18:04:35 by adpinhei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ PARSE_FILES := loop.c input_checker.c lexer.c parser_utils.c \
 BUILTIN_FILES := cd.c echo.c env.c exit.c export.c pwd.c unset.c is_builtin.c \
 
 EXEC_FILES := startproc.c open_redirs.c ft_execute.c ft_execve.c pipe_utils.c \
-				proc_utils.c
+				proc_utils.c parent_builtin.c
 
 MAIN_FILES := main.c
 
