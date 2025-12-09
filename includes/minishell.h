@@ -73,32 +73,32 @@ void			ft_printcmd(t_shell *shell);
 /*                                  Builtin Functions                        */
 /*****************************************************************************/
 
-void	change_env(char *old_pwd, char *new_pwd, t_shell *shell);
-char	*get_bigger_buffer(char *prev, int prev_len, int new_prev_len);
-char	*copy_from_env(char **args, t_shell *shell);
-char	*get_current_path(void);
-void	ft_cd(t_shell *shell);
+void			change_env(char *old_pwd, char *new_pwd, t_shell *shell);
+char			*get_bigger_buffer(char *prev, int prev_len, int new_prev_len);
+char			*copy_from_env(char **args, t_shell *shell);
+char			*get_current_path(void);
+void			ft_cd(t_shell *shell);
 
-void	ft_echo(char **args, t_shell *shell);
+void			ft_echo(char **args, t_shell *shell);
 
-void	ft_env(t_env *env);
+void			ft_env(t_env *env);
 
-int		safe_atoll(const char *str, long long *out);
-void	ft_exit(char **args, char *cmd, t_shell *shell);
+int				safe_atoll(const char *str, long long *out);
+void			ft_exit(char **args, char *cmd, t_shell *shell);
 
-t_env	*create_env_node(const char *env_str);
-int		check_args(char *args);
-t_env	*get_value(t_env *env, char *name);
-void 	set_value(char *str, t_env **env);
-void	ft_export(char **args, t_shell *shell);
+t_env			*create_env_node(const char *env_str);
+int				check_args(char *args);
+t_env			*get_value(t_env *env, char *name);
+void			set_value(char *str, t_env **env);
+void			ft_export(char **args, t_shell *shell);
 
-void	execute_builtin(t_shell *shell);
+void			execute_builtin(t_shell *shell);
 
-char 	*getpwd(t_env *env);
-void	ft_pwd(t_env *env);
+char			*getpwd(t_env *env);
+void			ft_pwd(t_env *env);
 
-void	remove_env(t_env **env, char *name);
-void	ft_unset(char **args, t_env *env, t_shell *shell);
+void			remove_env(t_env **env, char *name);
+void			ft_unset(char **args, t_env *env, t_shell *shell);
 
 /*****************************************************************************/
 /*                                  Exec Functions                           */
