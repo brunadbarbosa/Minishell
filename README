@@ -7,4 +7,6 @@ there will be a cmd->redirs in that node, which will have the fd of the file, al
 the necessary permissions (truncate or append). Maybe if !cmd->redirs it prints to the STDOUT_FILENO,
 and if cmd->redirs it prints to cmd->redirs->fd.
 
+3. check if echo must print the prompt ("minishell> ") again before the message, if we are on STDOUT
+
 '''
