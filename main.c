@@ -19,7 +19,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	ft_init_shell(&shell, envp);
-//	print_env(&shell);
 	loop(&shell);
 	ft_clean_shell(&shell, NULL);
 	return (shell.exit_status);

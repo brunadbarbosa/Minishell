@@ -15,6 +15,6 @@
 int	ft_openquotes(int i, int quotes)
 {
 	if (quotes)
-		return (quotes);
+		return (-1);
 	return (i);
 }
