@@ -26,14 +26,10 @@ void	loop(t_shell *shell)
 		add_history(input);
 		ft_lexer(shell, input);
 		ft_syntax(shell);
-		// ft_printlst(shell);
 		ft_parser(shell);
-		// check_is_builtin(shell);
-//		ft_printcmd(shell);
 		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);
 		ft_openredirs(shell->cmds);
-//		print_env(shell);
 		ft_startproc(shell);
 		ft_clean_cmd_lst(&shell->cmds, NULL);
 	}

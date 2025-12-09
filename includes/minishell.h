@@ -100,6 +100,8 @@ void			ft_pwd(t_env *env);
 void			remove_env(t_env **env, char *name);
 void			ft_unset(char **args, t_env *env, t_shell *shell);
 
+void			check_is_builtin(t_shell *shell);
+
 /*****************************************************************************/
 /*                                  Exec Functions                           */
 /*****************************************************************************/

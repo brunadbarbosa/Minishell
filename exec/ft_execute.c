@@ -29,11 +29,7 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 	if (!cmd || !shell)
 		return ;
 	if (is_builtin(cmd))
-	{
-//		execute_builtin(shell);
-		printf("builtin\n");
-		return ;
-	}
+		check_is_builtin(shell);
 	else
 	{
 		envp = ft_envstr(env);
