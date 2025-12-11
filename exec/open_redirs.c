@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/10 14:45:09 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/11 17:33:17 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	get_redir(t_redir *red, t_shell *shell);
 
-int	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
+void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 {
 	t_cmd	*cmd;
 	t_redir	*red;
 
 	if (!cmdlst)
-		return (2);
+		return ;
 	cmd = cmdlst;
 	while (cmd)
 	{
@@ -30,13 +30,13 @@ int	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 			while (red)
 			{
 				if (get_redir(red, shell))
-					return (1);
+					return ;
 				red = red->next;
 			}
 		}
 		cmd = cmd->next;
 	}
-	return (0);
+	return ;
 }
 
 int	get_redir(t_redir *red, t_shell *shell)

@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:45 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/04 17:28:32 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:00:33 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ static void		ft_shlvl(t_env *env);
 /// @brief initialize the super struct t_shell
 /// @param shell the super struct
 /// @param envp the pointer to the environment variables
-void	ft_init_shell(t_shell *shell, char **envp)
+t_shell	*ft_init_shell(t_shell *shell, char **envp)
 {
+	shell = malloc(sizeof(t_shell));
 	if (!shell)
-		return ;
+		return (NULL) ;
 	if (!envp)
 	{
 		ft_putstr_fd("No environment\n", 2);
-		return ;
+		return (NULL);
 	}
 	shell->std_in = STDIN_FILENO;
 	shell->std_out = STDOUT_FILENO;
@@ -36,6 +37,7 @@ void	ft_init_shell(t_shell *shell, char **envp)
 	shell->exit_status = 0;
 	shell->env = ft_create_env(envp);
 	ft_shlvl(shell->env);
+	return (shell);
 }
 
 static t_env	*ft_create_env(char **envp)

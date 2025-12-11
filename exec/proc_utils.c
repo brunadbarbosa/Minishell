@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/10 14:58:43 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:07:20 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,14 @@ void    ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
         if (cmd->next && (pipe(pipe_st->pipefd) == -1))
             return (ft_freepipe_st(pipe_st));
         pipe_st->pids[pipe_st->pid_count] = fork();
+        if (pipe_st->pids[pipe_st->pid_count] == -1)
+            return (ft_freepipe_st(pipe_st));
         if (pipe_st->pids[pipe_st->pid_count] == 0)
+        {
+			signal(SIGINT, SIG_DFL);
+            signal(SIGQUIT, SIG_DFL);
             ft_child(pipe_st, cmd, shell);
+        }
         if (cmd->next)
         {
             close(pipe_st->pipefd[1]);
@@ -42,6 +48,7 @@ void    ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
         cmd = cmd->next;
     }
 }
+
 
 /// @brief Structures the pipes in the child process and call ft_execute
 /// @param pipe_st the pipe struct
@@ -53,7 +60,6 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 
 	if (!pipe_st || !cmd || !shell)
 		exit(1);
-	// Setup do pipe de entrada
 	if (pipe_st->prev_read_fd != -1)
 	{
 		if (ft_dup2close(pipe_st->prev_read_fd, STDIN_FILENO))
@@ -63,7 +69,6 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 			exit(1);
 		}
 	}
-	// Setup do pipe de saída
 	if (cmd->next)
 	{
 		close(pipe_st->pipefd[0]);
@@ -74,7 +79,6 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 			exit(1);
 		}
 	}
-	// Aplicar redirecionamentos (SEM modificar cmd->redirs!)
 	redir = cmd->redirs;
 	while (redir)
 	{
@@ -87,7 +91,6 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 		redir = redir->next;
 	}
 	ft_freepipe_st(pipe_st);
-	//Executar builtin ou comando externo
 	if (is_builtin(cmd))
 	{
 		execute_builtin(cmd, shell);

@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:19:03 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/05 17:29:14 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:36:27 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,16 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 	{
 		printf("exit\n");
 		if (!args[0])
+		{
+			ft_clean_shell(shell, NULL);
 			exit(shell->exit_status);
-		if (!safe_atoll(args[0], &val) 
-			)
+		}
+		if (!safe_atoll(args[0], &val))
 		{
 			ft_putstr_fd("exit: ", 2);
 			ft_putstr_fd(args[0], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
+			ft_clean_shell(shell, NULL);
 			exit(2);
 		}
 		if (args[1])
@@ -93,6 +96,7 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 			return ;
 		}
 		shell->exit_status = val % 256;
+		ft_clean_shell(shell, NULL);
 		exit((unsigned char)val);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_shell.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:30:22 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/15 18:46:12 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:35:47 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,5 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 		ft_clean_tokens(&shell->tokens, msg);
 		shell->tokens = NULL;
 	}
+	free(shell);
 }

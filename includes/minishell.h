@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/10 14:44:49 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:04:44 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+#include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -28,11 +29,17 @@
 # include "structs.h"
 
 /*****************************************************************************/
+/*                                Global Variable                            */
+/*****************************************************************************/
+
+extern  t_shell *global_shell;
+
+/*****************************************************************************/
 /*                                Parsing Functions                          */
 /*****************************************************************************/
 
 void			loop(t_shell *shell);
-void			ft_init_shell(t_shell *shell, char **envp);
+t_shell			*ft_init_shell(t_shell *shell, char **envp);
 void			my_exit(t_shell *shell, char *input);
 void			ft_parser(t_shell *shell);
 void			ft_lexer(t_shell *shell, char *input);
@@ -106,7 +113,7 @@ void	ft_unset(char **args, t_shell *shell);
 /*****************************************************************************/
 
 void			ft_startproc(t_shell *shell);
-int				ft_openredirs(t_cmd *cmdlst, t_shell *shell);
+void			ft_openredirs(t_cmd *cmdlst, t_shell *shell);
 void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp, t_shell *shell);
 void			ft_freepipe_st(t_pipe *pipe_st);
@@ -115,6 +122,14 @@ void			ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell);
 //int				ft_pipe(t_cmd *cmdlst);
 int				init_pipe(t_pipe *pipe, t_cmd *cmds);
 int				is_builtin(t_cmd *cmd);
+
+/******************************************************************************/
+/*                                Signal Functions                            */
+/******************************************************************************/
+
+void	init_interactive_mode(void);
+void	sig_handler(int signum);
+
 /******************************************************************************/
 /*                                Cleaning Functions                          */
 /******************************************************************************/

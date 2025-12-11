@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/04 17:33:55 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/11 15:01:27 by brmaria-         ###   ########.fr       */
+/*   Created: 2025/12/11 13:20:40 by brmaria-          #+#    #+#             */
+/*   Updated: 2025/12/11 15:07:48 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
-//t_shell *global_shell;
+t_shell *global_shell;
 
-int	main(int argc, char **argv, char **envp)
+void	sig_handler(int signum)
 {
-	t_shell	*shell;
+	(void)signum;
+	if (global_shell)
+		global_shell->exit_status = 130;
+	rl_replace_line("", 0);
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_redisplay();
+}
 
-	(void)argc;
-	(void)argv;
-	shell = NULL;
-	shell = ft_init_shell(shell, envp);
-	global_shell = shell;
-//	print_env(&shell);
-	init_interactive_mode();
-	loop(shell);
-	ft_clean_shell(shell, NULL);
-	return (shell->exit_status);
+void	init_interactive_mode(void)
+{
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
