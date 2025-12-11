@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/06 19:38:15 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:10 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,10 @@ void	ft_cd(t_shell *shell)
 	args = shell->cmds->args + 1;
 	if (!args[0] || !args[0][0])
 	{
+		path_to_change = copy_from_env(args, shell);
 		old_pwd = get_current_path();
-		change_dir = chdir(copy_from_env(args, shell));
+		change_dir = chdir(path_to_change);
+		free(path_to_change); 
 		pwd = get_current_path();
 		change_env(old_pwd, pwd, shell);
 		shell->exit_status = 0;
@@ -114,12 +116,11 @@ void	ft_cd(t_shell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
-	path_to_change = copy_from_env(args, shell);
 	old_pwd = get_current_path();
 	change_dir = chdir(args[0]);
 	if (change_dir == -1)
 	{
-		perror("cd");
+		//perror("cd");
 		shell->exit_status = 1;
 		return ;
 	}

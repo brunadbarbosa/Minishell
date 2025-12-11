@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/06 19:36:58 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:22:15 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	remove_env(t_env **env, char *name)
     }
 }
 
-void	ft_unset(char **args, t_env *env, t_shell *shell)
+void	ft_unset(char **args, t_shell *shell)
 {
 	int	i;
 

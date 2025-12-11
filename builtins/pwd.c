@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:31:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/11/30 17:03:15 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:39:57 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,9 @@ void	ft_pwd(t_env *env)
 	char	*dir;
 	
 	dir = getpwd(env);
-	printf("%s\n", dir);
+	if (dir)
+	{
+		printf("%s\n", dir);
+		free(dir);
+	}
 }

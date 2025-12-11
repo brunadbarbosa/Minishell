@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/06 18:39:54 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 13:03:39 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static char	**ft_envstr(t_env *lst);
 static char	*get_envp(t_env *env);
 static int	ft_envsize(t_env *lst);
-static int	is_builtin(t_cmd *cmd);
 
 /// @brief passes the command to execve
 /// @param cmd the command to be executed
@@ -29,8 +28,8 @@ void	ft_execute(t_cmd *cmd, t_env *env, t_shell *shell)
 		return ;
 	if (is_builtin(cmd))
 	{
-		execute_builtin(shell);
-		return ;
+		execute_builtin(cmd, shell);
+		exit(shell->exit_status);
 	}
 	else
 	{
@@ -110,7 +109,7 @@ static int	ft_envsize(t_env *lst)
 	return (len);
 }
 
-static int	is_builtin(t_cmd *cmd)
+int	is_builtin(t_cmd *cmd)
 {
 	if (!cmd)
 		return (0);

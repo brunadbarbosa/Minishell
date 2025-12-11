@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/06 18:39:56 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 15:14:27 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,45 +16,34 @@ void	ft_env(t_env *env);
 void	ft_echo(char **args, t_shell *shell);
 void	ft_export(char **args, t_shell *shell);
 void	ft_pwd(t_env *env);
-void	ft_unset(char **args, t_env *env, t_shell *shell);
+void	ft_unset(char **args, t_shell *shell);
 void	ft_cd(t_shell *shell);
 void	ft_exit(char **args, char *cmd, t_shell *shell);
 
-void	execute_builtin(t_shell *shell)
+void	execute_builtin(t_cmd *cmd, t_shell *shell)
 {
 	char **args;
-	
 	t_env	*env;
-	char	*cmd;
 
-	// if(!shell->cmds)
-	// {
-	// 	return ;
-	// }
-	args = shell->cmds->args + 1;
+	args = cmd->args + 1;
 	env = shell->env;
-	cmd = shell->cmds->cmd;
-	if (ft_strncmp(cmd, "pwd", ft_strlen(cmd) + 1) == 0)
+	if (ft_strncmp(cmd->cmd, "pwd", 4) == 0)
 		ft_pwd(env);
-	else if (ft_strncmp(cmd, "echo", ft_strlen(cmd) + 1) == 0)
+	else if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
 		ft_echo(args, shell);
-	else if (ft_strncmp(cmd, "env", ft_strlen(cmd) + 1) == 0)
+	else if (ft_strncmp(cmd->cmd, "env", 4) == 0)
 		ft_env(env);		
-	else if (ft_strncmp(cmd, "export", ft_strlen(cmd) + 1) == 0)
+	else if (ft_strncmp(cmd->cmd, "export", 7) == 0)
 		ft_export(args, shell);
-	else if (ft_strncmp(cmd, "unset", ft_strlen(cmd) + 1) == 0)
-		ft_unset(args, env, shell);
-	else if (ft_strncmp(cmd, "cd", ft_strlen(cmd) + 1) == 0)
+	else if (ft_strncmp(cmd->cmd, "unset", 6) == 0)
+		ft_unset(args, shell);
+	else if (ft_strncmp(cmd->cmd, "cd", 3) == 0)
 	 	ft_cd(shell);
-	else if (ft_strncmp(cmd, "exit", ft_strlen(cmd) + 1) == 0)
-		ft_exit(args, cmd, shell);
+	else if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
+		ft_exit(args, cmd->cmd, shell);
 	else
-	{
 		shell->exit_status = 127;
-		ft_putstr_fd(" command not found\n", 2);
-	}
 }
-
 
 int	ft_is_parent_builtin(t_cmd *cmd)
 {

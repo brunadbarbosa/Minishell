@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 15:26:29 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/06 17:53:48 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 12:46:30 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ void	ft_export(char **args, t_shell *shell)
 			printf("\n");
 			env = env->next;
 		}
+		shell->exit_status = 0;
 		return ;
 	}
 	while (args[i])

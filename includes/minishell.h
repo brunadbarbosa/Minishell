@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/05 18:00:18 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/10 14:44:49 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,21 @@ t_env	*get_value(t_env *env, char *name);
 void 	set_value(char *str, t_env **env);
 void	ft_export(char **args, t_shell *shell);
 
-void	execute_builtin(t_shell *shell);
+void	execute_builtin(t_cmd *cmd, t_shell *shell);
 int		ft_is_parent_builtin(t_cmd *cmd);
 
 char 	*getpwd(t_env *env);
 void	ft_pwd(t_env *env);
 
 void	remove_env(t_env **env, char *name);
-void	ft_unset(char **args, t_env *env, t_shell *shell);
+void	ft_unset(char **args, t_shell *shell);
 
 /*****************************************************************************/
 /*                                  Exec Functions                           */
 /*****************************************************************************/
 
 void			ft_startproc(t_shell *shell);
-void			ft_openredirs(t_cmd *cmdlst);
+int				ft_openredirs(t_cmd *cmdlst, t_shell *shell);
 void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp, t_shell *shell);
 void			ft_freepipe_st(t_pipe *pipe_st);
@@ -114,6 +114,7 @@ void			ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell);
 
 //int				ft_pipe(t_cmd *cmdlst);
 int				init_pipe(t_pipe *pipe, t_cmd *cmds);
+int				is_builtin(t_cmd *cmd);
 /******************************************************************************/
 /*                                Cleaning Functions                          */
 /******************************************************************************/
@@ -125,5 +126,10 @@ void			ft_clean_tokens(t_token **lst, char *msg);
 void			ft_clean_redirs(t_redir **redirs);
 void			ft_free_args(char **args);
 void			ft_closepipe(int fd1, int fd2, char *str);
+
+
+
+int	get_redir(t_redir *red, t_shell *shell);
+int  ft_redcmd(int type, int fd);
 
 #endif
