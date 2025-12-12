@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/11 16:04:44 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/12 20:01:29 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp, t_shell *shell);
 void			ft_freepipe_st(t_pipe *pipe_st);
 void			ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell);
+void			parent(t_shell *shell);
 
 //int				ft_pipe(t_cmd *cmdlst);
 int				init_pipe(t_pipe *pipe, t_cmd *cmds);
