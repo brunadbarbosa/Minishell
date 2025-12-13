@@ -13,7 +13,6 @@
 #include "../includes/minishell.h"
 
 static int	is_pipe(t_token *head);
-static int	is_builtin(t_cmd *cmd);
 
 /// @brief calls the builtins in the parent process if there are no pipes
 void	parent(t_shell *shell)
@@ -30,7 +29,7 @@ void	parent(t_shell *shell)
 	else
 	{
 		if (is_builtin(shell->cmds))
-			execute_builtin(shell);
+			execute_builtin(shell->cmds, shell);
 		else
 			ft_startproc(shell);
 	}
@@ -54,7 +53,7 @@ static int	is_pipe(t_token *head)
 	return (0);
 }
 
-static int	is_builtin(t_cmd *cmd)
+int	is_builtin(t_cmd *cmd)
 {
 	if (!cmd)
 		return (0);

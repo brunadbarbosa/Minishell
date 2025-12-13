@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/12 20:01:29 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:18:41 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ t_redir_type	redirtype(t_token_type type);
 void			ft_printlst(t_shell *shell);
 void			print_env(t_shell *shell);
 void			ft_printcmd(t_shell *shell);
+void			read_into_here(int fd, char *delimiter);
 
 /*****************************************************************************/
 /*                                  Builtin Functions                        */

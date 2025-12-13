@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/11 18:02:19 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 15:55:58 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,4 @@ static void	ft_wait(t_pipe *pipe, t_shell *shell)
 		i++;
 	}
 	free(pipe->pids);
-	if (pipe->heredocs)
-	{
-		i = 0;
-		while (pipe->heredocs[i])
-		{
-			unlink(pipe->heredocs[i]);
-			free(pipe->heredocs[i]);
-			i++;
-		}
-		free(pipe->heredocs);
-	}
 }

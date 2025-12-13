@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:26 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/12 20:00:10 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 15:59:07 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ void	loop(t_shell *shell)
 		ft_syntax(shell);
 		ft_parser(shell);
 		//nft_printcmd(shell);
-		ft_openredirs(shell->cmds);
+		ft_openredirs(shell->cmds, shell);
 		parent(shell);
 		if (!ft_strncmp(input - 6, "$EMPTY", 6))
 			input -= 6;
-		free(input);	
+		free(input);
 		ft_clean_tokens(&shell->tokens, NULL);
 		ft_clean_cmd_lst(&shell->cmds, NULL);
 	}

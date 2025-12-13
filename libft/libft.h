@@ -6,13 +6,21 @@
 /*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 20:50:47 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 15:54:17 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:28:41 by adpinhei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 
 # define LIBFT_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
+
+# ifndef OPENFD_MAX
+#  define OPENFD_MAX 1024
+# endif
 
 # include <ctype.h>
 # include <string.h>
@@ -93,4 +101,8 @@ int		ft_putstr(const char *str);
 int		ft_putnbr(long int n);
 int		ft_putptr(void *s);
 int		ft_puthex(unsigned long nbr, const char chr);
+
+/*get next line*/
+char	*get_next_line(int fd);
+
 #endif

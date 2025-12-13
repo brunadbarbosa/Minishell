@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 18:20:08 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/10 13:03:39 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:06:18 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,25 +107,4 @@ static int	ft_envsize(t_env *lst)
 		lst = lst->next;
 	}
 	return (len);
-}
-
-int	is_builtin(t_cmd *cmd)
-{
-	if (!cmd)
-		return (0);
-	if (!ft_strncmp("echo", cmd->cmd, 5))
-		return (1);
-	if (!ft_strncmp("cd", cmd->cmd, 3))
-		return (1);
-	if (!ft_strncmp("pwd", cmd->cmd, 4))
-		return (1);
-	if (!ft_strncmp("export", cmd->cmd, 7))
-		return (1);
-	if (!ft_strncmp("unset", cmd->cmd, 6))
-		return (1);
-	if (!ft_strncmp("env", cmd->cmd, 4))
-		return (1);
-	if (!ft_strncmp("exit", cmd->cmd, 5))
-		return (1);
-	return (0);
 }
