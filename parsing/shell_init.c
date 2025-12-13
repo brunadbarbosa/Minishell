@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:45 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/11 15:00:33 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:39:15 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_shell	*ft_init_shell(t_shell *shell, char **envp)
 {
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
-		return (NULL) ;
+		return (NULL);
 	if (!envp)
 	{
 		ft_putstr_fd("No environment\n", 2);

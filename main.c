@@ -6,13 +6,11 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:33:55 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/11 15:01:27 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:21:04 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
-
-//t_shell *global_shell;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -22,8 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell = NULL;
 	shell = ft_init_shell(shell, envp);
-	global_shell = shell;
-//	print_env(&shell);
+	g_exit_status = shell->exit_status;
 	init_interactive_mode();
 	loop(shell);
 	ft_clean_shell(shell, NULL);

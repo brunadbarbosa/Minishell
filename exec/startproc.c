@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/13 15:55:58 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:56:02 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ static void	ft_wait(t_pipe *pipe, t_shell *shell)
 	int	status;
 	int	sig;
 
-	i = 0;
-	while (i < pipe->pid_count)
+	i = -1;
+	while (++i < pipe->pid_count)
 	{
 		waitpid(pipe->pids[i], &status, 0);
 		if (i == pipe->pid_count - 1)
@@ -50,13 +50,10 @@ static void	ft_wait(t_pipe *pipe, t_shell *shell)
 				shell->exit_status = 128 + sig;
 				if (sig == SIGQUIT)
 					ft_putstr_fd("Quit (core dumped)\n", 2);
-				else if (sig == SIGINT)
-					write(1, "\n", 1);
 			}
 			else
 				shell->exit_status = 1;
 		}
-		i++;
 	}
 	free(pipe->pids);
 }

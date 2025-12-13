@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/10 11:58:10 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:03:42 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,16 @@ void	ft_cd(t_shell *shell)
 	char	*path_to_change;
 
 	args = shell->cmds->args + 1;
+	old_pwd = get_current_path();
+	pwd = get_current_path();
 	if (!args[0] || !args[0][0])
 	{
 		path_to_change = copy_from_env(args, shell);
-		old_pwd = get_current_path();
 		change_dir = chdir(path_to_change);
 		free(path_to_change); 
-		pwd = get_current_path();
 		change_env(old_pwd, pwd, shell);
+		free(old_pwd);
+		free(pwd);
 		shell->exit_status = 0;
 		return ;
 	}
@@ -116,15 +118,14 @@ void	ft_cd(t_shell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
-	old_pwd = get_current_path();
 	change_dir = chdir(args[0]);
 	if (change_dir == -1)
 	{
-		//perror("cd");
+		ft_putstr_fd("Error while changing directories\n", 2);
+		free(old_pwd);
 		shell->exit_status = 1;
 		return ;
 	}
-	pwd = get_current_path();
 	change_env(old_pwd, pwd, shell);
 	shell->exit_status = 0;
 	return ;

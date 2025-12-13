@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/11 17:44:14 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:41:30 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	ft_lexer(t_shell *shell, char *input)
 	if (!input)
 		return ;
 	i = 0;
+	if (!ft_strncmp(input, "$EMPTY", 6))
+		input += 6;
 	while (input[i])
 	{
 		while (ft_isspace(input[i]))
@@ -89,17 +91,16 @@ static void	ft_rmempty(t_token **tokens)
 
 static int	ft_isemptytoken(t_token *token)
 {
-    // se não for WORD, pode remover normalmente
-    if (token->type != TOKEN_WORD)
-    {
-        int i = 0;
-        while (token->value[i] && ft_isspace(token->value[i]))
-            i++;
-        return (token->value[i] == '\0');
-    }
+	int	i;
 
-    // se for WORD e está vazio, NÃO remover!
-    return 0;
+	if (token->type != TOKEN_WORD)
+	{
+		i = 0;
+		while (token->value[i] && ft_isspace(token->value[i]))
+			i++;
+		return (token->value[i] == '\0');
+	}
+	return (0);
 }
 
 static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev)

@@ -6,23 +6,15 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/10 15:14:27 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 20:15:31 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_env(t_env *env);
-void	ft_echo(char **args, t_shell *shell);
-void	ft_export(char **args, t_shell *shell);
-void	ft_pwd(t_env *env);
-void	ft_unset(char **args, t_shell *shell);
-void	ft_cd(t_shell *shell);
-void	ft_exit(char **args, char *cmd, t_shell *shell);
-
 void	execute_builtin(t_cmd *cmd, t_shell *shell)
 {
-	char **args;
+	char	**args;
 	t_env	*env;
 
 	args = cmd->args + 1;
@@ -32,13 +24,13 @@ void	execute_builtin(t_cmd *cmd, t_shell *shell)
 	else if (ft_strncmp(cmd->cmd, "echo", 5) == 0)
 		ft_echo(args, shell);
 	else if (ft_strncmp(cmd->cmd, "env", 4) == 0)
-		ft_env(env);		
+		ft_env(env);
 	else if (ft_strncmp(cmd->cmd, "export", 7) == 0)
 		ft_export(args, shell);
 	else if (ft_strncmp(cmd->cmd, "unset", 6) == 0)
 		ft_unset(args, shell);
 	else if (ft_strncmp(cmd->cmd, "cd", 3) == 0)
-	 	ft_cd(shell);
+		ft_cd(shell);
 	else if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
 		ft_exit(args, cmd->cmd, shell);
 	else
@@ -49,13 +41,13 @@ int	ft_is_parent_builtin(t_cmd *cmd)
 {
 	if (!cmd || !cmd->cmd)
 		return (1);
-	if (ft_strncmp(cmd->cmd, "cd", ft_strlen(cmd->cmd)) == 0 
-		|| ft_strncmp(cmd->cmd, "exit", ft_strlen(cmd->cmd)) == 0
-			|| ft_strncmp(cmd->cmd, "export", ft_strlen(cmd->cmd)) == 0
-				|| ft_strncmp(cmd->cmd, "unset", ft_strlen(cmd->cmd)) == 0
-					|| ft_strncmp(cmd->cmd, "echo", ft_strlen(cmd->cmd)) == 0
-						|| ft_strncmp(cmd->cmd, "pwd", ft_strlen(cmd->cmd)) == 0
-							|| ft_strncmp(cmd->cmd, "env", ft_strlen(cmd->cmd)) == 0)
+	if (ft_strncmp(cmd->cmd, "cd", 3) == 0
+		|| ft_strncmp(cmd->cmd, "exit", 5) == 0
+		|| ft_strncmp(cmd->cmd, "export", 7) == 0
+		|| ft_strncmp(cmd->cmd, "unset", 6) == 0
+		|| ft_strncmp(cmd->cmd, "echo", 5) == 0
+		|| ft_strncmp(cmd->cmd, "pwd", 4) == 0
+		|| ft_strncmp(cmd->cmd, "env", 4) == 0)
 		return (1);
 	return (0);
 }

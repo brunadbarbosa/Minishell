@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 14:19:29 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/05 17:15:47 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:15:35 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,34 +50,29 @@ static void	ft_removequotes(char **str)
 	int		new_len;
 	char	quote_state;
 
-	i = 0;
+	i = -1;
 	new_len = 0;
 	quote_state = 0;
 	if (!*str)
 		return ;
-	while ((*str)[i])
+	while ((*str)[++i])
 	{
 		if ((*str)[i] != '\'' && (*str)[i] != '\"')
 			new_len++;
-		i++;
 	}
 	trimmed = malloc(sizeof(char) * (new_len + 1));
 	if (!trimmed)
 		return ;
-	i = 0;
+	i = -1;
 	j = 0;
-	while ((*str)[i])
+	while ((*str)[++i])
 	{
 		if (((*str)[i] == '\'' || (*str)[i] == '\"') && quote_state == 0)
 			quote_state = (*str)[i];
 		else if ((*str)[i] == quote_state)
 			quote_state = 0;
 		else
-		{
-			trimmed[j] = (*str)[i];
-			j++;
-		}
-		i++;	
+			trimmed[j++] = (*str)[i];
 	}
 	trimmed[j] = '\0';
 	free(*str);

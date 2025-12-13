@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/11 18:08:41 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 20:12:02 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	ft_execve(char **cmd, char **envp, t_shell *shell)
 
 	if (!cmd || !*cmd || !envp || !*envp)
 		return ;
-	if (!cmd[0][0] || cmd[0][0] == '/' || (cmd [0][0] == '.' && cmd[0][1] == '/'))
+	if (!cmd[0][0] || cmd[0][0] == '/'
+		|| (cmd [0][0] == '.' && cmd[0][1] == '/'))
 	{
 		if (access(cmd[0], F_OK | X_OK))
 		{

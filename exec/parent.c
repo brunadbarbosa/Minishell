@@ -15,29 +15,29 @@
 static int	is_pipe(t_token *head);
 
 /// @brief calls the builtins in the parent process if there are no pipes
-void parent(t_shell *shell)
+void	parent(t_shell *shell)
 {
-    int has_pipe;
+	int	has_pipe;
 
-    if (!shell)
-        return ;
-    has_pipe = is_pipe(shell->tokens);
-    if (has_pipe < 0)
-        return ;
-    if (shell->cmds && shell->cmds->redirs)
-    {
-        ft_startproc(shell);
-        return;
-    }
-    if (has_pipe)
-        ft_startproc(shell);
-    else
-    {
-        if (is_builtin(shell->cmds) && !shell->cmds->next)
-            execute_builtin(shell->cmds, shell);
-        else
-            ft_startproc(shell);
-    }
+	if (!shell)
+		return ;
+	has_pipe = is_pipe(shell->tokens);
+	if (has_pipe < 0)
+		return ;
+	if (shell->cmds && shell->cmds->redirs)
+	{
+		ft_startproc(shell);
+		return ;
+	}
+	if (has_pipe)
+		ft_startproc(shell);
+	else
+	{
+		if (is_builtin(shell->cmds) && !shell->cmds->next)
+			execute_builtin(shell->cmds, shell);
+		else
+			ft_startproc(shell);
+	}
 }
 
 /// @brief checks if there is a pipe in the command line

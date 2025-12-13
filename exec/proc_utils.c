@@ -6,49 +6,48 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/11 18:07:20 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/13 20:09:16 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell);
-static int  ft_dup2close(int pipefd, int stdfd);
+static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell);
+static int	ft_dup2close(int pipefd, int stdfd);
 
 /// @brief forks parent and child processes
 /// @param lst the command list
 /// @param pipe_st the struct with pipe information
 /// @param shell the master struct
-void    ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
+void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
 {
-    t_cmd   *cmd;
+	t_cmd	*cmd;
 
-    if (!lst || !pipe_st)
-        return ;
-    cmd = lst;
-    while (cmd)
-    {
-        if (cmd->next && (pipe(pipe_st->pipefd) == -1))
-            return (ft_freepipe_st(pipe_st));
-        pipe_st->pids[pipe_st->pid_count] = fork();
-        if (pipe_st->pids[pipe_st->pid_count] == -1)
-            return (ft_freepipe_st(pipe_st));
-        if (pipe_st->pids[pipe_st->pid_count] == 0)
-        {
+	if (!lst || !pipe_st)
+		return ;
+	cmd = lst;
+	while (cmd)
+	{
+		if (cmd->next && (pipe(pipe_st->pipefd) == -1))
+			return (ft_freepipe_st(pipe_st));
+		pipe_st->pids[pipe_st->pid_count] = fork();
+		if (pipe_st->pids[pipe_st->pid_count] == -1)
+			return (ft_freepipe_st(pipe_st));
+		if (pipe_st->pids[pipe_st->pid_count] == 0)
+		{
 			signal(SIGINT, SIG_DFL);
-            signal(SIGQUIT, SIG_DFL);
-            ft_child(pipe_st, cmd, shell);
-        }
-        if (cmd->next)
-        {
-            close(pipe_st->pipefd[1]);
-            pipe_st->prev_read_fd = pipe_st->pipefd[0];
-        }
-        pipe_st->pid_count++;
-        cmd = cmd->next;
-    }
+			signal(SIGQUIT, SIG_DFL);
+			ft_child(pipe_st, cmd, shell);
+		}
+		if (cmd->next)
+		{
+			close(pipe_st->pipefd[1]);
+			pipe_st->prev_read_fd = pipe_st->pipefd[0];
+		}
+		pipe_st->pid_count++;
+		cmd = cmd->next;
+	}
 }
-
 
 /// @brief Structures the pipes in the child process and call ft_execute
 /// @param pipe_st the pipe struct
@@ -106,42 +105,42 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 /// @param type the redirection type
 /// @param fd the file descriptor of the redirection file
 /// @return 0 on success, greater then 0 on failure
-int  ft_redcmd(int type, int fd)
+int	ft_redcmd(int type, int fd)
 {
-    if (type == REDIR_IN || type == REDIR_HERE)
-    {
-        if ((dup2(fd, STDIN_FILENO)) == -1)
-        {
-            close(fd);
-            ft_putstr_fd(" No such file or directory\n", 2);
-            return (1);
-        }
-        close(fd);
-    }
-    else if (type == REDIR_OUT || type == REDIR_APPEND)
-    {
-        if ((dup2(fd, STDOUT_FILENO)) == -1)
-        {
-            close(fd);
-            ft_putstr_fd(" Permission denied\n", 2);
-            return (2);
-        }
-        close(fd);
-    }
-    return (0);
+	if (type == REDIR_IN || type == REDIR_HERE)
+	{
+		if ((dup2(fd, STDIN_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd(" No such file or directory\n", 2);
+			return (1);
+		}
+		close(fd);
+	}
+	else if (type == REDIR_OUT || type == REDIR_APPEND)
+	{
+		if ((dup2(fd, STDOUT_FILENO)) == -1)
+		{
+			close(fd);
+			ft_putstr_fd(" Permission denied\n", 2);
+			return (2);
+		}
+		close(fd);
+	}
+	return (0);
 }
 
 /// @brief calls dup2 and closes the pipe end
 /// @param pipefd the end to be duplicated and then closed
 /// @param stdfd STD_FILENO
 /// @return 0 on success, greater on error
-static int  ft_dup2close(int pipefd, int stdfd)
+static int	ft_dup2close(int pipefd, int stdfd)
 {
-    int i;
+	int	i;
 
-    i = dup2(pipefd, stdfd);
-    if (i == -1)
-        return (1);
-    close(pipefd);
-    return (0);
+	i = dup2(pipefd, stdfd);
+	if (i == -1)
+		return (1);
+	close(pipefd);
+	return (0);
 }
