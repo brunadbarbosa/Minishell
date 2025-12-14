@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 14:19:51 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/13 20:15:31 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 14:58:16 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ void	execute_builtin(t_cmd *cmd, t_shell *shell)
 	else if (ft_strncmp(cmd->cmd, "env", 4) == 0)
 		ft_env(env);
 	else if (ft_strncmp(cmd->cmd, "export", 7) == 0)
-		ft_export(args, shell);
+		ft_export(args, shell, env);
 	else if (ft_strncmp(cmd->cmd, "unset", 6) == 0)
 		ft_unset(args, shell);
 	else if (ft_strncmp(cmd->cmd, "cd", 3) == 0)
-		ft_cd(shell);
+		ft_cd(args, shell);
 	else if (ft_strncmp(cmd->cmd, "exit", 5) == 0)
 		ft_exit(args, cmd->cmd, shell);
 	else

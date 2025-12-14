@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/10 13:19:02 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 15:34:51 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	ft_checkflag(char *args)
 	if (!args || args[0] != '-')
 		return (0);
 	i++;
-	while(args[i])
+	while (args[i])
 	{
 		if (args[i] == 'n')
 			i++;
@@ -32,6 +32,7 @@ static int	ft_checkflag(char *args)
 	}
 	return (1);
 }
+
 /// @brief will print what was writen on the terminal
 /// @param args the arguments from terminal
 void	ft_echo(char **args, t_shell *shell)
@@ -41,16 +42,16 @@ void	ft_echo(char **args, t_shell *shell)
 
 	i = 0;
 	sign = 0;
+	shell->exit_status = 0;
 	if (!args[i])
 	{
 		printf("\n");
-		shell->exit_status = 0;
 		return ;
 	}
 	if (ft_checkflag(args[i]))
 	{
 		i++;
-		sign = 1;		
+		sign = 1;
 	}
 	while (args[i])
 	{
@@ -61,5 +62,4 @@ void	ft_echo(char **args, t_shell *shell)
 	}
 	if (sign == 0)
 		printf("\n");
-	shell->exit_status = 0;
 }

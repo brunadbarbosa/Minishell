@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/13 20:04:39 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 13:39:31 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,29 @@ void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 	return ;
 }
 
+int	open_fd(t_redir *red)
+{
+	if (red->type == REDIR_APPEND)
+		red->fd = open(red->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else if (red->type == REDIR_IN)
+		red->fd = open(red->file, O_RDONLY);
+	else if (red->type == REDIR_OUT)
+		red->fd = open(red->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else
+		red->fd = -1;
+	return (red->fd);
+}
+
 int	get_redir(t_redir *red, t_shell *shell)
 {
 	char	*filename;
 
-	if (red->type == REDIR_APPEND)
-		red->fd = open(red->file, O_RDWR | O_CREAT | O_APPEND, 0644);
-	else if (red->type == REDIR_IN)
-		red->fd = open(red->file, O_RDONLY, 0644);
-	else if (red->type == REDIR_OUT)
-		red->fd = open(red->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (red->type == REDIR_HERE)
+	red->fd = open_fd(red);
+	if (red->type == REDIR_HERE)
 	{
 		filename = gen_filename();
+		if (!filename)
+			return (shell->exit_status = 1);
 		red->fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (red->fd < 0)
 		{
@@ -66,10 +76,7 @@ int	get_redir(t_redir *red, t_shell *shell)
 		free(filename);
 	}
 	if (red->fd < 0)
-	{
-		free(filename);
 		return (shell->exit_status = 1);
-	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 #    By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/04 17:25:19 by brmaria-          #+#    #+#              #
-#    Updated: 2025/12/13 16:02:49 by brmaria-         ###   ########.fr        #
+#    Updated: 2025/12/14 16:46:13 by brmaria-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,8 @@ PARSE_FILES := loop.c my_exit.c input_checker.c lexer.c parser_utils.c \
 				parser.c shell_init.c token_maker.c syntax.c\
 				expand_tk.c test.c token_utils.c expand_tk_utils.c heredoc.c\
 				
-BUILTIN_FILES := cd.c echo.c env.c exit.c export.c pwd.c unset.c is_builtin.c
+BUILTIN_FILES := cd.c echo.c env.c exit.c export.c pwd.c unset.c is_builtin.c\
+				export_utils.c cd_utils.c
 
 EXEC_FILES := startproc.c open_redirs.c ft_execute.c ft_execve.c pipe_utils.c \
 				proc_utils.c parent.c

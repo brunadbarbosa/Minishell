@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/13 20:30:44 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 19:45:49 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include <signal.h>
+# include <limits.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -56,7 +57,10 @@ t_token			*ft_init_token(ssize_t size);
 
 ssize_t			ft_tokensize(char *input);
 ssize_t			ft_operatorsize(char *input);
-size_t			ft_newstrsize(char *old, t_env *env);
+size_t			ft_newstrsize(char *old, t_shell *shell);
+void			update_quote(char c, char *state);
+void			do_expand(char *old, t_shell *shell, char **new, int idx[2]);
+size_t			calc_size(char *old, int *i, t_shell *shell, int *var_len);
 
 bool			ft_isspace(const char c);
 bool			is_operator(const char *str);
@@ -73,7 +77,7 @@ t_redir_type	redirtype(t_token_type type);
 /*testing functions*/
 
 void			ft_printlst(t_shell *shell);
-void			print_env(t_shell *shell);
+//void			print_env(t_shell *shell);
 void			ft_printcmd(t_shell *shell);
 void			read_into_here(int fd, char *delimiter);
 
@@ -85,12 +89,14 @@ void			change_env(char *old_pwd, char *new_pwd, t_shell *shell);
 char			*get_bigger_buffer(char *prev, int prev_len, int new_prev_len);
 char			*copy_from_env(char **args, t_shell *shell);
 char			*get_current_path(void);
-void			ft_cd(t_shell *shell);
+void			ft_cd(char **args, t_shell *shell);
+int				cd_to_home(char **args, t_shell *shell, char *old_pwd);
+void			update_pwd_env(t_shell *shell, char *old_pwd);
+int				change_directory(char **args, t_shell *shell, char *old_pwd);
 
 void			ft_echo(char **args, t_shell *shell);
 
 void			ft_env(t_env *env);
-void			ft_envadd_back(t_env **lst, t_env *new);
 
 int				safe_atoll(const char *str, long long *out);
 void			ft_exit(char **args, char *cmd, t_shell *shell);
@@ -98,8 +104,13 @@ void			ft_exit(char **args, char *cmd, t_shell *shell);
 t_env			*create_env_node(const char *env_str);
 int				check_args(char *args);
 t_env			*get_value(t_env *env, char *name);
-void			set_value(char *str, t_env **env);
-void			ft_export(char **args, t_shell *shell);
+t_env			*ft_envlast(t_env *lst);
+void			ft_envadd_back(t_env *lst, t_env *new);
+
+char			*extract_name(char *str, int *is_append);
+void			update_value(t_env *target, char *str, int is_append);
+void			set_value(char *str, t_env *env);
+void			ft_export(char **args, t_shell *shell, t_env *env);
 
 void			execute_builtin(t_cmd *cmd, t_shell *shell);
 int				ft_is_parent_builtin(t_cmd *cmd);
@@ -119,8 +130,11 @@ void			ft_openredirs(t_cmd *cmdlst, t_shell *shell);
 void			ft_execute(t_cmd *cmd, t_env *env, t_shell *shell);
 void			ft_execve(char **arg, char **envp, t_shell *shell);
 void			ft_freepipe_st(t_pipe *pipe_st);
+void			cleanup_and_exit(t_pipe *pipe_st, t_shell *shell, int status);
+void			execute_command(t_cmd *cmd, t_pipe *pipe_st, t_shell *shell);
 void			ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell);
 void			parent(t_shell *shell);
+void			ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell);
 
 int				init_pipe(t_pipe *pipe, t_cmd *cmds);
 int				is_builtin(t_cmd *cmd);
@@ -131,6 +145,7 @@ int				is_builtin(t_cmd *cmd);
 
 void			init_interactive_mode(void);
 void			sig_handler(int signum);
+void			setup_child_signals(void);
 
 /******************************************************************************/
 /*                                Cleaning Functions                          */
@@ -146,5 +161,6 @@ void			ft_closepipe(int fd1, int fd2, char *str);
 
 int				get_redir(t_redir *red, t_shell *shell);
 int				ft_redcmd(int type, int fd);
+void			ft_free_split(char **arr);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 13:20:40 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/13 19:20:40 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 13:51:00 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,10 @@ void	init_interactive_mode(void)
 {
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	setup_child_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

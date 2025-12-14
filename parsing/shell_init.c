@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:45 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/13 19:39:15 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 19:47:38 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ t_shell	*ft_init_shell(t_shell *shell, char **envp)
 	shell->std_out = STDOUT_FILENO;
 	shell->cmds = NULL;
 	shell->tokens = NULL;
+	shell->heredoc = NULL;
 	shell->exit_status = 0;
 	shell->env = ft_create_env(envp);
 	ft_shlvl(shell->env);

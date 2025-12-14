@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/13 20:12:02 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 20:09:41 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 static char	*ft_path(char *cmd, char **envp);
 static void	ft_free(char **str);
 static char	*ft_str2join(char *path, char *str1, char *str2);
+
+void	print_error(char *cmd, char *str, int stdfd)
+{
+	ft_putstr_fd(cmd, stdfd);
+	ft_putstr_fd(str, stdfd);
+}
 
 /// @brief calls execve
 /// @param cmd the arguments contained in t_cmd->args
@@ -29,21 +35,16 @@ void	ft_execve(char **cmd, char **envp, t_shell *shell)
 		|| (cmd [0][0] == '.' && cmd[0][1] == '/'))
 	{
 		if (access(cmd[0], F_OK | X_OK))
-		{
-			ft_putstr_fd(": command not found\n", 2);
-			return ;
-		}
+			return (print_error(cmd[0], ": command not found\n", 2));
 		path = cmd[0];
 	}
 	else
 		path = ft_path(cmd[0], envp);
 	if (!path)
 	{
-		ft_putstr_fd(cmd[0], 2);
-		ft_putendl_fd(": command not found", 2);
-		if (path)
-			free(path);
-		shell->exit_status = 127;
+		print_error(cmd[0], ": command not found\n", 2);
+		ft_free_args(envp);
+		ft_clean_shell(shell, NULL);
 		exit(127);
 	}
 	execve(path, cmd, envp);

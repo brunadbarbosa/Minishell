@@ -6,13 +6,11 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:19:03 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/11 15:36:27 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 19:40:00 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-#include <limits.h>
 
 static int	check_overflow(long long result, int sign, int digit)
 {
@@ -20,17 +18,30 @@ static int	check_overflow(long long result, int sign, int digit)
 	{
 		if (result > LLONG_MAX / 10
 			|| (result == LLONG_MAX / 10
-			&& digit > LLONG_MAX % 10))
+				&& digit > LLONG_MAX % 10))
 			return (1);
 	}
 	else
 	{
 		if (result > -(LLONG_MIN / 10)
 			|| (result == -(LLONG_MIN / 10)
-			&& digit > -(LLONG_MIN % 10)))
+				&& digit > -(LLONG_MIN % 10)))
 			return (1);
 	}
 	return (0);
+}
+
+int	convert_digits(const char *str, int *i, long long *result, int sign)
+{
+	while (str[*i])
+	{
+		if (str[*i] < '0' || str[*i] > '9'
+			|| check_overflow(*result, sign, str[*i] - '0'))
+			return (0);
+		*result = *result * 10 + (str[*i] - '0');
+		(*i)++;
+	}
+	return (1);
 }
 
 int	safe_atoll(const char *str, long long *out)
@@ -57,16 +68,20 @@ int	safe_atoll(const char *str, long long *out)
 	}
 	if (!str[i])
 		return (0);
-	while (str[i])
+	if (!convert_digits(str, &i, &result, sign))
+		return (0);
+	return (*out = result * sign);
+}
+
+int	check_too_many_args(char **args, t_shell *shell)
+{
+	if (args[1])
 	{
-		if (str[i] < '0' || str[i] > '9' 
-			|| check_overflow(result, sign, str[i] - '0'))
-			return (0);
-		result = result * 10 + (str[i] - '0');
-		i++;
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		shell->exit_status = 1;
+		return (1);
 	}
-	*out = result * sign;
-	return (1);
+	return (0);
 }
 
 void	ft_exit(char **args, char *cmd, t_shell *shell)
@@ -78,8 +93,9 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 		printf("exit\n");
 		if (!args[0])
 		{
+			val = shell->exit_status;
 			ft_clean_shell(shell, NULL);
-			exit(shell->exit_status);
+			exit(val);
 		}
 		if (!safe_atoll(args[0], &val))
 		{
@@ -89,12 +105,8 @@ void	ft_exit(char **args, char *cmd, t_shell *shell)
 			ft_clean_shell(shell, NULL);
 			exit(2);
 		}
-		if (args[1])
-		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			shell->exit_status = 1;
+		if (check_too_many_args(args, shell))
 			return ;
-		}
 		shell->exit_status = val % 256;
 		ft_clean_shell(shell, NULL);
 		exit((unsigned char)val);

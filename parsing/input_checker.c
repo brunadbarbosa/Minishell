@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   input_checker.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:20:13 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/15 17:08:01 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/14 19:23:39 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	update_quote(char c, char *state)
+{
+	if ((c == '\'' || c == '"') && *state == 0)
+		*state = c;
+	else if (*state == c)
+		*state = 0;
+}
 
 bool	ft_isspace(const char c)
 {

@@ -6,11 +6,13 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:26 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/13 19:38:47 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 20:21:01 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	ft_printcmd(t_shell *shell);
 
 int	ft_have_something(char *line)
 {

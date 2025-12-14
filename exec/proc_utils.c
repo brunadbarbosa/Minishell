@@ -6,89 +6,23 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/13 20:09:16 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/14 14:12:22 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell);
 static int	ft_dup2close(int pipefd, int stdfd);
 
-/// @brief forks parent and child processes
-/// @param lst the command list
-/// @param pipe_st the struct with pipe information
-/// @param shell the master struct
-void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
+void	cleanup_and_exit(t_pipe *pipe_st, t_shell *shell, int status)
 {
-	t_cmd	*cmd;
-
-	if (!lst || !pipe_st)
-		return ;
-	cmd = lst;
-	while (cmd)
-	{
-		if (cmd->next && (pipe(pipe_st->pipefd) == -1))
-			return (ft_freepipe_st(pipe_st));
-		pipe_st->pids[pipe_st->pid_count] = fork();
-		if (pipe_st->pids[pipe_st->pid_count] == -1)
-			return (ft_freepipe_st(pipe_st));
-		if (pipe_st->pids[pipe_st->pid_count] == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			ft_child(pipe_st, cmd, shell);
-		}
-		if (cmd->next)
-		{
-			close(pipe_st->pipefd[1]);
-			pipe_st->prev_read_fd = pipe_st->pipefd[0];
-		}
-		pipe_st->pid_count++;
-		cmd = cmd->next;
-	}
+	ft_freepipe_st(pipe_st);
+	ft_clean_shell(shell, NULL);
+	exit(status);
 }
 
-/// @brief Structures the pipes in the child process and call ft_execute
-/// @param pipe_st the pipe struct
-/// @param cmd the command node
-/// @param shell the master struct
-static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
+void	execute_command(t_cmd *cmd, t_pipe *pipe_st, t_shell *shell)
 {
-	t_redir	*redir;
-
-	if (!pipe_st || !cmd || !shell)
-		exit(1);
-	if (pipe_st->prev_read_fd != -1)
-	{
-		if (ft_dup2close(pipe_st->prev_read_fd, STDIN_FILENO))
-		{
-			ft_freepipe_st(pipe_st);
-			ft_clean_shell(shell, NULL);
-			exit(1);
-		}
-	}
-	if (cmd->next)
-	{
-		close(pipe_st->pipefd[0]);
-		if (ft_dup2close(pipe_st->pipefd[1], STDOUT_FILENO))
-		{
-			ft_freepipe_st(pipe_st);
-			ft_clean_shell(shell, NULL);
-			exit(1);
-		}
-	}
-	redir = cmd->redirs;
-	while (redir)
-	{
-		if (ft_redcmd(redir->type, redir->fd))
-		{
-			ft_freepipe_st(pipe_st);
-			ft_clean_shell(shell, NULL);
-			exit(1);
-		}
-		redir = redir->next;
-	}
 	ft_freepipe_st(pipe_st);
 	if (is_builtin(cmd))
 	{
@@ -99,6 +33,37 @@ static void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
 	ft_execute(cmd, shell->env, shell);
 	ft_clean_shell(shell, NULL);
 	exit(127);
+}
+
+/// @brief Structures the pipes in the child process and call ft_execute
+/// @param pipe_st the pipe struct
+/// @param cmd the command node
+/// @param shell the master struct
+void	ft_child(t_pipe *pipe_st, t_cmd *cmd, t_shell *shell)
+{
+	t_redir	*redir;
+
+	if (!pipe_st || !cmd || !shell)
+		exit(1);
+	if (pipe_st->prev_read_fd != -1)
+	{
+		if (ft_dup2close(pipe_st->prev_read_fd, STDIN_FILENO))
+			cleanup_and_exit(pipe_st, shell, 1);
+	}
+	if (cmd->next)
+	{
+		close(pipe_st->pipefd[0]);
+		if (ft_dup2close(pipe_st->pipefd[1], STDOUT_FILENO))
+			cleanup_and_exit(pipe_st, shell, 1);
+	}
+	redir = cmd->redirs;
+	while (redir)
+	{
+		if (ft_redcmd(redir->type, redir->fd))
+			cleanup_and_exit(pipe_st, shell, 1);
+		redir = redir->next;
+	}
+	execute_command(cmd, pipe_st, shell);
 }
 
 /// @brief redirects command to its infile and outfile
