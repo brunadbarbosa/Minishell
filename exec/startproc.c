@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/14 19:51:44 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:52:52 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,16 @@ void	ft_startproc(t_shell *shell)
 
 	if (!shell || !shell->cmds || !shell->env)
 		return ;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	if (init_pipe(&pipe_st, shell->cmds))
 		return (ft_putstr_fd("Unable to initialize t_pipe pipe\n", 2));
 	ft_fork(shell->cmds, &pipe_st, shell);
 	if (pipe_st.prev_read_fd != -1)
 		close(pipe_st.prev_read_fd);
 	ft_wait(&pipe_st, shell);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	ft_free_split(pipe_st.heredocs);
 }
 
@@ -68,7 +72,6 @@ static void	ft_wait(t_pipe *pipe, t_shell *shell)
 {
 	int	i;
 	int	status;
-	int	sig;
 
 	i = -1;
 	while (++i < pipe->pid_count)
@@ -80,9 +83,10 @@ static void	ft_wait(t_pipe *pipe, t_shell *shell)
 				shell->exit_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
 			{
-				sig = WTERMSIG(status);
-				shell->exit_status = 128 + sig;
-				if (sig == SIGQUIT)
+				shell->exit_status = 128 + WTERMSIG(status);
+				if (WTERMSIG(status) == SIGINT)
+    				write(STDOUT_FILENO, "\n", 1);
+				if (WTERMSIG(status) == SIGQUIT)
 					ft_putstr_fd("Quit (core dumped)\n", 2);
 			}
 			else

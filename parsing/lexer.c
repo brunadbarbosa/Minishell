@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/14 20:21:26 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:48:51 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,9 @@ static void	ft_rmempty(t_token **tokens)
 	while (curr)
 	{
 		if (ft_isemptytoken(curr))
+		{
 			ft_removenode(tokens, &curr, prev);
+		}
 		else
 		{
 			prev = curr;
@@ -93,14 +95,14 @@ static int	ft_isemptytoken(t_token *token)
 {
 	int	i;
 
-	if (token->type != TOKEN_WORD)
-	{
-		i = 0;
-		while (token->value[i] && ft_isspace(token->value[i]))
-			i++;
-		return (token->value[i] == '\0');
-	}
-	return (0);
+	if (!token->value)
+		return (1);
+	if (token->is_quoted)
+		return (0);
+	i = 0;
+	while (token->value[i] && ft_isspace(token->value[i]))
+		i++;
+	return (token->value[i] == '\0');
 }
 
 static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev)

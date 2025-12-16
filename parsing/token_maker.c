@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_maker.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adpinhei <adpinhei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 09:20:16 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/11/20 15:43:27 by adpinhei         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:48:26 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ t_token	*ft_new_token(char *input, ssize_t size)
 		free(token);
 		return (NULL);
 	}
+	if ((token->value[0] == '"' || token->value[0] == '\'') &&
+		token->value[size - 1] == token->value[0])
+		token->is_quoted = 1;
+	else
+		token->is_quoted = 0;
 	ft_settokentype(token);
 	return (token);
 }

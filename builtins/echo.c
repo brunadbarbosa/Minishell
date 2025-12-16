@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 17:12:42 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/14 15:34:51 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/15 18:12:52 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_echo(char **args, t_shell *shell)
 		printf("\n");
 		return ;
 	}
-	if (ft_checkflag(args[i]))
+	while (ft_checkflag(args[i]))
 	{
 		i++;
 		sign = 1;

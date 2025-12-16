@@ -60,7 +60,7 @@ static int	is_pipe(t_token *head)
 
 int	is_builtin(t_cmd *cmd)
 {
-	if (!cmd)
+	if (!cmd || !cmd->cmd[0])
 		return (0);
 	if (!ft_strncmp("echo", cmd->cmd, 5))
 		return (1);
@@ -75,6 +75,8 @@ int	is_builtin(t_cmd *cmd)
 	if (!ft_strncmp("env", cmd->cmd, 4))
 		return (1);
 	if (!ft_strncmp("exit", cmd->cmd, 5))
+		return (1);
+	if (ft_strchr(cmd->cmd, 47))
 		return (1);
 	return (0);
 }

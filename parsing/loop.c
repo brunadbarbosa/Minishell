@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:26 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/14 20:21:01 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/16 18:33:14 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,17 @@ void	loop(t_shell *shell)
 	while (true)
 	{
 		input = readline("minishell> ");
-		add_history(input);
 		if (!input)
 		{
 			ft_putendl_fd("exit", STDOUT_FILENO);
 			break ;
 		}
+		add_history(input);
 		if (!input[0] || !ft_have_something(input) || !strcmp(input, "$EMPTY"))
-			continue ;
+        {
+            free(input);
+            continue;
+        }
 		ft_lexer(shell, input);
 		ft_syntax(shell);
 		ft_parser(shell);
