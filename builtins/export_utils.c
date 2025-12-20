@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 13:18:17 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/14 14:03:46 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:28:05 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_env	*create_env_node(const char *env_str)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
-	equal = strchr(env_str, '=');
+	equal = ft_strchr(env_str, '=');
 	if (equal)
 	{
 		node->name = ft_substr(env_str, 0, equal - env_str);
@@ -60,8 +60,10 @@ t_env	*get_value(t_env *env, char *name)
 {
 	while (env)
 	{
-		if (ft_strncmp(env->name, name, ft_strlen(name) + 1) == 0)
+		if (ft_strncmp(env->name, name, ft_strlen(name)) == 0)
+		{
 			return (env);
+		}
 		env = env->next;
 	}
 	return (NULL);
@@ -72,11 +74,14 @@ t_env	*get_value(t_env *env, char *name)
 /// @return the address of the last list's node
 t_env	*ft_envlast(t_env *lst)
 {
+	t_env	*node;
+
 	if (!lst)
 		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	node = lst;
+	while (node->next)
+		node = node->next;
+	return (node);
 }
 
 /// @brief adding the variable created by export to the end of env's list

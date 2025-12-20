@@ -6,14 +6,14 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 15:52:20 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/16 17:51:52 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:36:28 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 int			get_redir(t_redir *red, t_shell *shell);
-static char	*gen_filename(void);
+char		*gen_filename(void);
 
 void	ft_openredirs(t_cmd *cmdlst, t_shell *shell)
 {
@@ -69,7 +69,7 @@ int	get_redir(t_redir *red, t_shell *shell)
 			free(filename);
 			return (shell->exit_status = 1);
 		}
-		read_into_here(red->fd, red->file);
+		read_into_here(red->fd, red->file, shell, filename);
 		close(red->fd);
 		red->fd = open(filename, O_RDONLY);
 		unlink(filename);
@@ -82,7 +82,7 @@ int	get_redir(t_redir *red, t_shell *shell)
 
 /// @brief generates a random filename based on /dev/urandom
 /// @return the filename
-static char	*gen_filename(void)
+char	*gen_filename(void)
 {
 	static int	i;
 	char		*num;

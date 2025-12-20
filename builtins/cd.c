@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 16:09:43 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/14 18:51:49 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:25:33 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,29 @@ char	*get_current_path(void)
 	return (cwd);
 }
 
+static int	cd_to_oldpwd(t_shell *shell, char *old_pwd)
+{
+	t_env	*path;
+
+	path = get_value(shell->env, "OLDPWD");
+	if (!path)
+	{
+		ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+		free(old_pwd);
+		shell->exit_status = 1;
+		return (1);
+	}
+	if (chdir(path->value) == -1)
+	{
+		perror("minishell: cd");
+		free(old_pwd);
+		shell->exit_status = 1;
+		return (1);
+	}
+	ft_putendl_fd(path->value, STDOUT_FILENO);
+	return (0);
+}
+
 int	change_directory(char **args, t_shell *shell, char *old_pwd)
 {
 	if (!args[0] || !args[0][0])
@@ -47,6 +70,8 @@ int	change_directory(char **args, t_shell *shell, char *old_pwd)
 		shell->exit_status = 1;
 		return (1);
 	}
+	if (ft_strcmp(args[0], "-") == 0)
+		return (cd_to_oldpwd(shell, old_pwd));
 	if (chdir(args[0]) == -1)
 	{
 		ft_putstr_fd("Error while changing directories\n", 2);

@@ -6,13 +6,19 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:47:40 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/16 13:52:52 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 15:34:13 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 static void		ft_wait(t_pipe *pipe, t_shell *shell);
+
+static void	ft_handle_pipe(t_cmd *cmd, t_pipe *pipe_st)
+{
+	if (cmd->next && (pipe(pipe_st->pipefd) == -1))
+		ft_freepipe_st(pipe_st);
+}
 
 /// @brief forks parent and child processes
 /// @param lst the command list
@@ -27,8 +33,7 @@ void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
 	cmd = lst;
 	while (cmd)
 	{
-		if (cmd->next && (pipe(pipe_st->pipefd) == -1))
-			return (ft_freepipe_st(pipe_st));
+		ft_handle_pipe(cmd, pipe_st);
 		pipe_st->pids[pipe_st->pid_count] = fork();
 		if (pipe_st->pids[pipe_st->pid_count] == -1)
 			return (ft_freepipe_st(pipe_st));
@@ -37,11 +42,10 @@ void	ft_fork(t_cmd *lst, t_pipe *pipe_st, t_shell *shell)
 			setup_child_signals();
 			ft_child(pipe_st, cmd, shell);
 		}
-		if (cmd->next)
-		{
-			close(pipe_st->pipefd[1]);
+		if (pipe_st->prev_read_fd != -1)
+			close(pipe_st->prev_read_fd);
+		if (cmd->next && (close(pipe_st->pipefd[1]), 1))
 			pipe_st->prev_read_fd = pipe_st->pipefd[0];
-		}
 		pipe_st->pid_count++;
 		cmd = cmd->next;
 	}
@@ -85,7 +89,7 @@ static void	ft_wait(t_pipe *pipe, t_shell *shell)
 			{
 				shell->exit_status = 128 + WTERMSIG(status);
 				if (WTERMSIG(status) == SIGINT)
-    				write(STDOUT_FILENO, "\n", 1);
+					write(STDOUT_FILENO, "\n", 1);
 				if (WTERMSIG(status) == SIGQUIT)
 					ft_putstr_fd("Quit (core dumped)\n", 2);
 			}

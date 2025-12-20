@@ -6,11 +6,25 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:52:15 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/13 20:11:23 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:25:47 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] != '\0' && s2[i] != '\0')
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (s1[i] - s2[i]);
+}
 
 void	remove_env(t_env **env, char *name)
 {
@@ -21,7 +35,7 @@ void	remove_env(t_env **env, char *name)
 	prev = NULL;
 	while (current)
 	{
-		if (strcmp(current->name, name) == 0)
+		if (ft_strcmp(current->name, name) == 0)
 		{
 			if (prev == NULL)
 				*env = current->next;

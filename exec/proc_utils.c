@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:08:56 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/16 12:56:21 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 14:56:21 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,16 @@ void	cleanup_and_exit(t_pipe *pipe_st, t_shell *shell, int status)
 
 void	execute_command(t_cmd *cmd, t_pipe *pipe_st, t_shell *shell)
 {
+	int	stats;
+
+	stats = 0;
 	ft_freepipe_st(pipe_st);
 	if (is_builtin(cmd))
 	{
+		stats = shell->exit_status;
 		execute_builtin(cmd, shell);
 		ft_clean_shell(shell, NULL);
-		exit(shell->exit_status);
+		exit(stats);
 	}
 	ft_execute(cmd, shell->env, shell);
 	ft_clean_shell(shell, NULL);

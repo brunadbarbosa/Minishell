@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:51:11 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/16 13:05:07 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:11:07 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ static char	*ft_path(char *cmd, char **envp)
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
-	if (envp[i] == NULL)
+	if (envp[i] == NULL || !envp[i][5])
 		return (ft_putstr_fd("PATH not found\n", 2), NULL);
 	path = ft_split(envp[i] + 5, ':');
 	if (!path)
 		return (NULL);
-	i = 0;
-	while (path[i++])
+	i = -1;
+	while (path[++i])
 	{
 		path_cmd = ft_str2join(path[i], "/", cmd);
 		if (!path_cmd)

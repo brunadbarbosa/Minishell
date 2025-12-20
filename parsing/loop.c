@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 17:27:26 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/16 18:33:14 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:25:56 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ void	loop(t_shell *shell)
 {
 	char	*input;
 
-	if (!shell)
-		return ;
-	while (true)
+	while (true && shell)
 	{
 		input = readline("minishell> ");
 		if (!input)
@@ -42,13 +40,13 @@ void	loop(t_shell *shell)
 			ft_putendl_fd("exit", STDOUT_FILENO);
 			break ;
 		}
+		if (!input[0] || !ft_have_something(input)
+			|| !ft_strcmp(input, "$EMPTY") || ft_lexer(shell, input))
+		{
+			free(input);
+			continue ;
+		}
 		add_history(input);
-		if (!input[0] || !ft_have_something(input) || !strcmp(input, "$EMPTY"))
-        {
-            free(input);
-            continue;
-        }
-		ft_lexer(shell, input);
 		ft_syntax(shell);
 		ft_parser(shell);
 		ft_openredirs(shell->cmds, shell);

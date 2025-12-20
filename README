@@ -1,3 +1,0 @@
-not expand env in heredoc
-
-Built-ins that use env can only be the 1st command

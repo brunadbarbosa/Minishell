@@ -76,7 +76,5 @@ int	is_builtin(t_cmd *cmd)
 		return (1);
 	if (!ft_strncmp("exit", cmd->cmd, 5))
 		return (1);
-	if (ft_strchr(cmd->cmd, 47))
-		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:54:41 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/16 18:34:24 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:25:27 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void			loop(t_shell *shell);
 t_shell			*ft_init_shell(t_shell *shell, char **envp);
 void			my_exit(t_shell *shell, char *input);
 void			ft_parser(t_shell *shell);
-void			ft_lexer(t_shell *shell, char *input);
+int				ft_lexer(t_shell *shell, char *input);
 void			ft_settokentype(t_token *token);
 void			ft_expand(t_token **lst, t_shell *shell);
 void			ft_syntax(t_shell *shell);
@@ -75,12 +75,8 @@ int				ft_initcmdlist(t_token **tk, t_token *tks, t_cmd **h,\
 
 t_redir_type	redirtype(t_token_type type);
 
-/*testing functions*/
-
-void			ft_printlst(t_shell *shell);
-//void			print_env(t_shell *shell);
-void			ft_printcmd(t_shell *shell);
-void			read_into_here(int fd, char *delimiter);
+void			read_into_here(int fd, char *delimiter,
+					t_shell *shell, char *filename);
 
 /*****************************************************************************/
 /*                                  Builtin Functions                        */
@@ -121,6 +117,7 @@ void			ft_pwd(t_env *env);
 
 void			remove_env(t_env **env, char *name);
 void			ft_unset(char **args, t_shell *shell);
+int				ft_strcmp(char *s1, char *s2);
 
 /*****************************************************************************/
 /*                                  Exec Functions                           */

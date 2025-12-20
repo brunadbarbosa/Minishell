@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 19:06:57 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/16 13:48:51 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/18 18:46:03 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@ static void	ft_removenode(t_token **tokens, t_token **curr, t_token *prev);
 
 /// @brief tokenizes the input
 /// @param input line from the user
-void	ft_lexer(t_shell *shell, char *input)
+int	ft_lexer(t_shell *shell, char *input)
 {
 	t_token	*token_node;
 	ssize_t	size;
 	int		i;
 
-	if (!input)
-		return ;
 	i = 0;
 	if (!ft_strncmp(input, "$EMPTY", 6))
 		input += 6;
@@ -36,15 +34,18 @@ void	ft_lexer(t_shell *shell, char *input)
 			i++;
 		size = ft_tokensize(&input[i]);
 		if (size == -1)
-			return (ft_putstr_fd("Unclosed quotes\n", 2));
+			return (ft_putstr_fd("Unclosed quotes\n", 2),
+				ft_clean_tokens(&shell->tokens, NULL),
+				ft_clean_cmd_lst(&shell->cmds, NULL), 1);
 		token_node = ft_new_token(&input[i], size);
 		if (!token_node)
-			return (ft_clean_shell(shell, "Failed to allocate token\n"));
+			return (ft_clean_shell(shell, "Failed to allocate token\n"), 1);
 		ft_add_token(&shell->tokens, token_node);
 		i += size;
 	}
 	ft_expand(&shell->tokens, shell);
 	ft_rmempty(&shell->tokens);
+	return (0);
 }
 
 /// @brief adds newly generated token nodes to the token list

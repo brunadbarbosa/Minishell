@@ -6,7 +6,7 @@
 /*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 19:30:22 by adpinhei          #+#    #+#             */
-/*   Updated: 2025/12/14 19:49:39 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:36:57 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 		ft_clean_tokens(&shell->tokens, msg);
 		shell->tokens = NULL;
 	}
-	if(shell->heredoc)
+	if (shell->heredoc)
 	{
 		ft_free_split(shell->heredoc);
 		shell->heredoc = NULL;
@@ -45,11 +45,11 @@ void	ft_clean_shell(t_shell *shell, char *msg)
 void	ft_free_split(char **arr)
 {
 	int	i;
-	
+
 	i = 0;
-	if(!arr)
+	if (!arr)
 		return ;
-	while(arr[i])
+	while (arr[i])
 	{
 		free(arr[i]);
 		i++;
