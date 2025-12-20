@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brmaria- <brmaria-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brmaria- <brmaria-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 13:20:40 by brmaria-          #+#    #+#             */
-/*   Updated: 2025/12/16 12:41:45 by brmaria-         ###   ########.fr       */
+/*   Updated: 2025/12/20 18:34:53 by brmaria-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	sig_handler(int signum)
 	rl_on_new_line();
 	rl_redisplay();
 }
-
+<brmaria-@student.42.fr>  
 void	init_interactive_mode(void)
 {
 	signal(SIGINT, sig_handler);
